@@ -36,6 +36,21 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Silence Chrome DevTools automatic workspace detection probe (prevents CSP warning in DevTools)
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+  res.status(204).end();
+});
+
+// Root Server Status Endpoint
+app.get('/', (req, res) => {
+  res.json({
+    name: 'MERN Job Board API Server',
+    status: 'ONLINE',
+    docs: '/api',
+    health: '/api/health',
+  });
+});
+
 // Base Route
 app.get('/api', (req, res) => {
   res.json({
@@ -69,8 +84,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 404 Handler for Unmatched API Routes
-app.use('/api/*', (req, res) => {
+// Mount Feature API Routers
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
+// Clean JSON 404 Handler for Unmatched Routes (replaces Express default HTML 404)
+app.use((req, res) => {
   res.status(404).json({
     message: `Cannot ${req.method} ${req.originalUrl} - Route not found`,
   });
