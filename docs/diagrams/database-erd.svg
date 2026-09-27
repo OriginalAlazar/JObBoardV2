@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" width="100%" height="100%">
+  <rect width="920" height="540" fill="#090d16" rx="16"/>
+  <text x="460" y="38" fill="#f8fafc" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">
+    MERN Job Board — Entity-Relationship Diagram (ERD)
+  </text>
+
+  <!-- USER TABLE -->
+  <g transform="translate(40, 70)">
+    <rect width="240" height="240" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+    <rect width="240" height="36" rx="8" fill="#0284c7"/>
+    <text x="120" y="24" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">User</text>
+    <text x="15" y="60" fill="#f8fafc" font-family="Courier, monospace" font-size="11">_id: ObjectId [PK]</text>
+    <text x="15" y="85" fill="#f8fafc" font-family="Courier, monospace" font-size="11">name: String</text>
+    <text x="15" y="110" fill="#38bdf8" font-family="Courier, monospace" font-size="11">email: String [UNIQUE]</text>
+    <text x="15" y="135" fill="#f8fafc" font-family="Courier, monospace" font-size="11">passwordHash: String</text>
+    <text x="15" y="160" fill="#fbbf24" font-family="Courier, monospace" font-size="11">role: 'SEEKER'|'EMPLOYER'</text>
+    <text x="15" y="185" fill="#f8fafc" font-family="Courier, monospace" font-size="11">company: String [opt]</text>
+    <text x="15" y="210" fill="#64748b" font-family="Courier, monospace" font-size="11">createdAt, updatedAt: Date</text>
+  </g>
+
+  <!-- SESSION TABLE -->
+  <g transform="translate(40, 350)">
+    <rect width="240" height="150" rx="8" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+    <rect width="240" height="36" rx="8" fill="#d97706"/>
+    <text x="120" y="24" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Session (TTL)</text>
+    <text x="15" y="60" fill="#f8fafc" font-family="Courier, monospace" font-size="11">_id: ObjectId [PK]</text>
+    <text x="15" y="85" fill="#38bdf8" font-family="Courier, monospace" font-size="11">sessionId: String [INDEX]</text>
+    <text x="15" y="110" fill="#f8fafc" font-family="Courier, monospace" font-size="11">user: ObjectId [FK ➔ User]</text>
+    <text x="15" y="135" fill="#fbbf24" font-family="Courier, monospace" font-size="11">expiresAt: Date [TTL INDEX]</text>
+  </g>
+
+  <!-- JOB TABLE -->
+  <g transform="translate(640, 70)">
+    <rect width="240" height="280" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+    <rect width="240" height="36" rx="8" fill="#059669"/>
+    <text x="120" y="24" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Job</text>
+    <text x="15" y="60" fill="#f8fafc" font-family="Courier, monospace" font-size="11">_id: ObjectId [PK]</text>
+    <text x="15" y="85" fill="#f8fafc" font-family="Courier, monospace" font-size="11">title: String</text>
+    <text x="15" y="110" fill="#f8fafc" font-family="Courier, monospace" font-size="11">description: String</text>
+    <text x="15" y="135" fill="#f8fafc" font-family="Courier, monospace" font-size="11">company, location: String</text>
+    <text x="15" y="160" fill="#f8fafc" font-family="Courier, monospace" font-size="11">type, category: String</text>
+    <text x="15" y="185" fill="#f8fafc" font-family="Courier, monospace" font-size="11">salary: Number</text>
+    <text x="15" y="210" fill="#f8fafc" font-family="Courier, monospace" font-size="11">requirements: [String]</text>
+    <text x="15" y="235" fill="#38bdf8" font-family="Courier, monospace" font-size="11">postedBy: ObjectId [FK]</text>
+    <text x="15" y="260" fill="#34d399" font-family="Courier, monospace" font-size="11">status: 'OPEN'|'CLOSED'</text>
+  </g>
+
+  <!-- APPLICATION TABLE -->
+  <g transform="translate(340, 260)">
+    <rect width="250" height="230" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+    <rect width="250" height="36" rx="8" fill="#7e22ce"/>
+    <text x="125" y="24" fill="#fff" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">Application</text>
+    <text x="15" y="60" fill="#f8fafc" font-family="Courier, monospace" font-size="11">_id: ObjectId [PK]</text>
+    <text x="15" y="85" fill="#a855f7" font-family="Courier, monospace" font-size="11">job: ObjectId [FK ➔ Job]</text>
+    <text x="15" y="110" fill="#38bdf8" font-family="Courier, monospace" font-size="11">applicant: ObjectId [FK]</text>
+    <text x="15" y="135" fill="#f8fafc" font-family="Courier, monospace" font-size="11">coverLetter: String (&gt;=20)</text>
+    <text x="15" y="160" fill="#f8fafc" font-family="Courier, monospace" font-size="11">resumeLink: String (URL)</text>
+    <text x="15" y="185" fill="#fbbf24" font-family="Courier, monospace" font-size="11">status: PENDING|REVIEWED..</text>
+    <text x="15" y="210" fill="#f43f5e" font-family="Courier, monospace" font-size="10">UNIQUE: { job, applicant }</text>
+  </g>
+
+  <!-- Relationships Lines -->
+  <!-- User to Session -->
+  <line x1="160" y1="310" x2="160" y2="350" stroke="#fbbf24" stroke-width="2"/>
+  <text x="175" y="335" fill="#fbbf24" font-family="Arial, sans-serif" font-size="11">1 : N</text>
+
+  <!-- User to Job (postedBy) -->
+  <path d="M 280,140 L 640,140" fill="none" stroke="#0284c7" stroke-width="2"/>
+  <text x="460" y="130" fill="#0284c7" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">1 : N (postedBy)</text>
+
+  <!-- User to Application (applicant) -->
+  <path d="M 280,240 L 340,300" fill="none" stroke="#38bdf8" stroke-width="2"/>
+  <text x="290" y="280" fill="#38bdf8" font-family="Arial, sans-serif" font-size="11">1 : N</text>
+
+  <!-- Job to Application -->
+  <path d="M 640,300 L 590,300" fill="none" stroke="#10b981" stroke-width="2"/>
+  <text x="615" y="290" fill="#10b981" font-family="Arial, sans-serif" font-size="11">1 : N</text>
+</svg>
