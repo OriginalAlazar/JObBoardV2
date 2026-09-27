@@ -2,10 +2,6 @@ const Session = require('../models/Session');
 const User = require('../models/User');
 const { destroySession } = require('../utils/session');
 
-/**
- * Authentication Middleware
- * Enforces valid session cookie, checks expiration, and attaches req.user
- */
 const requireAuth = async (req, res, next) => {
   try {
     const sessionId = req.cookies?.sessionId;
@@ -24,7 +20,6 @@ const requireAuth = async (req, res, next) => {
       });
     }
 
-    // Explicit expiration check (protects against MongoDB TTL sweep delay)
     if (new Date() > session.expiresAt) {
       await destroySession(res, sessionId);
       return res.status(401).json({
@@ -48,9 +43,6 @@ const requireAuth = async (req, res, next) => {
   }
 };
 
-/**
- * Role-Based Access Control Middleware
- */
 const requireRole = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {

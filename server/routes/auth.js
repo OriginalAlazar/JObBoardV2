@@ -7,16 +7,10 @@ const { createSession, destroySession } = require('../utils/session');
 
 const router = express.Router();
 
-/**
- * @route   POST /api/auth/register
- * @desc    Register a new user (Job Seeker or Employer) & create session
- * @access  Public
- */
 router.post('/register', async (req, res, next) => {
   try {
     const { name, email, password, role, company } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password || !role) {
       return res.status(400).json({
         message: 'Name, email, password, and role are required.',
@@ -41,19 +35,16 @@ router.post('/register', async (req, res, next) => {
       });
     }
 
-    // Check email uniqueness
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(409).json({
         message: 'An account with this email address already exists.',
       });
     }
 
-    // Hash password with bcrypt (salt rounds = 10)
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Create user
     const newUser = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
@@ -62,7 +53,6 @@ router.post('/register', async (req, res, next) => {
       company: role === 'EMPLOYER' ? company.trim() : undefined,
     });
 
-    // Create session and set HTTP-only cookie
     await createSession(res, newUser._id);
 
     return res.status(201).json({
@@ -70,15 +60,15 @@ router.post('/register', async (req, res, next) => {
       user: newUser,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: 'An account with this email address already exists.',
+      });
+    }
     next(error);
   }
 });
 
-/**
- * @route   POST /api/auth/login
- * @desc    Authenticate user credentials & issue session cookie
- * @access  Public
- */
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -89,7 +79,6 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    // Query user by email (include passwordHash for comparison)
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(401).json({
@@ -97,7 +86,6 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    // Verify password hash
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(401).json({
@@ -105,7 +93,6 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    // Issue session
     await createSession(res, user._id);
 
     return res.status(200).json({
@@ -117,11 +104,6 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-/**
- * @route   POST /api/auth/logout
- * @desc    Destroy session in database & clear cookie
- * @access  Public / Authenticated
- */
 router.post('/logout', async (req, res, next) => {
   try {
     const sessionId = req.cookies?.sessionId;
@@ -135,16 +117,10 @@ router.post('/logout', async (req, res, next) => {
   }
 });
 
-/**
- * @route   GET /api/auth/me
- * @desc    Get currently authenticated user (or null if guest)
- * @access  Public / Authenticated
- */
 router.get('/me', async (req, res, next) => {
   try {
     const sessionId = req.cookies?.sessionId;
 
-    // Guest visit without cookie -> return null smoothly without console error
     if (!sessionId) {
       return res.status(200).json({
         user: null,
@@ -161,7 +137,6 @@ router.get('/me', async (req, res, next) => {
       });
     }
 
-    // Check expiration
     if (new Date() > session.expiresAt) {
       await destroySession(res, sessionId);
       return res.status(401).json({
@@ -187,11 +162,6 @@ router.get('/me', async (req, res, next) => {
   }
 });
 
-/**
- * @route   PUT /api/auth/profile
- * @desc    Update user profile (name, company)
- * @access  Authenticated
- */
 router.put('/profile', requireAuth, async (req, res, next) => {
   try {
     const { name, company } = req.body;
@@ -220,11 +190,6 @@ router.put('/profile', requireAuth, async (req, res, next) => {
   }
 });
 
-/**
- * @route   PUT /api/auth/password
- * @desc    Update user password
- * @access  Authenticated
- */
 router.put('/password', requireAuth, async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -241,7 +206,6 @@ router.put('/password', requireAuth, async (req, res, next) => {
       });
     }
 
-    // Fetch user with passwordHash
     const user = await User.findById(req.user._id);
     const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!isMatch) {
