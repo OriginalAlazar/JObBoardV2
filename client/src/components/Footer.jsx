@@ -23,7 +23,18 @@ const Footer = () => {
         >
           {/* Brand Column */}
           <div style={{ maxWidth: '280px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <img
+                src="/favicon.png"
+                alt="Sira"
+                style={{
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '6px',
+                  objectFit: 'contain',
+                  display: 'block',
+                }}
+              />
               <span
                 style={{
                   fontFamily: 'var(--font-serif)',

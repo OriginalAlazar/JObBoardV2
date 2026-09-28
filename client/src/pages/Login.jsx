@@ -56,19 +56,31 @@ const Login = () => {
           }}
         >
           <div style={{ marginBottom: '28px' }}>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                color: 'var(--text-muted)',
-                display: 'block',
-                marginBottom: '6px',
-              }}
-            >
-              Sira · ሥራ
-            </span>
+            <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', marginBottom: '14px' }}>
+              <img
+                src="/favicon.png"
+                alt="Sira"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '6px',
+                  objectFit: 'contain',
+                  display: 'block',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.78rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  color: 'var(--text-muted)',
+                  fontWeight: 600,
+                }}
+              >
+                Sira · ሥራ
+              </span>
+            </Link>
             <h1
               style={{
                 fontSize: '2rem',

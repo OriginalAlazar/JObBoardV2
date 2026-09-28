@@ -37,11 +37,22 @@ const Navbar = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '10px',
             color: 'var(--text)',
             textDecoration: 'none',
           }}
         >
+          <img
+            src="/favicon.png"
+            alt="Sira"
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '6px',
+              objectFit: 'contain',
+              display: 'block',
+            }}
+          />
           <span
             style={{
               fontFamily: 'var(--font-serif)',
