@@ -25,7 +25,7 @@ const applicationSchema = new mongoose.Schema(
       required: [true, 'Resume link is required'],
       trim: true,
       match: [
-        /^(https?:\/\/)([\w.-]+)+(:\d+)?(\/([\w/_.]*(\?\S+)?)?)?$/,
+        /^(https?:\/\/)([\w.-]+)+(:\d+)?(\/([\w/_.-]*(\?\S+)?)?)?$/,
         'Please enter a valid HTTP/HTTPS link to your resume (e.g. Google Drive, Dropbox)',
       ],
     },
