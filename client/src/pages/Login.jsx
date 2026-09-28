@@ -44,14 +44,44 @@ const Login = () => {
   };
 
   return (
-    <div style={{ padding: '60px 0 80px', minHeight: 'calc(100vh - 160px)', display: 'flex', alignItems: 'center' }}>
-      <div className="container" style={{ maxWidth: '460px' }}>
-        <div className="card" style={{ padding: '36px' }}>
-          
-          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <h1 style={{ fontSize: '1.85rem', marginBottom: '8px' }}>Welcome Back</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0 }}>
-              Sign in to manage your jobs, candidates, or applications.
+    <div style={{ padding: '64px 0 96px', minHeight: 'calc(100vh - 160px)', display: 'flex', alignItems: 'center' }}>
+      <div className="container" style={{ maxWidth: '440px' }}>
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '36px',
+            textAlign: 'left'
+          }}
+        >
+          <div style={{ marginBottom: '28px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--text-muted)',
+                display: 'block',
+                marginBottom: '6px'
+              }}
+            >
+              Account Access
+            </span>
+            <h1
+              style={{
+                fontSize: '2rem',
+                margin: '0 0 8px 0',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em'
+              }}
+            >
+              Sign In
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', margin: 0, lineHeight: 1.5 }}>
+              Access your workspace to manage positions, candidate submissions, or applications.
             </p>
           </div>
 
@@ -70,7 +100,7 @@ const Login = () => {
                 id="login-email"
                 type="email"
                 className="form-input"
-                placeholder="name@example.com"
+                placeholder="name@organization.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
@@ -89,7 +119,7 @@ const Login = () => {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--primary)',
+                    color: 'var(--accent)',
                     fontSize: '0.8rem',
                     cursor: 'pointer',
                     fontWeight: 500,
@@ -102,7 +132,7 @@ const Login = () => {
                 id="login-password"
                 type={showPassword ? 'text' : 'password'}
                 className="form-input"
-                placeholder="••••••••••••"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -114,47 +144,60 @@ const Login = () => {
               id="login-submit-btn"
               type="submit"
               className="btn btn-primary"
-              style={{ width: '100%', padding: '12px', fontSize: '1rem', marginTop: '8px' }}
+              style={{ width: '100%', padding: '12px', fontSize: '0.98rem', marginTop: '12px' }}
               disabled={loading}
             >
-              {loading ? 'Authenticating...' : 'Sign In'}
+              {loading ? 'Authenticating...' : 'Sign In →'}
             </button>
           </form>
 
           {/* Quick Demo Fill Shortcut */}
-          <div style={{
-            marginTop: '28px',
-            paddingTop: '20px',
-            borderTop: '1px solid var(--border-subtle)',
-            textAlign: 'center'
-          }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, display: 'block', marginBottom: '10px' }}>
-              QUICK DEMO ACCOUNTS
+          <div
+            style={{
+              marginTop: '32px',
+              paddingTop: '20px',
+              borderTop: '1px solid var(--border)',
+              textAlign: 'left'
+            }}
+          >
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                fontWeight: 600,
+                display: 'block',
+                marginBottom: '10px',
+                fontFamily: 'var(--font-mono)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em'
+              }}
+            >
+              Quick demo credentials
             </span>
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 type="button"
                 className="btn btn-secondary"
-                style={{ fontSize: '0.82rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.82rem', padding: '8px 12px', flex: 1 }}
                 onClick={() => handleQuickLogin('seeker1@demo.com', 'Password123!')}
               >
-                👤 Job Seeker Demo
+                Candidate demo
               </button>
               <button
                 type="button"
                 className="btn btn-secondary"
-                style={{ fontSize: '0.82rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.82rem', padding: '8px 12px', flex: 1 }}
                 onClick={() => handleQuickLogin('employer@demo.com', 'Password123!')}
               >
-                🏢 Employer Demo
+                Employer demo
               </button>
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+          <div style={{ marginTop: '24px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'left' }}>
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-              Create an Account
+            <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>
+              Create an account
             </Link>
           </div>
 

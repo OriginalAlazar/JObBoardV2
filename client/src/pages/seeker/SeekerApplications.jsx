@@ -13,7 +13,7 @@ const SeekerApplications = () => {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [withdrawingId, setWithdrawingId] = useState(null);
-  const [selectedApp, setSelectedApp] = useState(null); // For viewing cover letter detail
+  const [selectedApp, setSelectedApp] = useState(null);
 
   const fetchApplications = async () => {
     try {
@@ -58,38 +58,63 @@ const SeekerApplications = () => {
     return app.status === activeTab;
   });
 
-  if (loading) return <Loading message="Loading your submitted applications..." />;
+  if (loading) return <Loading message="Loading submitted applications..." />;
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '32px' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', marginBottom: '4px' }}>My Applications</h1>
-            <p style={{ color: 'var(--text-muted)', margin: 0 }}>
-              Review the current status and submission details of all your job applications.
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                display: 'block',
+                marginBottom: '4px'
+              }}
+            >
+              Candidate Records
+            </span>
+            <h1
+              style={{
+                fontSize: '2.4rem',
+                margin: '0 0 6px 0',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em'
+              }}
+            >
+              My Applications
+            </h1>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.95rem' }}>
+              Review the real-time status and submission records for your active applications.
             </p>
           </div>
 
           <Link to="/jobs" className="btn btn-primary">
-            + Apply for More Jobs
+            Explore more roles →
           </Link>
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
+        {successMsg && <div className="alert alert-success" style={{ marginBottom: '20px' }}>{successMsg}</div>}
 
-        {/* Status Filter Tabs */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '8px',
-          marginBottom: '24px',
-          borderBottom: '1px solid var(--border-subtle)',
-          paddingBottom: '12px'
-        }}>
+        {/* Status Filter Tabs - Rectangular, not pills */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '6px',
+            marginBottom: '24px',
+            borderBottom: '1px solid var(--border)',
+            paddingBottom: '12px'
+          }}
+        >
           {STATUS_TABS.map((tab) => {
             const count = tab === 'ALL'
               ? applications.length
@@ -101,19 +126,20 @@ const SeekerApplications = () => {
                 type="button"
                 onClick={() => setActiveTab(tab)}
                 style={{
-                  background: activeTab === tab ? 'var(--primary)' : 'var(--bg-surface)',
-                  color: activeTab === tab ? '#ffffff' : 'var(--text-secondary)',
+                  background: activeTab === tab ? 'var(--accent)' : 'var(--surface)',
+                  color: activeTab === tab ? '#FFFFFF' : 'var(--text-muted)',
                   border: '1px solid',
-                  borderColor: activeTab === tab ? 'var(--primary)' : 'var(--border-strong)',
-                  padding: '8px 16px',
-                  borderRadius: 'var(--radius-full)',
+                  borderColor: activeTab === tab ? 'var(--accent)' : 'var(--border)',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-sm)',
                   fontWeight: 600,
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
+                  fontFamily: 'var(--font-sans)',
                   cursor: 'pointer',
-                  transition: 'var(--transition)'
+                  transition: 'background var(--duration-fast), color var(--duration-fast)'
                 }}
               >
-                {tab === 'ALL' ? 'All Submissions' : tab} ({count})
+                {tab === 'ALL' ? 'All' : tab.charAt(0) + tab.slice(1).toLowerCase()} ({count})
               </button>
             );
           })}
@@ -121,78 +147,104 @@ const SeekerApplications = () => {
 
         {/* Applications List */}
         {filteredApps.length === 0 ? (
-          <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📭</div>
-            <h3>No Applications in this Category</h3>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 20px' }}>
+          <div
+            style={{
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              padding: '48px 24px',
+              textAlign: 'left'
+            }}
+          >
+            <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
+              No applications in this category
+            </h3>
+            <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.92rem' }}>
               {activeTab === 'ALL'
                 ? 'You have not submitted any applications yet.'
                 : `You currently have no applications with status "${activeTab}".`}
             </p>
             <Link to="/jobs" className="btn btn-primary">
-              Explore Available Positions
+              Explore available positions →
             </Link>
           </div>
         ) : (
-          <div className="data-table-container">
-            <table className="data-table">
+          <div
+            style={{
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              overflowX: 'auto'
+            }}
+          >
+            <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
-                <tr>
-                  <th>Job Title &amp; Company</th>
-                  <th>Applied On</th>
-                  <th>Resume Link</th>
-                  <th>Current Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Position &amp; Organization
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Date Submitted
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Resume
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Status
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', textAlign: 'right' }}>
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredApps.map((app) => (
-                  <tr key={app._id}>
-                    <td>
-                      <div style={{ fontWeight: 600, fontSize: '0.98rem' }}>
-                        {app.job?.title || 'Unknown Position'}
+                  <tr key={app._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '16px' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text)' }}>
+                        {app.job?.title || 'Position'}
                       </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        {app.job?.company} • {app.job?.location}
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                        {app.job?.company} {app.job?.location ? `· ${app.job.location}` : ''}
                       </div>
                     </td>
-                    <td style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                    <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.86rem', fontFamily: 'var(--font-mono)' }}>
                       {new Date(app.createdAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric',
                       })}
                     </td>
-                    <td>
+                    <td style={{ padding: '16px' }}>
                       <a
                         href={app.resumeLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: 'var(--primary)', fontWeight: 500, fontSize: '0.88rem', textDecoration: 'underline' }}
+                        style={{ color: 'var(--accent)', fontWeight: 500, fontSize: '0.86rem', textDecoration: 'underline' }}
                       >
-                        View Resume ↗
+                        View Link →
                       </a>
                     </td>
-                    <td>
+                    <td style={{ padding: '16px' }}>
                       <StatusBadge status={app.status} />
                     </td>
-                    <td>
-                      <div className="action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                    <td style={{ padding: '16px', textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: '8px' }}>
                         <button
                           type="button"
                           className="btn btn-secondary"
-                          style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                          style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                           onClick={() => setSelectedApp(selectedApp?._id === app._id ? null : app)}
                         >
-                          {selectedApp?._id === app._id ? 'Hide Details' : 'Details'}
+                          {selectedApp?._id === app._id ? 'Close' : 'Details'}
                         </button>
 
-                        {/* Withdrawal action - allowed only in PENDING state (BR-011) */}
+                        {/* Withdrawal action - allowed only in PENDING state */}
                         {app.status === 'PENDING' && (
                           <button
                             type="button"
                             className="btn btn-danger"
-                            style={{ padding: '6px 12px', fontSize: '0.82rem' }}
+                            style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                             disabled={withdrawingId === app._id}
                             onClick={() => handleWithdraw(app._id)}
                             title="Withdraw application from employer consideration"
@@ -209,15 +261,35 @@ const SeekerApplications = () => {
           </div>
         )}
 
-        {/* Selected Application Details Modal / Card */}
+        {/* Selected Application Details Drawer / Card */}
         {selectedApp && (
-          <div className="card" style={{ marginTop: '28px', padding: '24px', borderLeft: '4px solid var(--primary)' }}>
+          <div
+            style={{
+              marginTop: '32px',
+              padding: '24px',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              textAlign: 'left'
+            }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>
-                  Submission Details: {selectedApp.job?.title}
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  Submission Details
+                </span>
+                <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '4px 0' }}>
+                  {selectedApp.job?.title}
                 </h3>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.86rem' }}>
                   Submitted to {selectedApp.job?.company} on{' '}
                   {new Date(selectedApp.createdAt).toLocaleDateString('en-US', {
                     month: 'long',
@@ -229,46 +301,50 @@ const SeekerApplications = () => {
               <button
                 type="button"
                 onClick={() => setSelectedApp(null)}
-                style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}
+                style={{ background: 'transparent', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px 8px' }}
+                aria-label="Close details"
               >
                 ✕
               </button>
             </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '6px' }}>
-                SUBMITTED COVER LETTER
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+                Submitted Statement / Cover Letter
               </div>
-              <div style={{
-                background: 'var(--bg-surface-elevated)',
-                padding: '16px',
-                borderRadius: 'var(--radius-sm)',
-                whiteSpace: 'pre-line',
-                lineHeight: 1.6,
-                fontSize: '0.92rem',
-                color: 'var(--text-secondary)'
-              }}>
+              <div
+                style={{
+                  background: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  padding: '16px',
+                  borderRadius: 'var(--radius-sm)',
+                  whiteSpace: 'pre-line',
+                  lineHeight: 1.6,
+                  fontSize: '0.9rem',
+                  color: 'var(--text)'
+                }}
+              >
                 {selectedApp.coverLetter}
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <a
                 href={selectedApp.resumeLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
-                style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+                className="btn btn-secondary"
+                style={{ fontSize: '0.84rem', padding: '8px 14px' }}
               >
-                Open Submitted Resume Link ↗
+                Open Resume Link →
               </a>
               {selectedApp.job?._id && (
                 <Link
                   to={`/jobs/${selectedApp.job._id}`}
                   className="btn btn-secondary"
-                  style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+                  style={{ fontSize: '0.84rem', padding: '8px 14px' }}
                 >
-                  View Original Job Posting
+                  View Job Details →
                 </Link>
               )}
             </div>

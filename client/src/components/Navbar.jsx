@@ -13,73 +13,75 @@ const Navbar = () => {
 
   return (
     <header style={{
-      background: '#ffffff',
-      borderBottom: '1px solid #e2e8f0',
+      background: 'var(--surface)',
+      borderBottom: '1px solid var(--border)',
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
+      height: '64px',
     }}>
       <div className="container" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '68px'
+        height: '100%',
       }}>
-        {/* Brand */}
+        {/* Monochrome Brand Mark */}
         <Link to="/" style={{
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          color: '#0f172a',
-          fontWeight: 800,
-          fontSize: '1.25rem',
-          fontFamily: 'var(--font-display)'
+          color: 'var(--text)',
+          textDecoration: 'none',
+          fontWeight: 700,
+          fontSize: '1rem',
+          letterSpacing: '-0.01em',
         }}>
-          <div style={{
-            width: '34px',
-            height: '34px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #0284c7, #6366f1)',
-            color: 'white',
+          <span style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: 'var(--radius-sm)',
+            background: 'var(--text)',
+            color: 'var(--surface)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontWeight: 800
+            fontWeight: 700,
+            fontSize: '0.85rem',
           }}>
-            J
-          </div>
-          JobBoard
+            K
+          </span>
+          <span>KIRAY <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>/ JOBS</span></span>
         </Link>
 
         {/* Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <Link to="/jobs" style={{ fontWeight: 600, color: '#334155' }}>
-            Browse Jobs
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <Link to="/jobs" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+            Opportunities
           </Link>
 
           {/* Role-Specific Links */}
           {isAuthenticated && isSeeker && (
             <>
-              <Link to="/seeker/dashboard" style={{ fontWeight: 600, color: '#334155' }}>
-                Dashboard
+              <Link to="/seeker/dashboard" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                Workspace
               </Link>
-              <Link to="/seeker/applications" style={{ fontWeight: 600, color: '#334155' }}>
-                My Applications
+              <Link to="/seeker/applications" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                Applications
               </Link>
             </>
           )}
 
           {isAuthenticated && isEmployer && (
             <>
-              <Link to="/employer/dashboard" style={{ fontWeight: 600, color: '#334155' }}>
-                Dashboard
+              <Link to="/employer/dashboard" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                Hiring Hub
               </Link>
-              <Link to="/employer/jobs" style={{ fontWeight: 600, color: '#334155' }}>
-                My Jobs
+              <Link to="/employer/jobs" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                Postings
               </Link>
               <Link to="/employer/jobs/create" className="btn btn-outline" style={{ padding: '6px 14px', fontSize: '0.85rem' }}>
-                + Post Job
+                Post a job
               </Link>
             </>
           )}
@@ -88,39 +90,26 @@ const Navbar = () => {
           {!isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Link to="/login" className="btn btn-secondary" style={{ padding: '7px 16px', fontSize: '0.88rem' }}>
-                Log In
+                Log in
               </Link>
               <Link to="/register" className="btn btn-primary" style={{ padding: '7px 16px', fontSize: '0.88rem' }}>
                 Register
               </Link>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginLeft: '8px' }}>
-              <div style={{
-                background: '#f1f5f9',
-                padding: '6px 12px',
-                borderRadius: '9999px',
-                fontSize: '0.82rem',
-                fontWeight: 600,
-                color: '#0f172a',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <span style={{
+                fontSize: '0.85rem',
+                color: 'var(--text-muted)',
               }}>
-                <span style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: isEmployer ? '#7e22ce' : '#059669'
-                }} />
-                {user.name} ({isEmployer ? 'Employer' : 'Seeker'})
-              </div>
+                {user.name} <span style={{ color: 'var(--border-strong)' }}>·</span> {isEmployer ? 'Employer' : 'Candidate'}
+              </span>
               <button
                 onClick={handleLogout}
                 className="btn btn-secondary"
-                style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                style={{ padding: '6px 12px', fontSize: '0.82rem' }}
               >
-                Log Out
+                Sign out
               </button>
             </div>
           )}

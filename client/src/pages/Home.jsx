@@ -2,30 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import JobCard from '../components/JobCard';
-import Loading from '../components/Loading';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [recentJobs, setRecentJobs] = useState([]);
+  const [totalJobs, setTotalJobs] = useState(0);
   const [loadingJobs, setLoadingJobs] = useState(true);
-  const [healthStatus, setHealthStatus] = useState({ loading: true, connected: false });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const res = await api.get('/health');
-        setHealthStatus({ loading: false, connected: res.data.database?.connected });
-      } catch {
-        setHealthStatus({ loading: false, connected: false });
-      }
-    };
-
     const fetchRecentJobs = async () => {
       try {
         setLoadingJobs(true);
-        const res = await api.get('/jobs?limit=3&sort=newest');
+        const res = await api.get('/jobs?limit=5&sort=newest');
         setRecentJobs(res.data.jobs || []);
+        setTotalJobs(res.data.pagination?.total || 0);
       } catch {
         setRecentJobs([]);
       } finally {
@@ -33,7 +24,6 @@ const Home = () => {
       }
     };
 
-    checkBackend();
     fetchRecentJobs();
   }, []);
 
@@ -57,138 +47,130 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section */}
+      {/* Editorial Landing Hero: Left-Aligned with Intentional Whitespace */}
       <section style={{
-        background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #eef2ff 100%)',
-        borderBottom: '1px solid #bae6fd',
-        padding: '70px 0 60px',
-        textAlign: 'center'
+        padding: '72px 0 64px',
+        borderBottom: '1px solid var(--border)',
+        background: 'var(--surface)'
       }}>
-        <div className="container" style={{ maxWidth: '850px' }}>
+        <div className="container" style={{ maxWidth: '960px', margin: '0 auto 0 0', paddingLeft: 'max(24px, calc((100vw - 1160px) / 2))' }}>
           
-          {/* Live System Health Badge */}
           <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: '#ffffff',
-            padding: '4px 14px',
-            borderRadius: '9999px',
-            fontSize: '0.8rem',
+            fontSize: '0.82rem',
+            fontFamily: 'var(--font-mono)',
             fontWeight: 600,
-            border: '1px solid #cbd5e1',
-            marginBottom: '20px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            marginBottom: '16px'
           }}>
-            <span style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: healthStatus.loading ? '#f59e0b' : (healthStatus.connected ? '#10b981' : '#ef4444')
-            }} />
-            {healthStatus.loading
-              ? 'Checking backend connection...'
-              : (healthStatus.connected ? 'Express API & MongoDB Database Online' : 'Connecting to API server...')}
+            KIRAY / JOBS
           </div>
 
           <h1 style={{
-            fontSize: '3rem',
-            fontWeight: 800,
-            letterSpacing: '-0.03em',
+            fontSize: 'clamp(2.8rem, 6vw, 4.2rem)',
+            fontWeight: 500,
+            lineHeight: 1.08,
             marginBottom: '16px',
-            color: '#0f172a'
+            color: 'var(--text)'
           }}>
-            Connect with Top Employers &amp; Open Positions
+            Work worth moving toward.
           </h1>
 
           <p style={{
             fontSize: '1.2rem',
-            color: '#334155',
-            marginBottom: '36px',
+            color: 'var(--text-muted)',
+            maxWidth: '560px',
+            marginBottom: '32px',
             lineHeight: 1.6
           }}>
-            A modern MERN recruitment platform offering role-based applicant management, fast search, and instant status tracking.
+            Discover curated opportunities from engineering teams and organizations building what comes next.
           </p>
 
-          {/* Search Form */}
+          {/* Search Bar */}
           <form onSubmit={handleSearch} style={{
             display: 'flex',
-            gap: '10px',
-            background: '#ffffff',
-            padding: '8px',
-            borderRadius: '12px',
-            border: '1px solid #cbd5e1',
-            boxShadow: '0 10px 15px -3px rgba(0,0,0,0.06)'
+            gap: '8px',
+            maxWidth: '580px',
+            marginBottom: '28px'
           }}>
             <input
               type="text"
-              placeholder="Search by job title, skill, company, or city..."
+              placeholder="Search by title, role, skill, or location..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                flex: 1,
-                border: 'none',
-                outline: 'none',
-                padding: '12px 18px',
-                fontSize: '1rem',
-                fontFamily: 'var(--font-sans)',
-                color: '#0f172a'
-              }}
+              className="form-input"
+              style={{ fontSize: '0.95rem', padding: '12px 16px' }}
             />
-            <button type="submit" className="btn btn-primary" style={{ padding: '0 28px' }}>
-              Search Jobs
+            <button type="submit" className="btn btn-primary" style={{ padding: '0 22px', flexShrink: 0 }}>
+              Search jobs →
             </button>
           </form>
 
-          {/* Popular Categories */}
-          <div style={{ marginTop: '28px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600, alignSelf: 'center' }}>
-              Popular:
-            </span>
-            {categories.map((cat) => (
-              <Link
-                key={cat}
-                to={`/jobs?category=${encodeURIComponent(cat)}`}
-                style={{
-                  background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  color: '#334155',
-                  padding: '4px 12px',
-                  borderRadius: '9999px',
-                  fontSize: '0.82rem',
-                  fontWeight: 500,
-                  textDecoration: 'none'
-                }}
-              >
-                {cat}
-              </Link>
-            ))}
+          {/* Editorial Counter Line & Category Text Links */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', gap: '24px', fontSize: '0.9rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--text)', fontWeight: 500 }}>
+              <span style={{ fontWeight: 700 }}>{totalJobs || '8'}</span> opportunities available
+            </div>
+            <span style={{ color: 'var(--border)' }}>|</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', color: 'var(--text-muted)' }}>
+              <span>Disciplines:</span>
+              {categories.map((cat, idx) => (
+                <React.Fragment key={cat}>
+                  <Link
+                    to={`/jobs?category=${encodeURIComponent(cat)}`}
+                    style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}
+                  >
+                    {cat}
+                  </Link>
+                  {idx < categories.length - 1 && <span className="meta-separator">·</span>}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
 
         </div>
       </section>
 
-      {/* Featured / Recent Jobs Section */}
-      <section style={{ padding: '60px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+      {/* Featured Opportunities Section: Flat List Rows (No Card Grids) */}
+      <section style={{ padding: '64px 0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            marginBottom: '24px',
+            flexWrap: 'wrap',
+            gap: '12px'
+          }}>
             <div>
-              <h2 style={{ fontSize: '1.8rem', marginBottom: '6px' }}>Recent Opportunities</h2>
-              <p style={{ color: 'var(--text-muted)', margin: 0 }}>Fresh job postings added by verified companies</p>
+              <h2 style={{ fontSize: '1.85rem', marginBottom: '4px' }}>Featured Opportunities</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0 }}>
+                Positions open for immediate review and direct application
+              </p>
             </div>
-            <Link to="/jobs" className="btn btn-outline" style={{ fontSize: '0.9rem' }}>
-              Explore All Jobs →
+            <Link to="/jobs" style={{ fontSize: '0.92rem', color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}>
+              Explore all {totalJobs || ''} roles →
             </Link>
           </div>
 
           {loadingJobs ? (
-            <Loading message="Loading latest openings..." />
+            <div className="job-directory">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="job-row" style={{ opacity: 0.5 }}>
+                  <div className="job-row-main" style={{ width: '100%' }}>
+                    <div style={{ width: '30%', height: '18px', background: 'var(--border)', borderRadius: '4px', marginBottom: '8px' }} />
+                    <div style={{ width: '45%', height: '12px', background: 'var(--border)', borderRadius: '4px' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : recentJobs.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-              No open job postings right now. Check back soon!
+            <div className="card" style={{ padding: '40px', color: 'var(--text-muted)' }}>
+              No active postings available right now. Please check back shortly.
             </div>
           ) : (
-            <div className="job-grid">
+            <div className="job-directory">
               {recentJobs.map((job) => (
                 <JobCard key={job._id} job={job} />
               ))}
@@ -197,35 +179,41 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Feature Highlights Section */}
-      <section style={{ padding: '60px 0' }}>
+      {/* Editorial Platform Architecture Pillars (Left-Aligned, No Emojis, Thin Borders) */}
+      <section style={{ padding: '48px 0 80px', borderTop: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '24px'
+            gap: '32px'
           }}>
-            <div className="card">
-              <div style={{ fontSize: '2rem', marginBottom: '10px' }}>🔍</div>
-              <h3 style={{ marginBottom: '8px' }}>Powerful Job Discovery</h3>
-              <p style={{ color: '#64748b' }}>
-                Search by keyword, filter by category, employment type, or salary range with server-side pagination.
+            <div>
+              <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>
+                01 / DISCOVERY
+              </div>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '8px' }}>Direct from employers</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                Every position is published directly by authenticated recruiters and hiring managers. No scraped duplicates or third-party agencies.
               </p>
             </div>
 
-            <div className="card">
-              <div style={{ fontSize: '2rem', marginBottom: '10px' }}>📄</div>
-              <h3 style={{ marginBottom: '8px' }}>Seamless Application Flow</h3>
-              <p style={{ color: '#64748b' }}>
-                Submit customized cover letters and external resume links. Track your application status from Pending to Accepted in real-time.
+            <div>
+              <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>
+                02 / WORKSPACE
+              </div>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '8px' }}>Transparent lifecycle</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                Track the status of your submissions from submission through evaluation to final decision in an integrated candidate workspace.
               </p>
             </div>
 
-            <div className="card">
-              <div style={{ fontSize: '2rem', marginBottom: '10px' }}>💼</div>
-              <h3 style={{ marginBottom: '8px' }}>Employer Recruitment Hub</h3>
-              <p style={{ color: '#64748b' }}>
-                Post jobs, review applicant submissions, manage statuses, and view recruitment metrics on an intuitive dashboard.
+            <div>
+              <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>
+                03 / SECURITY
+              </div>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '8px' }}>Zero surveillance</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                Server-side sessions using HTTP-only cookies and automatic database TTL expiration. No trackers, telemetry, or third-party cookies.
               </p>
             </div>
           </div>

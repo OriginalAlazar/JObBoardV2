@@ -45,6 +45,8 @@ const EmployerDashboard = () => {
     return 'Good evening';
   };
 
+  const formatNumber = (num) => String(num || 0).padStart(2, '0');
+
   const handleToggleExpand = async (jobId) => {
     if (expandedJobId === jobId) {
       setExpandedJobId(null);
@@ -67,54 +69,92 @@ const EmployerDashboard = () => {
     }
   };
 
-  if (loading) return <Loading message="Loading recruitment workspace..." />;
+  if (loading) return <Loading message="Loading hiring workspace..." />;
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
         {/* Editorial Greeting Header */}
-        <div style={{ marginBottom: '32px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '20px' }}>
+        <div style={{ marginBottom: '36px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
-                Hiring Workspace • {user?.company || 'Organization'}
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  display: 'block',
+                  marginBottom: '4px'
+                }}
+              >
+                Hiring Workspace · {user?.company || 'Organization'}
               </span>
-              <h1 style={{ fontSize: '2.4rem', margin: '4px 0 6px', lineHeight: 1.15 }}>
-                {getGreeting()}, {user?.name}
+              <h1
+                style={{
+                  fontSize: '2.5rem',
+                  margin: '0 0 6px 0',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.15
+                }}
+              >
+                {getGreeting()}, {user?.name?.split(' ')[0] || 'Employer'}
               </h1>
-              <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '1rem' }}>
-                Operational recruitment pipeline, open listings, and applicant review.
+              <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.98rem' }}>
+                Your active recruitment pipeline, listings, and candidate submissions.
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               <Link to="/employer/jobs" className="btn btn-secondary">
-                Manage All Postings
+                Manage all postings
               </Link>
               <Link to="/employer/jobs/create" className="btn btn-primary">
-                + Post New Role
+                Post new role →
               </Link>
             </div>
           </div>
 
-          {/* Editorial Pipeline Summary (Avoiding generic 3-card cliché) */}
+          {/* Editorial Pipeline Summary */}
           {stats && (
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '36px',
-              marginTop: '24px',
-              paddingTop: '20px',
-              borderTop: '1px solid var(--border-subtle)',
-              fontSize: '0.92rem'
-            }}>
+            <div
+              style={{
+                marginTop: '32px',
+                borderTop: '1px solid var(--border)',
+                borderBottom: '1px solid var(--border)',
+                padding: '24px 0',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '24px'
+              }}
+            >
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Active Openings
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  ACTIVE JOBS
                 </span>
-                <span style={{ fontSize: '1.7rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
-                  {stats.openJobs}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text)'
+                  }}
+                >
+                  {formatNumber(stats.openJobs)}
                 </span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block' }}>
                   of {stats.totalJobs} total
@@ -122,35 +162,86 @@ const EmployerDashboard = () => {
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Total Applicants
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  APPLICATIONS
                 </span>
-                <span style={{ fontSize: '1.7rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--primary)' }}>
-                  {stats.totalApplicants}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text)'
+                  }}
+                >
+                  {formatNumber(stats.totalApplicants)}
                 </span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block' }}>
-                  across active roles
+                  across all roles
                 </span>
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Pending Evaluation
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  AWAITING REVIEW
                 </span>
-                <span style={{ fontSize: '1.7rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-amber)' }}>
-                  {stats.pending}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--accent)'
+                  }}
+                >
+                  {formatNumber(stats.pending)}
                 </span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block' }}>
-                  require first pass
+                  require decision
                 </span>
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Accepted Offers
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  ACCEPTED OFFERS
                 </span>
-                <span style={{ fontSize: '1.7rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-green)' }}>
-                  {stats.accepted}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--accent)'
+                  }}
+                >
+                  {formatNumber(stats.accepted)}
                 </span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block' }}>
                   {stats.reviewed} under review
@@ -160,65 +251,110 @@ const EmployerDashboard = () => {
           )}
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '24px' }}>{error}</div>}
 
-        {/* Operational Directory of Active Positions with Inline Review Expansion */}
-        <div className="card" style={{ padding: '32px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '1.35rem', margin: 0 }}>Active Job Postings &amp; Candidates</h2>
-            <Link to="/employer/jobs" style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.88rem' }}>
-              All Postings ({recentJobs.length}) →
+        {/* Operational Directory of Active Positions */}
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '32px'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2
+              style={{
+                fontSize: '1.4rem',
+                margin: 0,
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600
+              }}
+            >
+              Recent Postings &amp; Candidates
+            </h2>
+            <Link
+              to="/employer/jobs"
+              style={{
+                color: 'var(--accent)',
+                fontWeight: 600,
+                fontSize: '0.88rem',
+                textDecoration: 'none'
+              }}
+            >
+              All postings ({recentJobs.length}) →
             </Link>
           </div>
 
           {recentJobs.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '50px 20px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>💼</div>
-              <h3>No Active Roles</h3>
-              <p style={{ maxWidth: '420px', margin: '0 auto 20px' }}>
+            <div style={{ textAlign: 'left', padding: '32px 0', color: 'var(--text-muted)' }}>
+              <p style={{ margin: '0 0 16px 0', fontSize: '0.95rem' }}>
                 You have no active job postings. Publish an opening to begin receiving verified applications.
               </p>
               <Link to="/employer/jobs/create" className="btn btn-primary">
-                Create First Opening
+                Post your first role →
               </Link>
             </div>
           ) : (
-            <div className="job-directory">
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {recentJobs.map((job) => {
                 const isExpanded = expandedJobId === job._id;
                 const candidates = expandedCandidates[job._id] || [];
 
                 return (
-                  <div key={job._id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                  <div
+                    key={job._id}
+                    style={{
+                      borderBottom: '1px solid var(--border)',
+                      padding: '20px 0'
+                    }}
+                  >
                     {/* Row Item */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '20px 24px',
-                      background: isExpanded ? 'var(--bg-surface-elevated)' : 'var(--bg-surface)',
-                      transition: 'background var(--motion-fast)'
-                    }}>
-                      <div style={{ flex: 1, minWidth: 0, paddingRight: '20px' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '16px'
+                      }}
+                    >
+                      <div style={{ flex: 1, minWidth: '240px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                          <h3 style={{ fontSize: '1.2rem', margin: 0, fontFamily: 'var(--font-serif)' }}>
+                          <h3
+                            style={{
+                              fontSize: '1.15rem',
+                              margin: 0,
+                              fontFamily: 'var(--font-sans)',
+                              fontWeight: 600
+                            }}
+                          >
                             {job.title}
                           </h3>
                           <StatusBadge status={job.status} />
                         </div>
-                        <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-                          📍 {job.location} • 💼 {job.type} • 🏷️ {job.category} • <span style={{ color: 'var(--accent-green)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>${job.salary?.toLocaleString()}/yr</span>
+                        <div style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                          {job.location} · {job.type} · {job.category} ·{' '}
+                          <span
+                            style={{
+                              fontFamily: 'var(--font-mono)',
+                              fontWeight: 600,
+                              color: 'var(--accent)'
+                            }}
+                          >
+                            ${job.salary?.toLocaleString()} / yr
+                          </span>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <button
                           type="button"
                           className="btn btn-secondary"
-                          style={{ padding: '6px 14px', fontSize: '0.82rem', fontWeight: 600 }}
+                          style={{ padding: '6px 14px', fontSize: '0.82rem' }}
                           onClick={() => handleToggleExpand(job._id)}
                         >
-                          {isExpanded ? 'Hide Candidates ▲' : `Review Candidates (${job.applicantCount || 0}) ▼`}
+                          {isExpanded ? 'Hide Candidates' : `Candidates (${job.applicantCount || 0})`}
                         </button>
 
                         <Link
@@ -231,41 +367,47 @@ const EmployerDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Inline Review Drawer (Micro-interaction without leaving page) */}
+                    {/* Inline Review Drawer */}
                     {isExpanded && (
-                      <div style={{
-                        padding: '24px',
-                        background: 'var(--bg-surface-elevated)',
-                        borderTop: '1px solid var(--border-subtle)',
-                        animation: 'modalIn var(--motion-fast)'
-                      }}>
+                      <div
+                        style={{
+                          marginTop: '16px',
+                          padding: '20px',
+                          background: 'var(--bg)',
+                          border: '1px solid var(--border)',
+                          borderRadius: 'var(--radius-sm)'
+                        }}
+                      >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                          <strong style={{ fontSize: '0.92rem', color: 'var(--text-primary)' }}>
-                            Direct Applicant Submissions for {job.title}
+                          <strong style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                            Applicants for {job.title}
                           </strong>
-                          <Link to={`/employer/jobs/${job._id}/applications`} style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
-                            Open Dedicated Decision Board ↗
+                          <Link
+                            to={`/employer/jobs/${job._id}/applications`}
+                            style={{ fontSize: '0.82rem', color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}
+                          >
+                            Open Decision Board →
                           </Link>
                         </div>
 
                         {loadingCandidates ? (
-                          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                            Loading applicant submissions...
+                          <div style={{ padding: '16px 0', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                            Loading submissions...
                           </div>
                         ) : candidates.length === 0 ? (
-                          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                          <div style={{ padding: '16px 0', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
                             No candidates have applied for this position yet.
                           </div>
                         ) : (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {candidates.map((cand) => (
                               <div
                                 key={cand._id}
                                 style={{
-                                  background: 'var(--bg-surface)',
-                                  border: '1px solid var(--border-subtle)',
+                                  background: 'var(--surface)',
+                                  border: '1px solid var(--border)',
                                   borderRadius: 'var(--radius-sm)',
-                                  padding: '14px 18px',
+                                  padding: '12px 16px',
                                   display: 'flex',
                                   justifyContent: 'space-between',
                                   alignItems: 'center',
@@ -274,22 +416,22 @@ const EmployerDashboard = () => {
                                 }}
                               >
                                 <div>
-                                  <div style={{ fontWeight: 600, fontSize: '0.92rem' }}>
+                                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text)' }}>
                                     {cand.applicant?.name || 'Applicant'}
                                   </div>
-                                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                    {cand.applicant?.email} • Applied {new Date(cand.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                    {cand.applicant?.email} · Applied {new Date(cand.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                   </div>
                                 </div>
 
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                   <a
                                     href={cand.resumeLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    style={{ fontSize: '0.82rem', color: 'var(--primary)', textDecoration: 'underline' }}
+                                    style={{ fontSize: '0.82rem', color: 'var(--accent)', textDecoration: 'underline' }}
                                   >
-                                    Resume ↗
+                                    Resume →
                                   </a>
                                   <StatusBadge status={cand.status} />
                                 </div>

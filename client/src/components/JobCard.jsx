@@ -5,42 +5,47 @@ import StatusBadge from './StatusBadge';
 const JobCard = ({ job }) => {
   if (!job) return null;
 
-  const formattedSalary = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(job.salary || 0);
-
-  const formattedDate = new Date(job.createdAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
+  const formattedSalary = job.salary
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(job.salary)
+    : null;
 
   return (
     <Link
       to={`/jobs/${job._id}`}
-      className="job-directory-row"
+      className="job-row"
       id={`job-row-${job._id}`}
       aria-label={`${job.title} at ${job.company}, ${job.location}`}
     >
-      <div className="row-main">
-        <h3 className="row-title">{job.title}</h3>
-        <div className="row-company">{job.company}</div>
+      <div className="job-row-main">
+        <div className="job-row-header">
+          <span className="job-row-title">{job.title}</span>
+          <span className="job-row-company">{job.company}</span>
+        </div>
 
-        <div className="row-meta">
-          <span className="row-meta-item">📍 {job.location}</span>
-          <span className="row-meta-item">💼 {job.type}</span>
-          <span className="row-meta-item">🏷️ {job.category}</span>
-          <span className="row-salary">💰 {formattedSalary}</span>
-          <span className="row-meta-item" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            Posted {formattedDate}
-          </span>
+        <div className="job-row-meta">
+          <span>{job.location}</span>
+          <span className="meta-separator">·</span>
+          <span>{job.type}</span>
+          <span className="meta-separator">·</span>
+          <span>{job.category}</span>
+          {formattedSalary && (
+            <>
+              <span className="meta-separator">·</span>
+              <span className="font-mono" style={{ color: 'var(--text)' }}>
+                {formattedSalary}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="row-action">
+      <div className="job-row-action">
         <StatusBadge status={job.status} />
-        <span className="row-arrow" aria-hidden="true">
+        <span className="job-row-arrow" aria-hidden="true">
           →
         </span>
       </div>

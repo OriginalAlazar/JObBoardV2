@@ -66,86 +66,137 @@ const EmployerJobs = () => {
     }
   };
 
-  if (loading) return <Loading message="Loading your job postings..." />;
+  if (loading) return <Loading message="Loading job postings..." />;
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '32px' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', marginBottom: '4px' }}>My Job Postings</h1>
-            <p style={{ color: 'var(--text-muted)', margin: 0 }}>
-              Manage open listings, review applicants, toggle status, or edit details.
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                display: 'block',
+                marginBottom: '4px'
+              }}
+            >
+              Hiring Records
+            </span>
+            <h1
+              style={{
+                fontSize: '2.4rem',
+                margin: '0 0 6px 0',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em'
+              }}
+            >
+              My Job Postings
+            </h1>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.95rem' }}>
+              Manage open listings, review applicants, toggle status, or edit specifications.
             </p>
           </div>
 
           <Link to="/employer/jobs/create" className="btn btn-primary">
-            + Post New Job
+            Post new role →
           </Link>
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
+        {successMsg && <div className="alert alert-success" style={{ marginBottom: '20px' }}>{successMsg}</div>}
 
         {jobs.length === 0 ? (
-          <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📋</div>
-            <h3>No Postings Found</h3>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 20px' }}>
-              You haven't created any job postings yet. Get started by creating your first listing.
+          <div
+            style={{
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              padding: '48px 24px',
+              textAlign: 'left'
+            }}
+          >
+            <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
+              No postings found
+            </h3>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '440px', margin: '0 0 20px 0', fontSize: '0.92rem' }}>
+              You haven't created any job postings yet. Publish an opening to begin receiving verified applications.
             </p>
             <Link to="/employer/jobs/create" className="btn btn-primary">
-              Create Job Posting
+              Create job posting →
             </Link>
           </div>
         ) : (
-          <div className="data-table-container">
-            <table className="data-table">
+          <div
+            style={{
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              overflowX: 'auto'
+            }}
+          >
+            <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
-                <tr>
-                  <th>Job Title &amp; Location</th>
-                  <th>Category</th>
-                  <th>Type</th>
-                  <th>Salary</th>
-                  <th>Status</th>
-                  <th>Candidates</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Title &amp; Location
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Category
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Type
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Compensation
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Status
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                    Candidates
+                  </th>
+                  <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', textAlign: 'right' }}>
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {jobs.map((job) => (
-                  <tr key={job._id}>
-                    <td>
-                      <div style={{ fontWeight: 600, fontSize: '0.98rem' }}>{job.title}</div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{job.location}</div>
+                  <tr key={job._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '16px' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text)' }}>{job.title}</div>
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: '2px' }}>{job.location}</div>
                     </td>
-                    <td>{job.category}</td>
-                    <td>{job.type}</td>
-                    <td style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--accent-green)' }}>
+                    <td style={{ padding: '16px', fontSize: '0.88rem' }}>{job.category}</td>
+                    <td style={{ padding: '16px', fontSize: '0.88rem' }}>{job.type}</td>
+                    <td style={{ padding: '16px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--accent)', fontSize: '0.88rem' }}>
                       ${job.salary?.toLocaleString()}
                     </td>
-                    <td>
+                    <td style={{ padding: '16px' }}>
                       <StatusBadge status={job.status} />
                     </td>
-                    <td>
+                    <td style={{ padding: '16px' }}>
                       <Link
                         to={`/employer/jobs/${job._id}/applications`}
                         style={{
-                          fontWeight: 700,
-                          color: job.applicantCount > 0 ? 'var(--primary)' : 'var(--text-muted)',
-                          textDecoration: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px'
+                          fontWeight: 600,
+                          fontFamily: 'var(--font-mono)',
+                          color: job.applicantCount > 0 ? 'var(--accent)' : 'var(--text-muted)',
+                          textDecoration: 'none'
                         }}
                       >
-                        👥 {job.applicantCount || 0}
+                        {String(job.applicantCount || 0).padStart(2, '0')}
                       </Link>
                     </td>
-                    <td>
-                      <div className="action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                    <td style={{ padding: '16px', textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: '6px' }}>
                         <Link
                           to={`/employer/jobs/${job._id}/applications`}
                           className="btn btn-primary"
@@ -160,7 +211,7 @@ const EmployerJobs = () => {
                           style={{ padding: '5px 10px', fontSize: '0.78rem' }}
                           disabled={processingId === job._id}
                           onClick={() => handleToggleStatus(job)}
-                          title={`Toggle posting between OPEN and CLOSED`}
+                          title="Toggle posting between OPEN and CLOSED"
                         >
                           {job.status === 'OPEN' ? 'Close' : 'Reopen'}
                         </button>

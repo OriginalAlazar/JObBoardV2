@@ -19,14 +19,14 @@ const CATEGORIES = [
 const JOB_TYPES = ['ALL', 'Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'];
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'highest-salary', label: 'Highest Salary' },
-  { value: 'lowest-salary', label: 'Lowest Salary' },
+  { value: 'newest', label: 'Newest first' },
+  { value: 'oldest', label: 'Oldest first' },
+  { value: 'highest-salary', label: 'Highest compensation' },
+  { value: 'lowest-salary', label: 'Lowest compensation' },
 ];
 
 const SALARY_TIERS = [
-  { value: '', label: 'Any Salary' },
+  { value: '', label: 'Any salary' },
   { value: '50000', label: '$50,000+' },
   { value: '75000', label: '$75,000+' },
   { value: '100000', label: '$100,000+' },
@@ -45,7 +45,7 @@ const Jobs = () => {
   const querySort = searchParams.get('sort') || 'newest';
   const queryPage = parseInt(searchParams.get('page') || '1', 10);
 
-  // Local state for search input to allow smooth typing
+  // Local state for search input
   const [searchInput, setSearchInput] = useState(querySearch);
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 9, total: 0, totalPages: 1 });
@@ -64,12 +64,10 @@ const Jobs = () => {
     return () => clearTimeout(timer);
   }, [loading]);
 
-  // Keep search input synced if URL search changes externally
   useEffect(() => {
     setSearchInput(querySearch);
   }, [querySearch]);
 
-  // Helper to update specific search params in URL
   const updateParams = useCallback((newParams) => {
     setSearchParams((prev) => {
       const updated = new URLSearchParams(prev);
@@ -80,7 +78,6 @@ const Jobs = () => {
           updated.set(key, val);
         }
       });
-      // Always reset to page 1 on filter changes unless page was explicitly modified
       if (!('page' in newParams)) {
         updated.delete('page');
       }
@@ -88,7 +85,6 @@ const Jobs = () => {
     });
   }, [setSearchParams]);
 
-  // Fetch jobs whenever URL params change
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -140,22 +136,19 @@ const Jobs = () => {
   );
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
-        {/* Editorial Header & Live Opportunities Counter */}
-        <div style={{ marginBottom: '32px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+        {/* Left-Aligned Editorial Header */}
+        <div style={{ marginBottom: '36px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
             <div>
-              <h1 style={{ fontSize: '2.5rem', marginBottom: '6px' }}>Browse Opportunities</h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>
-                {loading && !showSkeleton ? (
-                  'Filtering openings...'
-                ) : (
-                  <>
-                    Showing <strong style={{ color: 'var(--text-primary)' }}>{pagination.total}</strong> active {pagination.total === 1 ? 'position' : 'positions'} across vetted employers
-                  </>
-                )}
+              <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                Directory
+              </div>
+              <h1 style={{ fontSize: '2.4rem', margin: 0, lineHeight: 1.15 }}>Open Opportunities</h1>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '6px' }}>
+                Showing <strong>{pagination.total}</strong> active {pagination.total === 1 ? 'position' : 'positions'}
               </p>
             </div>
 
@@ -166,41 +159,41 @@ const Jobs = () => {
                 className="btn btn-outline"
                 style={{ fontSize: '0.85rem', padding: '6px 14px' }}
               >
-                ✕ Clear All Filters
+                Clear all filters
               </button>
             )}
           </div>
 
           {/* Search bar input */}
-          <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '10px' }}>
+          <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', maxWidth: '640px' }}>
             <input
               type="text"
               className="form-input"
-              placeholder="Search by job title, company, skills, or city..."
+              placeholder="Search by title, company, skill, or location..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              style={{ fontSize: '1rem', padding: '12px 18px' }}
+              style={{ fontSize: '0.95rem', padding: '11px 16px' }}
             />
-            <button type="submit" className="btn btn-primary" style={{ padding: '0 24px', flexShrink: 0 }}>
-              Search
+            <button type="submit" className="btn btn-primary" style={{ padding: '0 20px', flexShrink: 0 }}>
+              Search →
             </button>
           </form>
         </div>
 
-        {/* 2-Column Layout: Sidebar Filters + Main Job Directory */}
+        {/* 2-Column Layout: Filter Sidebar + Large List Rows */}
         <div className="jobs-layout">
           
           {/* Left Sidebar Filter Panel */}
-          <aside className="filter-card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)' }}>
-              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Filter Directory
+          <aside className="filter-sidebar">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>
+              <span style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Filters
               </span>
               {hasActiveFilters && (
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  style={{ background: 'transparent', border: 'none', color: 'var(--primary)', fontSize: '0.82rem', cursor: 'pointer', fontWeight: 600 }}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--accent)', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 500 }}
                 >
                   Reset
                 </button>
@@ -209,7 +202,7 @@ const Jobs = () => {
 
             {/* Sort Filter */}
             <div className="filter-section">
-              <label className="filter-title" htmlFor="sort-select">Sort By</label>
+              <label className="filter-title" htmlFor="sort-select">Sort by</label>
               <select
                 id="sort-select"
                 className="form-select"
@@ -233,7 +226,7 @@ const Jobs = () => {
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
-                    {cat === 'ALL' ? 'All Categories' : cat}
+                    {cat === 'ALL' ? 'All categories' : cat}
                   </option>
                 ))}
               </select>
@@ -241,7 +234,7 @@ const Jobs = () => {
 
             {/* Job Type Filter */}
             <div className="filter-section">
-              <label className="filter-title" htmlFor="type-select">Job Type</label>
+              <label className="filter-title" htmlFor="type-select">Employment type</label>
               <select
                 id="type-select"
                 className="form-select"
@@ -250,7 +243,7 @@ const Jobs = () => {
               >
                 {JOB_TYPES.map((t) => (
                   <option key={t} value={t}>
-                    {t === 'ALL' ? 'All Employment Types' : t}
+                    {t === 'ALL' ? 'All employment types' : t}
                   </option>
                 ))}
               </select>
@@ -258,7 +251,7 @@ const Jobs = () => {
 
             {/* Minimum Salary Filter */}
             <div className="filter-section">
-              <label className="filter-title" htmlFor="salary-select">Minimum Annual Salary</label>
+              <label className="filter-title" htmlFor="salary-select">Minimum compensation</label>
               <select
                 id="salary-select"
                 className="form-select"
@@ -273,7 +266,7 @@ const Jobs = () => {
 
           </aside>
 
-          {/* Right Main Content: Editorial Directory Rows */}
+          {/* Right Main Content: Large List Rows */}
           <main>
             {error && (
               <div className="alert alert-error" style={{ marginBottom: '24px' }}>
@@ -281,32 +274,29 @@ const Jobs = () => {
               </div>
             )}
 
-            {/* Skeleton state (shown only after 200ms delay to prevent fast flash) */}
             {loading && showSkeleton ? (
               <div className="job-directory">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="job-directory-row" style={{ opacity: 0.6 }}>
-                    <div className="row-main" style={{ width: '100%' }}>
-                      <div style={{ width: '38%', height: '20px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)', marginBottom: '8px' }} />
-                      <div style={{ width: '24%', height: '14px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)', marginBottom: '10px' }} />
-                      <div style={{ width: '55%', height: '12px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)' }} />
+                  <div key={i} className="job-row" style={{ opacity: 0.5 }}>
+                    <div className="job-row-main" style={{ width: '100%' }}>
+                      <div style={{ width: '35%', height: '18px', background: 'var(--border)', borderRadius: '4px', marginBottom: '8px' }} />
+                      <div style={{ width: '50%', height: '12px', background: 'var(--border)', borderRadius: '4px' }} />
                     </div>
                   </div>
                 ))}
               </div>
             ) : !loading && jobs.length === 0 ? (
-              <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔎</div>
-                <h3 style={{ marginBottom: '8px' }}>No Matches Found</h3>
-                <p style={{ color: 'var(--text-muted)', maxWidth: '440px', margin: '0 auto 24px' }}>
-                  We couldn't find any job postings matching your current criteria. Try adjusting your search query or reset your filters.
+              <div className="card" style={{ padding: '48px 32px' }}>
+                <h3 style={{ marginBottom: '6px' }}>No positions found</h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '20px', maxWidth: '440px' }}>
+                  No open job postings match your active filter criteria. Try expanding your search or resetting filters.
                 </p>
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="btn btn-primary"
+                  className="btn btn-secondary"
                 >
-                  Clear All Filters
+                  Clear all filters
                 </button>
               </div>
             ) : (
@@ -325,7 +315,6 @@ const Jobs = () => {
                       className="page-btn"
                       onClick={() => handlePageChange(pagination.page - 1)}
                       disabled={pagination.page <= 1}
-                      aria-label="Previous page"
                     >
                       ← Previous
                     </button>
@@ -346,7 +335,6 @@ const Jobs = () => {
                       className="page-btn"
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page >= pagination.totalPages}
-                      aria-label="Next page"
                     >
                       Next →
                     </button>

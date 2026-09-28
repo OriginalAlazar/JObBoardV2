@@ -5,14 +5,14 @@ import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
 const JobApplications = () => {
-  const { id } = useParams(); // Job ID
+  const { id } = useParams();
   const [job, setJob] = useState(null);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
-  const [selectedCandidate, setSelectedCandidate] = useState(null); // For viewing full cover letter
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -54,75 +54,134 @@ const JobApplications = () => {
 
   if (loading) return <Loading message="Loading candidate applications..." />;
 
-  // Group applications by status for quick summary
   const pendingCount = applications.filter((a) => a.status === 'PENDING').length;
   const reviewedCount = applications.filter((a) => a.status === 'REVIEWED').length;
   const acceptedCount = applications.filter((a) => a.status === 'ACCEPTED').length;
   const rejectedCount = applications.filter((a) => a.status === 'REJECTED').length;
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
         {/* Navigation Breadcrumb */}
-        <div style={{ marginBottom: '20px' }}>
-          <Link to="/employer/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontWeight: 500 }}>
+        <div style={{ marginBottom: '24px' }}>
+          <Link
+            to="/employer/jobs"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: 'var(--text-muted)',
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              textDecoration: 'none'
+            }}
+          >
             ← Back to All Postings
           </Link>
         </div>
 
         {/* Job Header Summary */}
-        <div className="card" style={{ marginBottom: '28px' }}>
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '28px',
+            marginBottom: '32px'
+          }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                <h1 style={{ fontSize: '1.8rem', margin: 0 }}>{job?.title}</h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                <h1
+                  style={{
+                    fontSize: '1.85rem',
+                    margin: 0,
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 600,
+                    letterSpacing: '-0.02em'
+                  }}
+                >
+                  {job?.title}
+                </h1>
                 <StatusBadge status={job?.status} />
               </div>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>
-                {job?.company} • {job?.location} • ${job?.salary?.toLocaleString()} / year
+                {job?.company} · {job?.location} ·{' '}
+                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--accent)' }}>
+                  ${job?.salary?.toLocaleString()} / yr
+                </span>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <span className="badge status-pending">{pendingCount} Pending</span>
-              <span className="badge status-reviewed">{reviewedCount} In Review</span>
-              <span className="badge status-accepted">{acceptedCount} Accepted</span>
-              <span className="badge status-rejected">{rejectedCount} Rejected</span>
+              <span className="badge status-pending">
+                <span className="status-dot dot-pending" /> {pendingCount} Pending
+              </span>
+              <span className="badge status-reviewed">
+                <span className="status-dot dot-reviewed" /> {reviewedCount} In Review
+              </span>
+              <span className="badge status-accepted">
+                <span className="status-dot dot-accepted" /> {acceptedCount} Accepted
+              </span>
+              <span className="badge status-rejected">
+                <span className="status-dot dot-rejected" /> {rejectedCount} Rejected
+              </span>
             </div>
           </div>
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
+        {successMsg && <div className="alert alert-success" style={{ marginBottom: '20px' }}>{successMsg}</div>}
 
         {/* Candidate List */}
-        <div className="card" style={{ padding: '28px' }}>
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '28px'
+          }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>
+            <h2 style={{ fontSize: '1.25rem', margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 600 }}>
               Candidate Applications ({applications.length})
             </h2>
           </div>
 
           {applications.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>👥</div>
-              <h3>No Applicants Yet</h3>
-              <p style={{ maxWidth: '420px', margin: '0 auto' }}>
-                No candidate submissions have been received for this position yet. Ensure the posting status is OPEN so job seekers can apply.
+            <div style={{ textAlign: 'left', padding: '32px 0', color: 'var(--text-muted)' }}>
+              <h3 style={{ fontSize: '1.15rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
+                No applicants yet
+              </h3>
+              <p style={{ maxWidth: '440px', margin: 0, fontSize: '0.92rem' }}>
+                No candidate submissions have been received for this position yet. Ensure the posting status is OPEN so candidates can apply.
               </p>
             </div>
           ) : (
-            <div className="data-table-container">
-              <table className="data-table">
+            <div style={{ overflowX: 'auto' }}>
+              <table className="data-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr>
-                    <th>Candidate</th>
-                    <th>Contact</th>
-                    <th>Applied On</th>
-                    <th>Resume</th>
-                    <th>Current Status</th>
-                    <th style={{ textAlign: 'right' }}>Review &amp; Status Transition</th>
+                  <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Candidate
+                    </th>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Contact
+                    </th>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Applied
+                    </th>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Resume
+                    </th>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Status
+                    </th>
+                    <th style={{ padding: '12px 16px', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', textAlign: 'right' }}>
+                      Status Transition
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -133,56 +192,58 @@ const JobApplications = () => {
                     const isReviewed = app.status === 'REVIEWED';
 
                     return (
-                      <tr key={app._id}>
-                        <td>
-                          <div style={{ fontWeight: 600 }}>{applicant.name || 'Anonymous Applicant'}</div>
+                      <tr key={app._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                        <td style={{ padding: '16px' }}>
+                          <div style={{ fontWeight: 600, fontSize: '0.92rem', color: 'var(--text)' }}>
+                            {applicant.name || 'Candidate'}
+                          </div>
                         </td>
-                        <td style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                        <td style={{ padding: '16px', fontSize: '0.86rem', color: 'var(--text-muted)' }}>
                           {applicant.email || '—'}
                         </td>
-                        <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                        <td style={{ padding: '16px', color: 'var(--text-muted)', fontSize: '0.86rem', fontFamily: 'var(--font-mono)' }}>
                           {new Date(app.createdAt).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
                             year: 'numeric',
                           })}
                         </td>
-                        <td>
+                        <td style={{ padding: '16px' }}>
                           <a
                             href={app.resumeLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: 'var(--primary)', fontWeight: 500, fontSize: '0.85rem', textDecoration: 'underline' }}
+                            style={{ color: 'var(--accent)', fontWeight: 500, fontSize: '0.86rem', textDecoration: 'underline' }}
                           >
-                            View Resume ↗
+                            View Resume →
                           </a>
                         </td>
-                        <td>
+                        <td style={{ padding: '16px' }}>
                           <StatusBadge status={app.status} />
                         </td>
-                        <td>
-                          <div className="action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
                             <button
                               type="button"
                               className="btn btn-secondary"
                               style={{ padding: '4px 10px', fontSize: '0.78rem' }}
                               onClick={() => setSelectedCandidate(selectedCandidate?._id === app._id ? null : app)}
                             >
-                              {selectedCandidate?._id === app._id ? 'Close Letter' : 'Cover Letter'}
+                              {selectedCandidate?._id === app._id ? 'Close' : 'Cover Letter'}
                             </button>
 
                             {/* BR-005 State Machine Transitions */}
                             {isTerminal ? (
-                              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                                Decision Finalized
+                              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontStyle: 'italic', paddingLeft: '4px' }}>
+                                Finalized
                               </span>
                             ) : (
-                              <div style={{ display: 'flex', gap: '6px' }}>
+                              <div style={{ display: 'inline-flex', gap: '6px' }}>
                                 {isPending && (
                                   <button
                                     type="button"
                                     className="btn btn-secondary"
-                                    style={{ padding: '4px 10px', fontSize: '0.78rem', color: 'var(--accent-purple)' }}
+                                    style={{ padding: '4px 10px', fontSize: '0.78rem' }}
                                     disabled={updatingId === app._id}
                                     onClick={() => handleStatusChange(app._id, 'REVIEWED')}
                                     title="Mark as reviewed"
@@ -196,13 +257,14 @@ const JobApplications = () => {
                                     <button
                                       type="button"
                                       className="btn btn-primary"
-                                      style={{ padding: '4px 10px', fontSize: '0.78rem', background: 'var(--accent-green)' }}
+                                      style={{ padding: '4px 10px', fontSize: '0.78rem' }}
                                       disabled={updatingId === app._id}
                                       onClick={() => handleStatusChange(app._id, 'ACCEPTED')}
                                       title="Accept candidate"
                                     >
                                       Accept
                                     </button>
+
                                     <button
                                       type="button"
                                       className="btn btn-danger"
@@ -228,16 +290,36 @@ const JobApplications = () => {
           )}
         </div>
 
-        {/* Selected Candidate Cover Letter Card */}
+        {/* Selected Candidate Cover Letter Drawer */}
         {selectedCandidate && (
-          <div className="card" style={{ marginTop: '28px', padding: '24px', borderLeft: '4px solid var(--primary)' }}>
+          <div
+            style={{
+              marginTop: '32px',
+              padding: '24px',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--surface)',
+              textAlign: 'left'
+            }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>
-                  Candidate Introduction: {selectedCandidate.applicant?.name}
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text-muted)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em'
+                  }}
+                >
+                  Candidate Submission Detail
+                </span>
+                <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '4px 0' }}>
+                  {selectedCandidate.applicant?.name}
                 </h3>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-                  Email: {selectedCandidate.applicant?.email} • Submitted on{' '}
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.86rem' }}>
+                  Email: {selectedCandidate.applicant?.email} · Submitted on{' '}
                   {new Date(selectedCandidate.createdAt).toLocaleDateString('en-US', {
                     month: 'long',
                     day: 'numeric',
@@ -248,38 +330,42 @@ const JobApplications = () => {
               <button
                 type="button"
                 onClick={() => setSelectedCandidate(null)}
-                style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}
+                style={{ background: 'transparent', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px 8px' }}
+                aria-label="Close details"
               >
                 ✕
               </button>
             </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '6px' }}>
-                COVER LETTER
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+                Cover Letter / Candidate Statement
               </div>
-              <div style={{
-                background: 'var(--bg-surface-elevated)',
-                padding: '16px',
-                borderRadius: 'var(--radius-sm)',
-                whiteSpace: 'pre-line',
-                lineHeight: 1.6,
-                fontSize: '0.92rem',
-                color: 'var(--text-secondary)'
-              }}>
+              <div
+                style={{
+                  background: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                  padding: '16px',
+                  borderRadius: 'var(--radius-sm)',
+                  whiteSpace: 'pre-line',
+                  lineHeight: 1.6,
+                  fontSize: '0.9rem',
+                  color: 'var(--text)'
+                }}
+              >
                 {selectedCandidate.coverLetter}
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <a
                 href={selectedCandidate.resumeLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
-                style={{ fontSize: '0.85rem', padding: '6px 14px' }}
+                className="btn btn-secondary"
+                style={{ fontSize: '0.84rem', padding: '8px 14px' }}
               >
-                Open External Resume ↗
+                Open External Resume →
               </a>
             </div>
           </div>

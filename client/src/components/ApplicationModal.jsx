@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
   const { user } = useAuth();
 
-  // Multi-step state: 1 = Applicant Info, 2 = Materials, 3 = Review & Confirm
+  // Multi-step state: 1 = Personal info, 2 = Application info / Materials, 3 = Review, 4 = Submit / Completed
   const [step, setStep] = useState(1);
 
   // Form fields
@@ -115,17 +115,59 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-        
-        {/* Modal Header with Progress Stepper */}
-        <div className="modal-header">
+    <div
+      className="modal-backdrop"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div
+        className="modal-dialog"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius-md)',
+          background: 'var(--surface)',
+          boxShadow: 'none'
+        }}
+      >
+        {/* Modal Header */}
+        <div
+          className="modal-header"
+          style={{
+            borderBottom: '1px solid var(--border)',
+            paddingBottom: '16px',
+            marginBottom: '20px'
+          }}
+        >
           <div>
-            <h3 id="modal-title" style={{ fontSize: '1.3rem', marginBottom: '2px', fontFamily: 'var(--font-serif)' }}>
-              Apply for {job.title}
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--text-muted)',
+                display: 'block',
+                marginBottom: '4px'
+              }}
+            >
+              Application Submission
+            </span>
+            <h3
+              id="modal-title"
+              style={{
+                fontSize: '1.25rem',
+                margin: 0,
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600
+              }}
+            >
+              {job.title}
             </h3>
-            <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.88rem' }}>
-              {job.company} • {job.location}
+            <div style={{ color: 'var(--accent)', fontWeight: 500, fontSize: '0.88rem', marginTop: '4px' }}>
+              {job.company} · {job.location}
             </div>
           </div>
           <button
@@ -134,47 +176,118 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
             style={{
               background: 'transparent',
               border: 'none',
-              fontSize: '1.5rem',
+              fontSize: '1.25rem',
               cursor: 'pointer',
               color: 'var(--text-muted)',
               lineHeight: 1,
+              padding: '4px 8px'
             }}
             aria-label="Close modal"
           >
-            ×
+            ✕
           </button>
         </div>
 
         {/* 3-Step Progress Stepper Header */}
         {!success && (
-          <div className="stepper-header">
-            <div className="step-indicator">
-              <span className={`step-dot ${step === 1 ? 'active' : step > 1 ? 'completed' : ''}`}>
-                {step > 1 ? '✓' : '1'}
+          <div
+            className="stepper-header"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '24px',
+              paddingBottom: '16px',
+              borderBottom: '1px solid var(--border)'
+            }}
+          >
+            <div className="step-indicator" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 600,
+                  background: step >= 1 ? 'var(--accent)' : 'var(--border)',
+                  color: step >= 1 ? '#FFFFFF' : 'var(--text-muted)'
+                }}
+              >
+                1
               </span>
-              <span style={{ fontSize: '0.82rem', fontWeight: step === 1 ? 700 : 500, color: step === 1 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
-                Applicant
+              <span
+                style={{
+                  fontSize: '0.84rem',
+                  fontWeight: step === 1 ? 600 : 400,
+                  color: step === 1 ? 'var(--text)' : 'var(--text-muted)'
+                }}
+              >
+                Personal
               </span>
             </div>
 
-            <div style={{ flex: 1, height: '2px', background: step > 1 ? 'var(--accent-green)' : 'var(--border-subtle)', margin: '0 8px' }} />
+            <div style={{ flex: 1, height: '1px', background: step > 1 ? 'var(--accent)' : 'var(--border)', margin: '0 12px' }} />
 
-            <div className="step-indicator">
-              <span className={`step-dot ${step === 2 ? 'active' : step > 2 ? 'completed' : ''}`}>
-                {step > 2 ? '✓' : '2'}
+            <div className="step-indicator" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 600,
+                  background: step >= 2 ? 'var(--accent)' : 'var(--border)',
+                  color: step >= 2 ? '#FFFFFF' : 'var(--text-muted)'
+                }}
+              >
+                2
               </span>
-              <span style={{ fontSize: '0.82rem', fontWeight: step === 2 ? 700 : 500, color: step === 2 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+              <span
+                style={{
+                  fontSize: '0.84rem',
+                  fontWeight: step === 2 ? 600 : 400,
+                  color: step === 2 ? 'var(--text)' : 'var(--text-muted)'
+                }}
+              >
                 Materials
               </span>
             </div>
 
-            <div style={{ flex: 1, height: '2px', background: step > 2 ? 'var(--accent-green)' : 'var(--border-subtle)', margin: '0 8px' }} />
+            <div style={{ flex: 1, height: '1px', background: step > 2 ? 'var(--accent)' : 'var(--border)', margin: '0 12px' }} />
 
-            <div className="step-indicator">
-              <span className={`step-dot ${step === 3 ? 'active' : ''}`}>
+            <div className="step-indicator" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.8rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 600,
+                  background: step === 3 ? 'var(--accent)' : 'var(--border)',
+                  color: step === 3 ? '#FFFFFF' : 'var(--text-muted)'
+                }}
+              >
                 3
               </span>
-              <span style={{ fontSize: '0.82rem', fontWeight: step === 3 ? 700 : 500, color: step === 3 ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+              <span
+                style={{
+                  fontSize: '0.84rem',
+                  fontWeight: step === 3 ? 600 : 400,
+                  color: step === 3 ? 'var(--text)' : 'var(--text-muted)'
+                }}
+              >
                 Review
               </span>
             </div>
@@ -182,25 +295,56 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
         )}
 
         {success ? (
-          <div className="alert alert-success" style={{ textAlign: 'center', padding: '28px' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🎉</div>
-            <h4 style={{ color: 'var(--accent-green)', marginBottom: '6px', fontSize: '1.25rem' }}>Application Submitted!</h4>
-            <p style={{ margin: 0 }}>Your candidate submission has been delivered directly to {job.company}. Closing window...</p>
+          <div
+            style={{
+              padding: '32px 16px',
+              textAlign: 'left',
+              border: '1px solid var(--border)',
+              background: 'var(--accent-soft)',
+              borderRadius: 'var(--radius-sm)'
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.8rem',
+                textTransform: 'uppercase',
+                color: 'var(--accent)',
+                letterSpacing: '0.04em',
+                marginBottom: '8px'
+              }}
+            >
+              Confirmed
+            </div>
+            <h4
+              style={{
+                color: 'var(--accent)',
+                margin: '0 0 8px 0',
+                fontSize: '1.4rem',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600
+              }}
+            >
+              Application Submitted
+            </h4>
+            <p style={{ margin: 0, color: 'var(--text)', fontSize: '0.92rem', lineHeight: 1.6 }}>
+              Your candidate profile and materials have been submitted directly to {job.company}.
+            </p>
           </div>
         ) : (
           <div>
-            {error && <div className="alert alert-error">{error}</div>}
+            {error && <div className="alert alert-error" style={{ marginBottom: '16px' }}>{error}</div>}
 
             {/* STEP 1: Applicant Profile Confirmation */}
             {step === 1 && (
               <div>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                  Step 1 of 3: Confirm your applicant identity and contact details.
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+                  Step 1 of 3: Provide your contact details for this submission.
                 </p>
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="app-name">
-                    Full Name <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                    Full Name
                   </label>
                   <input
                     id="app-name"
@@ -214,7 +358,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="app-email">
-                    Contact Email Address <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                    Contact Email Address
                   </label>
                   <input
                     id="app-email"
@@ -225,7 +369,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     required
                   />
                   <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
-                    Recruitment updates and interview decisions will be sent to this email.
+                    Status updates and recruitment decisions will be sent to this email.
                   </small>
                 </div>
 
@@ -240,13 +384,13 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
             {/* STEP 2: Application Materials (Resume Link & Cover Letter) */}
             {step === 2 && (
               <div>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                  Step 2 of 3: Provide your online resume/portfolio and introduction.
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+                  Step 2 of 3: Provide your online resume and brief statement.
                 </p>
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="resumeLink">
-                    Online Resume or Portfolio Link <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                    Online Resume or Portfolio Link
                   </label>
                   <input
                     id="resumeLink"
@@ -258,20 +402,22 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     required
                   />
                   <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
-                    Must be a valid HTTP/HTTPS link (Google Drive, Dropbox, LinkedIn, personal website).
+                    Accepted formats: Google Drive, Dropbox, Notion, or personal portfolio URL.
                   </small>
                 </div>
 
                 <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label className="form-label" htmlFor="coverLetter">
-                      Cover Letter / Professional Introduction <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                      Cover Letter / Statement
                     </label>
-                    <span style={{
-                      fontSize: '0.75rem',
-                      color: coverLetter.length >= 20 ? 'var(--accent-green)' : 'var(--text-muted)',
-                      fontWeight: 600
-                    }}>
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        fontFamily: 'var(--font-mono)',
+                        color: coverLetter.length >= 20 ? 'var(--accent)' : 'var(--text-muted)'
+                      }}
+                    >
                       {coverLetter.length} / 20 min
                     </span>
                   </div>
@@ -279,7 +425,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     id="coverLetter"
                     className="form-textarea"
                     rows={5}
-                    placeholder="Describe your background, technical skills, and why you are interested in this position..."
+                    placeholder="Describe your relevant background and interest in this role..."
                     value={coverLetter}
                     onChange={(e) => setCoverLetter(e.target.value)}
                     required
@@ -288,7 +434,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '24px' }}>
                   <button type="button" className="btn btn-secondary" onClick={handleBack}>
-                    ← Back to Applicant Info
+                    ← Back
                   </button>
                   <button
                     type="button"
@@ -305,59 +451,104 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
             {/* STEP 3: Review with Direct Edit Links & Submission */}
             {step === 3 && (
               <div>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                  Step 3 of 3: Review your details before final submission. Click "Edit" on any section to modify.
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+                  Step 3 of 3: Review your submission before confirming.
                 </p>
 
                 {/* Section 1 Review */}
-                <div className="review-section">
-                  <div className="review-header">
-                    <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Applicant Details</strong>
+                <div
+                  style={{
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '16px',
+                    marginBottom: '12px',
+                    background: 'var(--surface)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <strong style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Applicant Details
+                    </strong>
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--accent)',
+                        cursor: 'pointer',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        textDecoration: 'underline'
+                      }}
                     >
-                      Edit ✏️
+                      Edit
                     </button>
                   </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text)' }}>
                     <div>Name: <strong>{applicantName}</strong></div>
-                    <div>Email: <strong>{applicantEmail}</strong></div>
+                    <div style={{ marginTop: '4px' }}>Email: <strong>{applicantEmail}</strong></div>
                   </div>
                 </div>
 
                 {/* Section 2 Review */}
-                <div className="review-section">
-                  <div className="review-header">
-                    <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>Materials &amp; Introduction</strong>
+                <div
+                  style={{
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '16px',
+                    marginBottom: '20px',
+                    background: 'var(--surface)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <strong style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Materials
+                    </strong>
                     <button
                       type="button"
                       onClick={() => setStep(2)}
-                      style={{ background: 'transparent', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'var(--accent)',
+                        cursor: 'pointer',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        textDecoration: 'underline'
+                      }}
                     >
-                      Edit ✏️
+                      Edit
                     </button>
                   </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-                    <div style={{ marginBottom: '6px' }}>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text)' }}>
+                    <div style={{ marginBottom: '8px', wordBreak: 'break-all' }}>
                       Resume Link:{' '}
-                      <a href={resumeLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>
+                      <a
+                        href={resumeLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'var(--accent)', textDecoration: 'underline' }}
+                      >
                         {resumeLink}
                       </a>
                     </div>
                     <div>
                       Cover Letter:
-                      <div style={{
-                        marginTop: '4px',
-                        background: 'var(--bg-surface)',
-                        padding: '10px',
-                        borderRadius: 'var(--radius-sm)',
-                        whiteSpace: 'pre-line',
-                        maxHeight: '120px',
-                        overflowY: 'auto',
-                        fontSize: '0.85rem'
-                      }}>
+                      <div
+                        style={{
+                          marginTop: '6px',
+                          background: 'var(--bg)',
+                          border: '1px solid var(--border)',
+                          padding: '10px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          whiteSpace: 'pre-line',
+                          maxHeight: '120px',
+                          overflowY: 'auto',
+                          fontSize: '0.85rem',
+                          lineHeight: 1.6
+                        }}
+                      >
                         {coverLetter}
                       </div>
                     </div>
@@ -366,7 +557,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '24px' }}>
                   <button type="button" className="btn btn-secondary" onClick={handleBack} disabled={submitting}>
-                    ← Back to Materials
+                    ← Back
                   </button>
                   <button
                     type="button"
@@ -375,14 +566,13 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     onClick={handleSubmit}
                     style={{ padding: '10px 24px' }}
                   >
-                    {submitting ? 'Submitting Application...' : 'Confirm & Submit Application ✓'}
+                    {submitting ? 'Submitting Application...' : 'Confirm & Submit Application'}
                   </button>
                 </div>
               </div>
             )}
           </div>
         )}
-
       </div>
     </div>
   );

@@ -5,28 +5,31 @@ const StatusBadge = ({ status }) => {
 
   const normalized = status.toUpperCase();
 
-  const getStyleClass = () => {
+  const getLabel = () => {
     switch (normalized) {
       case 'OPEN':
-        return 'status-open';
+        return 'Open';
       case 'CLOSED':
-        return 'status-closed';
+        return 'Closed';
       case 'PENDING':
-        return 'status-pending';
+        return 'Pending';
       case 'REVIEWED':
-        return 'status-reviewed';
+        return 'Reviewed';
       case 'ACCEPTED':
-        return 'status-accepted';
+        return 'Accepted';
       case 'REJECTED':
-        return 'status-rejected';
+        return 'Rejected';
       default:
-        return 'badge';
+        return status;
     }
   };
 
+  const dotClass = `dot-${normalized.toLowerCase()}`;
+
   return (
-    <span className={`badge ${getStyleClass()}`} aria-label={`Status: ${normalized}`}>
-      {normalized}
+    <span className="status-badge" aria-label={`Status: ${getLabel()}`}>
+      <span className={`status-dot ${dotClass}`} aria-hidden="true" />
+      <span>{getLabel()}</span>
     </span>
   );
 };

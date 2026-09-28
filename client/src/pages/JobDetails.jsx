@@ -50,8 +50,8 @@ const JobDetails = () => {
 
   if (error || !job) {
     return (
-      <div className="container" style={{ padding: '60px 24px', textAlign: 'center' }}>
-        <div className="alert alert-error" style={{ maxWidth: '600px', margin: '0 auto 20px' }}>
+      <div className="container" style={{ padding: '64px var(--space-4)', textAlign: 'left' }}>
+        <div className="alert alert-error" style={{ maxWidth: '600px', marginBottom: '20px' }}>
           {error || 'Unable to display job posting.'}
         </div>
         <Link to="/jobs" className="btn btn-secondary">
@@ -95,50 +95,181 @@ const JobDetails = () => {
           </Link>
         </div>
 
-        {/* 70/30 Master-Detail Split Layout */}
-        <div className="master-detail-layout">
+        {/* Editorial Split Layout (Left Sticky Summary, Right Reading Column) */}
+        <div className="split-job-layout">
           
-          {/* Left Column (70%): Long-form Editorial Reading Column */}
-          <article className="reading-column">
-            
-            {/* Header Block */}
-            <div style={{ marginBottom: '32px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+          {/* Left Column (Sticky Desktop): Job Meta Summary & Direct Action */}
+          <aside className="sticky-job-col">
+            <div
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--surface)',
+                padding: '28px'
+              }}
+            >
+              <div style={{ marginBottom: '16px' }}>
                 <StatusBadge status={job.status} />
-                <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-                  Posted on {formattedDate}
-                </span>
               </div>
 
-              <h1 style={{ fontSize: '2.6rem', marginBottom: '8px', lineHeight: 1.15 }}>
+              <h1
+                style={{
+                  fontSize: '2rem',
+                  lineHeight: 1.15,
+                  marginBottom: '6px',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  textTransform: 'uppercase'
+                }}
+              >
                 {job.title}
               </h1>
 
-              <div style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '20px' }}>
+              <div
+                style={{
+                  fontSize: '1.05rem',
+                  fontWeight: 600,
+                  color: 'var(--accent)',
+                  marginBottom: '20px'
+                }}
+              >
                 {job.company}
               </div>
 
-              {/* Accessible Metadata Chips with Explicit Wording + Icons */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <span className="meta-chip">
-                  <span aria-hidden="true">📍</span> Location: <strong>{job.location}</strong>
-                </span>
-                <span className="meta-chip">
-                  <span aria-hidden="true">💼</span> Type: <strong>{job.type}</strong>
-                </span>
-                <span className="meta-chip">
-                  <span aria-hidden="true">🏷️</span> Category: <strong>{job.category}</strong>
-                </span>
-                <span className="meta-chip" style={{ color: 'var(--accent-green)' }}>
-                  <span aria-hidden="true">💰</span> Compensation: <strong>{formattedSalary} / yr</strong>
-                </span>
+              <div
+                style={{
+                  borderTop: '1px solid var(--border)',
+                  borderBottom: '1px solid var(--border)',
+                  padding: '16px 0',
+                  marginBottom: '24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                  fontSize: '0.92rem'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Location</span>
+                  <span style={{ fontWeight: 500 }}>{job.location}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Work type</span>
+                  <span style={{ fontWeight: 500 }}>{job.type}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Category</span>
+                  <span style={{ fontWeight: 500 }}>{job.category}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>Compensation</span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontWeight: 600,
+                      color: 'var(--accent)'
+                    }}
+                  >
+                    {formattedSalary} / yr
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '4px' }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Published</span>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{formattedDate}</span>
+                </div>
               </div>
-            </div>
 
+              {/* Action Buttons */}
+              {job.status === 'CLOSED' ? (
+                <button
+                  className="btn btn-secondary"
+                  style={{ width: '100%', padding: '12px' }}
+                  disabled
+                >
+                  Position Closed
+                </button>
+              ) : hasApplied ? (
+                <div
+                  style={{
+                    background: 'var(--accent-soft)',
+                    color: 'var(--accent)',
+                    border: '1px solid var(--border)',
+                    padding: '12px',
+                    borderRadius: 'var(--radius-sm)',
+                    fontWeight: 600,
+                    fontSize: '0.92rem',
+                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <span className="status-dot dot-accepted" />
+                  Application Submitted
+                </div>
+              ) : isEmployer ? (
+                <div
+                  style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--text-muted)',
+                    textAlign: 'center',
+                    padding: '8px'
+                  }}
+                >
+                  Employer account active
+                </div>
+              ) : isAuthenticated ? (
+                <button
+                  id="apply-job-btn"
+                  className="btn btn-primary"
+                  onClick={() => setIsModalOpen(true)}
+                  style={{ width: '100%', padding: '12px', fontSize: '0.98rem' }}
+                >
+                  Apply now →
+                </button>
+              ) : (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate('/login', { state: { from: `/jobs/${id}` } })}
+                  style={{ width: '100%', padding: '12px', fontSize: '0.98rem' }}
+                >
+                  Sign in to Apply →
+                </button>
+              )}
+
+              <p
+                style={{
+                  fontSize: '0.78rem',
+                  color: 'var(--text-muted)',
+                  textAlign: 'left',
+                  marginTop: '16px',
+                  marginBottom: 0,
+                  lineHeight: 1.4
+                }}
+              >
+                Direct employer submission · Verified posting
+              </p>
+            </div>
+          </aside>
+
+          {/* Right Column: Long-form Editorial Reading Column */}
+          <article className="reading-column">
+            
             {/* Role Responsibilities & Overview */}
             <section style={{ marginBottom: '36px' }}>
-              <h2 style={{ fontSize: '1.5rem', marginBottom: '16px' }}>About the Role</h2>
-              <div style={{ whiteSpace: 'pre-line', lineHeight: 1.75 }}>
+              <h2
+                style={{
+                  fontSize: '1.75rem',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 600,
+                  marginBottom: '16px',
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                About the role
+              </h2>
+              <div style={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: 'var(--text)' }}>
                 {job.description}
               </div>
             </section>
@@ -146,113 +277,67 @@ const JobDetails = () => {
             {/* Key Requirements */}
             {job.requirements && job.requirements.length > 0 && (
               <section style={{ marginBottom: '40px' }}>
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '16px' }}>Key Qualifications &amp; Skills</h2>
-                <ul style={{ lineHeight: 1.8 }}>
+                <h2
+                  style={{
+                    fontSize: '1.75rem',
+                    fontFamily: 'var(--font-serif)',
+                    fontWeight: 600,
+                    marginBottom: '16px',
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  Requirements
+                </h2>
+                <ul
+                  style={{
+                    listStyleType: 'disc',
+                    paddingLeft: '20px',
+                    lineHeight: 1.8,
+                    color: 'var(--text)'
+                  }}
+                >
                   {job.requirements.map((req, idx) => (
-                    <li key={idx} style={{ paddingLeft: '4px' }}>{req}</li>
+                    <li key={idx} style={{ marginBottom: '6px' }}>
+                      {req}
+                    </li>
                   ))}
                 </ul>
               </section>
             )}
 
-            {/* Hiring Team / Recruiter Card */}
-            <div style={{
-              background: 'var(--bg-surface-elevated)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '24px',
-              marginTop: '40px'
-            }}>
-              <h3 style={{ fontSize: '1.05rem', marginBottom: '6px', fontFamily: 'var(--font-sans)', fontWeight: 700 }}>
-                Hiring Team
+            {/* Hiring Team note */}
+            <div
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--surface)',
+                padding: '20px 24px',
+                marginTop: '40px'
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: '0.95rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  marginBottom: '6px',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 700,
+                  color: 'var(--text)'
+                }}
+              >
+                Hiring Organization
               </h3>
-              <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-muted)' }}>
-                This role is published and reviewed by <strong>{job.postedBy?.name || 'Recruiter'}</strong> at {job.company}.
+              <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                This role is published and managed directly by <strong>{job.postedBy?.name || 'Recruitment Team'}</strong> at {job.company}.
               </p>
             </div>
 
           </article>
 
-          {/* Right Column (30%): Sticky Application & Metadata Card on Desktop (lg:sticky lg:top-90) */}
-          <aside className="sticky-sidebar">
-            <div className="card" style={{ padding: '28px', border: '1px solid var(--border-strong)' }}>
-              
-              <div style={{ marginBottom: '20px' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Target Compensation
-                </span>
-                <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--accent-green)', fontFamily: 'var(--font-mono)' }}>
-                  {formattedSalary}
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 400, marginLeft: '4px' }}>/ year</span>
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '18px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Status</span>
-                  <StatusBadge status={job.status} />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Work Model</span>
-                  <strong>{job.type}</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                  <span style={{ color: 'var(--text-muted)' }}>Location</span>
-                  <strong>{job.location}</strong>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              {job.status === 'CLOSED' ? (
-                <button className="btn btn-secondary" style={{ width: '100%', padding: '12px' }} disabled>
-                  Position Closed
-                </button>
-              ) : hasApplied ? (
-                <div style={{
-                  background: 'var(--accent-green-bg)',
-                  color: 'var(--accent-green)',
-                  border: '1px solid var(--accent-green-border)',
-                  padding: '12px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
-                  textAlign: 'center'
-                }}>
-                  ✓ Application Submitted
-                </div>
-              ) : isEmployer ? (
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', padding: '8px' }}>
-                  Employer account logged in
-                </div>
-              ) : isAuthenticated ? (
-                <button
-                  id="apply-job-btn"
-                  className="btn btn-primary"
-                  onClick={() => setIsModalOpen(true)}
-                  style={{ width: '100%', padding: '12px', fontSize: '1rem' }}
-                >
-                  Apply for this Position →
-                </button>
-              ) : (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => navigate('/login', { state: { from: `/jobs/${id}` } })}
-                  style={{ width: '100%', padding: '12px', fontSize: '1rem' }}
-                >
-                  Sign in to Apply →
-                </button>
-              )}
-
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '14px', marginBottom: 0 }}>
-                Direct employer submission • No agency intermediaries
-              </p>
-
-            </div>
-          </aside>
-
         </div>
 
-        {/* 3-Step Progressive Application Modal */}
+        {/* Deliberate Progressive Application Modal / Drawer */}
         <ApplicationModal
           job={job}
           isOpen={isModalOpen}

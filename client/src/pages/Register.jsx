@@ -34,7 +34,7 @@ const Register = () => {
     }
 
     if (role === 'EMPLOYER' && !company.trim()) {
-      setError('Company name is required for Employer accounts.');
+      setError('Organization name is required for Employer accounts.');
       return;
     }
 
@@ -68,61 +68,95 @@ const Register = () => {
   };
 
   return (
-    <div style={{ padding: '50px 0 80px', minHeight: 'calc(100vh - 160px)', display: 'flex', alignItems: 'center' }}>
-      <div className="container" style={{ maxWidth: '520px' }}>
-        <div className="card" style={{ padding: '36px' }}>
-          
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            <h1 style={{ fontSize: '1.85rem', marginBottom: '8px' }}>Create an Account</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0 }}>
-              Join the platform to discover opportunities or hire talent.
+    <div style={{ padding: '56px 0 96px', minHeight: 'calc(100vh - 160px)', display: 'flex', alignItems: 'center' }}>
+      <div className="container" style={{ maxWidth: '480px' }}>
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '36px',
+            textAlign: 'left'
+          }}
+        >
+          <div style={{ marginBottom: '24px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--text-muted)',
+                display: 'block',
+                marginBottom: '6px'
+              }}
+            >
+              Onboarding
+            </span>
+            <h1
+              style={{
+                fontSize: '2rem',
+                margin: '0 0 8px 0',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em'
+              }}
+            >
+              Create Account
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', margin: 0, lineHeight: 1.5 }}>
+              Join to discover curated opportunities or post open roles.
             </p>
           </div>
 
           {/* Role Switcher Tabs */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '8px',
-            background: 'var(--bg-surface-elevated)',
-            padding: '4px',
-            borderRadius: 'var(--radius-sm)',
-            marginBottom: '24px',
-            border: '1px solid var(--border-strong)'
-          }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '6px',
+              background: 'var(--bg)',
+              padding: '4px',
+              borderRadius: 'var(--radius-sm)',
+              marginBottom: '24px',
+              border: '1px solid var(--border)'
+            }}
+          >
             <button
               type="button"
               onClick={() => setRole('JOB_SEEKER')}
               style={{
-                padding: '10px',
+                padding: '8px 12px',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 fontWeight: 600,
-                fontSize: '0.9rem',
+                fontSize: '0.88rem',
                 cursor: 'pointer',
-                background: role === 'JOB_SEEKER' ? 'var(--primary)' : 'transparent',
-                color: role === 'JOB_SEEKER' ? '#ffffff' : 'var(--text-secondary)',
-                transition: 'var(--transition)'
+                background: role === 'JOB_SEEKER' ? 'var(--surface)' : 'transparent',
+                color: role === 'JOB_SEEKER' ? 'var(--text)' : 'var(--text-muted)',
+                boxShadow: role === 'JOB_SEEKER' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                transition: 'background var(--duration-fast), color var(--duration-fast)'
               }}
             >
-              🔍 Job Seeker
+              Job Seeker
             </button>
             <button
               type="button"
               onClick={() => setRole('EMPLOYER')}
               style={{
-                padding: '10px',
+                padding: '8px 12px',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 fontWeight: 600,
-                fontSize: '0.9rem',
+                fontSize: '0.88rem',
                 cursor: 'pointer',
-                background: role === 'EMPLOYER' ? 'var(--primary)' : 'transparent',
-                color: role === 'EMPLOYER' ? '#ffffff' : 'var(--text-secondary)',
-                transition: 'var(--transition)'
+                background: role === 'EMPLOYER' ? 'var(--surface)' : 'transparent',
+                color: role === 'EMPLOYER' ? 'var(--text)' : 'var(--text-muted)',
+                boxShadow: role === 'EMPLOYER' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                transition: 'background var(--duration-fast), color var(--duration-fast)'
               }}
             >
-              🏢 Employer / Recruiter
+              Employer / Recruiter
             </button>
           </div>
 
@@ -135,13 +169,13 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="register-name">
-                Full Name <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                Full Name
               </label>
               <input
                 id="register-name"
                 type="text"
                 className="form-input"
-                placeholder={role === 'EMPLOYER' ? 'Jane Smith (HR Manager)' : 'John Doe'}
+                placeholder={role === 'EMPLOYER' ? 'Abebe Bikila' : 'Sara Mekonnen'}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoComplete="name"
@@ -152,13 +186,13 @@ const Register = () => {
             {role === 'EMPLOYER' && (
               <div className="form-group">
                 <label className="form-label" htmlFor="register-company">
-                  Company Name <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Company / Organization Name
                 </label>
                 <input
                   id="register-company"
                   type="text"
                   className="form-input"
-                  placeholder="Acme Technologies Inc."
+                  placeholder="NEBO Tech"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   required
@@ -168,13 +202,13 @@ const Register = () => {
 
             <div className="form-group">
               <label className="form-label" htmlFor="register-email">
-                Email Address <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                Email Address
               </label>
               <input
                 id="register-email"
                 type="email"
                 className="form-input"
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
@@ -185,7 +219,7 @@ const Register = () => {
             <div className="form-group">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                 <label className="form-label" htmlFor="register-password" style={{ marginBottom: 0 }}>
-                  Password <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Password
                 </label>
                 <button
                   type="button"
@@ -193,7 +227,7 @@ const Register = () => {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: 'var(--primary)',
+                    color: 'var(--accent)',
                     fontSize: '0.8rem',
                     cursor: 'pointer',
                     fontWeight: 500,
@@ -206,40 +240,74 @@ const Register = () => {
                 id="register-password"
                 type={showPassword ? 'text' : 'password'}
                 className="form-input"
-                placeholder="At least 8 characters with upper, lower, number, special"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
                 required
               />
 
-              {/* Password Requirements Checklist */}
-              <div style={{
-                marginTop: '8px',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '4px',
-                fontSize: '0.78rem',
-                color: 'var(--text-muted)'
-              }}>
-                <span style={{ color: hasMinLength ? 'var(--accent-green)' : undefined }}>
-                  {hasMinLength ? '✓' : '•'} 8+ characters
-                </span>
-                <span style={{ color: hasUpper ? 'var(--accent-green)' : undefined }}>
-                  {hasUpper ? '✓' : '•'} Uppercase letter
-                </span>
-                <span style={{ color: hasLower ? 'var(--accent-green)' : undefined }}>
-                  {hasLower ? '✓' : '•'} Lowercase letter
-                </span>
-                <span style={{ color: hasNumber && hasSpecial ? 'var(--accent-green)' : undefined }}>
-                  {hasNumber && hasSpecial ? '✓' : '•'} Number &amp; symbol
-                </span>
+              {/* Password Requirements Checklist with dots */}
+              <div
+                style={{
+                  marginTop: '10px',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '6px',
+                  fontSize: '0.8rem',
+                  color: 'var(--text-muted)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: hasMinLength ? 'var(--accent)' : 'var(--border)'
+                    }}
+                  />
+                  <span style={{ color: hasMinLength ? 'var(--text)' : 'var(--text-muted)' }}>8+ characters</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: hasUpper ? 'var(--accent)' : 'var(--border)'
+                    }}
+                  />
+                  <span style={{ color: hasUpper ? 'var(--text)' : 'var(--text-muted)' }}>Uppercase letter</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: hasLower ? 'var(--accent)' : 'var(--border)'
+                    }}
+                  />
+                  <span style={{ color: hasLower ? 'var(--text)' : 'var(--text-muted)' }}>Lowercase letter</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: hasNumber && hasSpecial ? 'var(--accent)' : 'var(--border)'
+                    }}
+                  />
+                  <span style={{ color: hasNumber && hasSpecial ? 'var(--text)' : 'var(--text-muted)' }}>Number &amp; symbol</span>
+                </div>
               </div>
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="register-confirm-password">
-                Confirm Password <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                Confirm Password
               </label>
               <input
                 id="register-confirm-password"
@@ -262,16 +330,16 @@ const Register = () => {
               id="register-submit-btn"
               type="submit"
               className="btn btn-primary"
-              style={{ width: '100%', padding: '12px', fontSize: '1rem', marginTop: '12px' }}
+              style={{ width: '100%', padding: '12px', fontSize: '0.98rem', marginTop: '12px' }}
               disabled={loading || !isPasswordValid || password !== confirmPassword}
             >
-              {loading ? 'Creating Account...' : `Register as ${role === 'EMPLOYER' ? 'Employer' : 'Job Seeker'}`}
+              {loading ? 'Creating Account...' : `Register as ${role === 'EMPLOYER' ? 'Employer' : 'Job Seeker'} →`}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+          <div style={{ marginTop: '24px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'left' }}>
             Already have an account?{' '}
-            <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+            <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>
               Sign In
             </Link>
           </div>

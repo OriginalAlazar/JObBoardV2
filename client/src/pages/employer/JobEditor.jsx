@@ -118,36 +118,76 @@ const JobEditor = () => {
   if (fetching) return <Loading message="Loading job posting details..." />;
 
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container" style={{ maxWidth: '780px' }}>
         
         {/* Navigation Breadcrumb */}
-        <div style={{ marginBottom: '20px' }}>
-          <Link to="/employer/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontWeight: 500 }}>
+        <div style={{ marginBottom: '24px' }}>
+          <Link
+            to="/employer/jobs"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: 'var(--text-muted)',
+              fontWeight: 500,
+              fontSize: '0.9rem',
+              textDecoration: 'none'
+            }}
+          >
             ← Back to My Jobs
           </Link>
         </div>
 
-        <div className="card" style={{ padding: '36px' }}>
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '36px',
+            textAlign: 'left'
+          }}
+        >
           <div style={{ marginBottom: '28px' }}>
-            <h1 style={{ fontSize: '1.85rem', marginBottom: '6px' }}>
-              {isEditMode ? 'Edit Job Posting' : 'Post a New Job Opportunity'}
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                display: 'block',
+                marginBottom: '4px'
+              }}
+            >
+              {isEditMode ? 'Posting Editor' : 'New Position'}
+            </span>
+            <h1
+              style={{
+                fontSize: '2rem',
+                margin: '0 0 6px 0',
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em'
+              }}
+            >
+              {isEditMode ? 'Edit Job Posting' : 'Post an Opportunity'}
             </h1>
-            <p style={{ color: 'var(--text-muted)', margin: 0 }}>
+            <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.92rem' }}>
               {isEditMode
                 ? 'Update specifications, role requirements, or adjust posting status.'
-                : 'Fill in details below to publish an opening to verified candidates.'}
+                : 'Publish an opening to verified candidates.'}
             </p>
           </div>
 
-          {error && <div className="alert alert-error">{error}</div>}
+          {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
 
           <form onSubmit={handleSubmit}>
             {/* Title & Company */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="job-title">
-                  Position Title <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Position Title
                 </label>
                 <input
                   id="job-title"
@@ -163,7 +203,7 @@ const JobEditor = () => {
 
               <div className="form-group">
                 <label className="form-label" htmlFor="job-company">
-                  Company Name <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Company Name
                 </label>
                 <input
                   id="job-company"
@@ -179,17 +219,17 @@ const JobEditor = () => {
             </div>
 
             {/* Location & Salary */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="job-location">
-                  Location <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Location
                 </label>
                 <input
                   id="job-location"
                   name="location"
                   type="text"
                   className="form-input"
-                  placeholder="e.g. San Francisco, CA or Remote"
+                  placeholder="e.g. Addis Ababa or Remote"
                   value={formData.location}
                   onChange={handleChange}
                   required
@@ -198,7 +238,7 @@ const JobEditor = () => {
 
               <div className="form-group">
                 <label className="form-label" htmlFor="job-salary">
-                  Annual Salary ($ USD) <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Target Salary ($ USD / yr)
                 </label>
                 <input
                   id="job-salary"
@@ -216,10 +256,10 @@ const JobEditor = () => {
             </div>
 
             {/* Category & Employment Type */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
               <div className="form-group">
                 <label className="form-label" htmlFor="job-category">
-                  Category <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Category
                 </label>
                 <select
                   id="job-category"
@@ -236,7 +276,7 @@ const JobEditor = () => {
 
               <div className="form-group">
                 <label className="form-label" htmlFor="job-type">
-                  Employment Type <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                  Employment Type
                 </label>
                 <select
                   id="job-type"
@@ -274,7 +314,7 @@ const JobEditor = () => {
             {/* Role Description */}
             <div className="form-group">
               <label className="form-label" htmlFor="job-description">
-                Role Description <span style={{ color: 'var(--accent-rose)' }}>*</span>
+                Role Description
               </label>
               <textarea
                 id="job-description"
@@ -291,14 +331,14 @@ const JobEditor = () => {
             {/* Requirements list */}
             <div className="form-group">
               <label className="form-label" htmlFor="job-requirements">
-                Key Requirements &amp; Qualifications (one per line)
+                Key Requirements &amp; Skills (one per line)
               </label>
               <textarea
                 id="job-requirements"
                 name="requirementsText"
                 className="form-textarea"
                 rows={5}
-                placeholder="3+ years React and Node.js experience&#10;Strong understanding of RESTful APIs&#10;Experience with MongoDB or NoSQL databases"
+                placeholder="React and Node.js experience&#10;RESTful API design&#10;MongoDB / NoSQL database design"
                 value={formData.requirementsText}
                 onChange={handleChange}
               />
@@ -320,7 +360,7 @@ const JobEditor = () => {
               >
                 {submitting
                   ? (isEditMode ? 'Updating...' : 'Publishing...')
-                  : (isEditMode ? 'Update Posting' : 'Publish Job')}
+                  : (isEditMode ? 'Update Posting →' : 'Publish Role →')}
               </button>
             </div>
           </form>

@@ -26,7 +26,7 @@ const SeekerDashboard = () => {
         setStats(statsRes.data);
         setRecentApplications(appsRes.data.slice(0, 5));
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to load seeker dashboard.');
+        setError(err.response?.data?.message || 'Failed to load career workspace.');
       } finally {
         setLoading(false);
       }
@@ -44,170 +44,325 @@ const SeekerDashboard = () => {
     return 'Good evening';
   };
 
+  const formatNumber = (num) => String(num || 0).padStart(2, '0');
+
   return (
-    <div style={{ padding: '40px 0 80px' }}>
+    <div style={{ padding: '48px 0 80px' }}>
       <div className="container">
         
         {/* Editorial Greeting Header */}
-        <div style={{ marginBottom: '32px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '20px' }}>
+        <div style={{ marginBottom: '36px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
             <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono)',
+                  color: 'var(--text-muted)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  display: 'block',
+                  marginBottom: '4px'
+                }}
+              >
                 Candidate Workspace
               </span>
-              <h1 style={{ fontSize: '2.4rem', margin: '4px 0 6px', lineHeight: 1.15 }}>
-                {getGreeting()}, {user?.name || 'Applicant'}
+              <h1
+                style={{
+                  fontSize: '2.5rem',
+                  margin: '0 0 6px 0',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.15
+                }}
+              >
+                {getGreeting()}, {user?.name?.split(' ')[0] || 'Applicant'}
               </h1>
-              <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '1rem' }}>
-                Your active applications and real-time recruitment progression.
+              <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.98rem' }}>
+                Your active applications and real-time review progression.
               </p>
             </div>
 
-            <Link to="/jobs" className="btn btn-primary" style={{ padding: '10px 20px' }}>
-              Explore Open Positions →
+            <Link to="/jobs" className="btn btn-primary">
+              Explore opportunities →
             </Link>
           </div>
 
-          {/* Operational Metrics Horizontal Split (Avoiding 3-card generic cliché) */}
+          {/* Editorial Workspace Stats List */}
           {stats && (
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '32px',
-              marginTop: '24px',
-              paddingTop: '20px',
-              borderTop: '1px solid var(--border-subtle)',
-              fontSize: '0.92rem'
-            }}>
+            <div
+              style={{
+                marginTop: '32px',
+                borderTop: '1px solid var(--border)',
+                borderBottom: '1px solid var(--border)',
+                padding: '24px 0',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '24px'
+              }}
+            >
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Total Applications
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  ACTIVE APPLICATIONS
                 </span>
-                <span style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
-                  {stats.totalApplications}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text)'
+                  }}
+                >
+                  {formatNumber(stats.totalApplications)}
                 </span>
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Awaiting Review
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  AWAITING REVIEW
                 </span>
-                <span style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-amber)' }}>
-                  {stats.pending}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text)'
+                  }}
+                >
+                  {formatNumber(stats.pending)}
                 </span>
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Under Evaluation
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  UNDER EVALUATION
                 </span>
-                <span style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-purple)' }}>
-                  {stats.reviewed}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--text)'
+                  }}
+                >
+                  {formatNumber(stats.reviewed)}
                 </span>
               </div>
 
               <div>
-                <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Offers / Accepted
+                <span
+                  style={{
+                    color: 'var(--text-muted)',
+                    display: 'block',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}
+                >
+                  ACCEPTED / OFFERS
                 </span>
-                <span style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--accent-green)' }}>
-                  {stats.accepted}
+                <span
+                  style={{
+                    fontSize: '2rem',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    color: 'var(--accent)'
+                  }}
+                >
+                  {formatNumber(stats.accepted)}
                 </span>
               </div>
             </div>
           )}
         </div>
 
-        {error && <div className="alert alert-error">{error}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '24px' }}>{error}</div>}
 
-        {/* Semantic UX4G Journey Timeline Section */}
-        <div className="card" style={{ padding: '32px' }}>
+        {/* Recent Applications Section */}
+        <div
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--surface)',
+            padding: '32px'
+          }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '1.35rem', margin: 0 }}>Application Journeys</h2>
-            <Link to="/seeker/applications" style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.88rem' }}>
-              View All Submissions ({recentApplications.length}) →
+            <h2
+              style={{
+                fontSize: '1.4rem',
+                margin: 0,
+                fontFamily: 'var(--font-serif)',
+                fontWeight: 600
+              }}
+            >
+              Recent Applications
+            </h2>
+            <Link
+              to="/seeker/applications"
+              style={{
+                color: 'var(--accent)',
+                fontWeight: 600,
+                fontSize: '0.88rem',
+                textDecoration: 'none'
+              }}
+            >
+              View all ({recentApplications.length}) →
             </Link>
           </div>
 
           {recentApplications.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🌱</div>
-              <h3 style={{ marginBottom: '8px' }}>No Active Journeys Yet</h3>
-              <p style={{ maxWidth: '420px', margin: '0 auto 20px' }}>
-                You haven't submitted any job applications yet. Browse vetted positions and track your review status directly here.
+            <div style={{ textAlign: 'left', padding: '32px 0', color: 'var(--text-muted)' }}>
+              <p style={{ margin: '0 0 16px 0', fontSize: '0.95rem' }}>
+                You have not submitted any job applications yet.
               </p>
               <Link to="/jobs" className="btn btn-primary">
-                Browse Directory
+                Explore open positions →
               </Link>
             </div>
           ) : (
-            <ol role="list" className="journey-timeline" aria-label="Candidate Application Progress Timeline">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
               {recentApplications.map((app) => {
                 const isPending = app.status === 'PENDING';
                 const isReviewed = app.status === 'REVIEWED';
                 const isAccepted = app.status === 'ACCEPTED';
                 const isRejected = app.status === 'REJECTED';
 
+                const formattedDate = new Date(app.createdAt).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+
                 return (
-                  <li key={app._id} role="listitem" className="journey-step" aria-label={`${app.job?.title} at ${app.job?.company}, status: ${app.status}`}>
-                    {/* Visual Stepper Marker & Decorative Connector */}
-                    <div className="journey-marker" aria-hidden="true">
-                      <div className={`journey-dot ${isAccepted ? 'completed' : isReviewed || isPending ? 'active' : ''}`}>
-                        {isAccepted ? '✓' : ''}
-                      </div>
-                      <div className="journey-line" />
-                    </div>
-
-                    {/* Content Details */}
-                    <div className="journey-content">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '6px' }}>
-                        <div>
-                          <h4 style={{ fontSize: '1.1rem', margin: 0, fontFamily: 'var(--font-sans)', fontWeight: 700 }}>
-                            {app.job?.title || 'Unknown Position'}
-                          </h4>
-                          <span style={{ fontSize: '0.88rem', color: 'var(--primary)', fontWeight: 600 }}>
-                            {app.job?.company}
-                          </span>
-                        </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <StatusBadge status={app.status} />
-                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                            Applied {new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </span>
+                  <div
+                    key={app._id}
+                    style={{
+                      borderBottom: '1px solid var(--border)',
+                      paddingBottom: '24px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+                      <div>
+                        <h3
+                          style={{
+                            fontSize: '1.2rem',
+                            margin: '0 0 4px 0',
+                            fontFamily: 'var(--font-sans)',
+                            fontWeight: 600
+                          }}
+                        >
+                          {app.job?.title || 'Position'}
+                        </h3>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--accent)', fontWeight: 500 }}>
+                          {app.job?.company} {app.job?.location ? `· ${app.job.location}` : ''}
                         </div>
                       </div>
 
-                      {/* Timeline Stage Indicators */}
-                      <div style={{ display: 'flex', gap: '12px', marginTop: '10px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                          Step 1: Submitted ✓
-                        </span>
-                        <span>→</span>
-                        <span style={{ color: isReviewed || isAccepted ? 'var(--text-primary)' : undefined, fontWeight: isReviewed ? 700 : 500 }}>
-                          Step 2: Under Review {isReviewed || isAccepted ? '✓' : ''}
-                        </span>
-                        <span>→</span>
-                        <span style={{
-                          color: isAccepted ? 'var(--accent-green)' : isRejected ? 'var(--accent-rose)' : undefined,
-                          fontWeight: isAccepted || isRejected ? 700 : 500
-                        }}>
-                          Step 3: {isAccepted ? 'Accepted 🎉' : isRejected ? 'Decision Made' : 'Final Decision'}
-                        </span>
-                      </div>
-
-                      {app.job?._id && (
-                        <div style={{ marginTop: '10px' }}>
-                          <Link to={`/jobs/${app.job._id}`} style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
-                            View Original Posting →
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <StatusBadge status={app.status} />
+                        {app.job?._id && (
+                          <Link
+                            to={`/jobs/${app.job._id}`}
+                            style={{
+                              fontSize: '0.84rem',
+                              color: 'var(--text-muted)',
+                              textDecoration: 'none'
+                            }}
+                          >
+                            View role →
                           </Link>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </li>
+
+                    {/* Editorial Text Timeline:
+                        ● Application submitted
+                        │  Sep 28 · 10:42 AM
+                        │
+                        ● Application reviewed
+                        │
+                        ○ Employer decision
+                           Pending
+                    */}
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.84rem',
+                        lineHeight: 1.6,
+                        color: 'var(--text-muted)',
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '16px 20px'
+                      }}
+                    >
+                      <div style={{ color: 'var(--text)', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--accent)', marginRight: '8px' }}>●</span> Application submitted
+                      </div>
+                      <div style={{ paddingLeft: '18px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                        │ {formattedDate}
+                      </div>
+                      <div style={{ paddingLeft: '18px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                        │
+                      </div>
+                      <div style={{ color: isReviewed || isAccepted || isRejected ? 'var(--text)' : 'var(--text-muted)', fontWeight: isReviewed || isAccepted || isRejected ? 600 : 400 }}>
+                        <span style={{ color: isReviewed || isAccepted || isRejected ? 'var(--accent)' : 'var(--border-strong)', marginRight: '8px' }}>
+                          {isReviewed || isAccepted || isRejected ? '●' : '○'}
+                        </span>{' '}
+                        Application reviewed
+                      </div>
+                      <div style={{ paddingLeft: '18px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                        │ {isReviewed || isAccepted || isRejected ? 'Under employer evaluation' : 'Pending review'}
+                      </div>
+                      <div style={{ paddingLeft: '18px', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                        │
+                      </div>
+                      <div style={{ color: isAccepted || isRejected ? 'var(--text)' : 'var(--text-muted)', fontWeight: isAccepted || isRejected ? 600 : 400 }}>
+                        <span style={{ color: isAccepted ? 'var(--accent)' : isRejected ? 'var(--accent-rose)' : 'var(--border-strong)', marginRight: '8px' }}>
+                          {isAccepted || isRejected ? '●' : '○'}
+                        </span>{' '}
+                        Employer decision: {isAccepted ? 'Accepted' : isRejected ? 'Closed / Not selected' : 'Pending'}
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
-            </ol>
+            </div>
           )}
         </div>
 
