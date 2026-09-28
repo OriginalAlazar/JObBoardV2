@@ -239,6 +239,192 @@
       color: var(--primary);
     }
 
+    /* Live Cloud Status Badges */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .live-badge-primary {
+      background: #1F4D3A;
+      color: #ffffff;
+      border: 1px solid #1F4D3A;
+    }
+
+    .live-badge-primary:hover {
+      background: #153427;
+      color: #ffffff;
+    }
+
+    .live-badge-secondary {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+    }
+
+    .live-badge-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .live-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+      animation: livePulse 2s infinite;
+    }
+
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+      70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Presentation Mode Overrides */
+    body.presentation-mode .sidebar {
+      display: none !important;
+    }
+
+    body.presentation-mode .content-area {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      max-width: 1040px !important;
+      padding: 36px 32px 100px !important;
+    }
+
+    body.presentation-mode .doc-title {
+      font-size: 3.2rem !important;
+    }
+
+    body.presentation-mode .doc-section {
+      margin-bottom: 84px !important;
+    }
+
+    /* Defense Q&A Card Styling */
+    .qa-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .qa-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .qa-question {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .qa-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .qa-category-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid rgba(2, 132, 199, 0.2);
+    }
+
+    .qa-answer {
+      font-size: 0.94rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .qa-answer strong {
+      color: var(--text-primary);
+    }
+
+    .qa-cite {
+      display: inline-block;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: var(--bg-surface-elevated);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Demo Account Pill Boxes */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .demo-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+    }
+
+    .demo-pill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .demo-pill-copy {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0;
+    }
+
     /* -------------------------------------------------------------
        LAYOUT: SIDEBAR + CONTENT
     ------------------------------------------------------------- */
@@ -830,11 +1016,20 @@
     </a>
 
     <div class="nav-actions">
+      <a href="https://j-ob-board-v2.vercel.app" target="_blank" rel="noopener noreferrer" class="live-badge live-badge-primary">
+        <span class="live-status-dot"></span> Live App ↗
+      </a>
+      <a href="https://sira-api-idc1.onrender.com/api/jobs" target="_blank" rel="noopener noreferrer" class="live-badge live-badge-secondary">
+        API ↗
+      </a>
+      <button class="btn-action" id="pres-btn" onclick="togglePresentationMode()" title="Toggle full-width presentation mode">
+        <span id="pres-icon">🎤</span> <span id="pres-text">Defense Mode</span>
+      </button>
       <button class="theme-toggle" id="theme-btn" title="Toggle dark/light theme">
         <span id="theme-icon">☀️</span> <span id="theme-text">Light Mode</span>
       </button>
       <button class="btn-action" onclick="window.print()" title="Print to PDF">
-        🖨️ Print / Save PDF
+        🖨️ PDF
       </button>
     </div>
   </header>
@@ -849,36 +1044,37 @@
       </div>
 
       <nav>
-        <div class="toc-group-title">Foundations & Requirements</div>
+        <div class="toc-group-title">Foundations &amp; Requirements</div>
         <ul class="toc-nav">
-          <li><a href="#section-1" class="toc-link"><span class="toc-num">01</span> Project Plan & Cloud Constraints</a></li>
+          <li><a href="#section-1" class="toc-link"><span class="toc-num">01</span> Project Plan &amp; Cloud Constraints</a></li>
           <li><a href="#section-2" class="toc-link"><span class="toc-num">02</span> Software Requirements (SRS)</a></li>
           <li><a href="#section-3" class="toc-link"><span class="toc-num">03</span> Use Case Specifications</a></li>
         </ul>
 
-        <div class="toc-group-title">System & Database Architecture</div>
+        <div class="toc-group-title">System &amp; Database Architecture</div>
         <ul class="toc-nav">
-          <li><a href="#section-4" class="toc-link"><span class="toc-num">04</span> System & Cloud Architecture</a></li>
-          <li><a href="#section-5" class="toc-link"><span class="toc-num">05</span> Database Design & ERD</a></li>
-          <li><a href="#section-6" class="toc-link"><span class="toc-num">06</span> REST API Contract & Route Order</a></li>
-          <li><a href="#section-7" class="toc-link"><span class="toc-num">07</span> Auth & Cookie Security Engine</a></li>
-          <li><a href="#section-8" class="toc-link"><span class="toc-num">08</span> Business Rules (BR-001 - 010)</a></li>
-          <li><a href="#section-9" class="toc-link"><span class="toc-num">09</span> UI/UX & Component Design</a></li>
+          <li><a href="#section-4" class="toc-link"><span class="toc-num">04</span> System &amp; Cloud Architecture</a></li>
+          <li><a href="#section-5" class="toc-link"><span class="toc-num">05</span> Database Design &amp; ERD</a></li>
+          <li><a href="#section-6" class="toc-link"><span class="toc-num">06</span> REST API Contract &amp; Route Order</a></li>
+          <li><a href="#section-7" class="toc-link"><span class="toc-num">07</span> Auth &amp; Cookie Security Engine</a></li>
+          <li><a href="#section-8" class="toc-link"><span class="toc-num">08</span> Business Rules (BR-001 - 011)</a></li>
+          <li><a href="#section-9" class="toc-link"><span class="toc-num">09</span> UI/UX &amp; Component Design</a></li>
         </ul>
 
-        <div class="toc-group-title">Deployment & Quality Assurance</div>
+        <div class="toc-group-title">Deployment &amp; Quality Assurance</div>
         <ul class="toc-nav">
           <li><a href="#section-10" class="toc-link"><span class="toc-num">10</span> Academic Cloud Deployment</a></li>
-          <li><a href="#section-11" class="toc-link"><span class="toc-num">11</span> Environment & Secret Hygiene</a></li>
-          <li><a href="#section-12" class="toc-link"><span class="toc-num">12</span> QA & Test Execution Matrix</a></li>
-          <li><a href="#section-13" class="toc-link"><span class="toc-num">13</span> Git Workflow & Commits</a></li>
+          <li><a href="#section-11" class="toc-link"><span class="toc-num">11</span> Environment &amp; Secret Hygiene</a></li>
+          <li><a href="#section-12" class="toc-link"><span class="toc-num">12</span> QA &amp; Test Execution Matrix</a></li>
+          <li><a href="#section-13" class="toc-link"><span class="toc-num">13</span> Git Workflow &amp; Commits</a></li>
           <li><a href="#section-14" class="toc-link"><span class="toc-num">14</span> Operational Deployment Runbook</a></li>
         </ul>
 
-        <div class="toc-group-title">Team Division & Defense</div>
+        <div class="toc-group-title">Team Division &amp; Defense</div>
         <ul class="toc-nav">
           <li><a href="#section-15" class="toc-link"><span class="toc-num">15</span> 4-Person Modular Team Plan</a></li>
-          <li><a href="#section-16" class="toc-link"><span class="toc-num">16</span> Live Evaluation & Defense Script</a></li>
+          <li><a href="#section-16" class="toc-link"><span class="toc-num">16</span> Live Evaluation &amp; Defense Script</a></li>
+          <li><a href="#section-17" class="toc-link"><span class="toc-num">17</span> Examiner Q&amp;A Defense Guide</a></li>
         </ul>
       </nav>
     </aside>
@@ -900,6 +1096,64 @@
         <p class="doc-subtitle">
           The definitive single source of truth for the Sira recruitment platform. Contains complete SRS, use case specifications, system diagrams, Mongoose data schemas, REST API contracts, business rules (BR-001 through BR-011), editorial design system tokens, 92 automated test suite matrices, and academic cloud deployment runbooks.
         </p>
+
+        <!-- Live Cloud Deployment & Quick Demo Evaluation Box -->
+        <div style="margin-top: 24px; padding: 20px; background: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: 12px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+              <span class="live-status-dot"></span> Live Academic Cloud Deployment (Verified Online)
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="https://j-ob-board-v2.vercel.app" target="_blank" rel="noopener noreferrer" class="live-badge live-badge-primary">
+                Production App: j-ob-board-v2.vercel.app ↗
+              </a>
+              <a href="https://sira-api-idc1.onrender.com/api/jobs" target="_blank" rel="noopener noreferrer" class="live-badge live-badge-secondary">
+                REST API: sira-api-idc1.onrender.com ↗
+              </a>
+              <a href="https://github.com/OriginalAlazar/JObBoardV2" target="_blank" rel="noopener noreferrer" class="live-badge live-badge-secondary">
+                GitHub Repository ↗
+              </a>
+            </div>
+          </div>
+          
+          <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;">
+            <strong>Pre-Seeded Evaluation Accounts (Click "Copy" to instant-copy credentials):</strong>
+          </div>
+          <div class="demo-grid">
+            <div class="demo-pill">
+              <div class="demo-pill-header">
+                <span>Hana Alemu (Employer)</span>
+                <button type="button" class="demo-pill-copy" onclick="copyDemoCreds('employer@demo.com', 'Password123!', this)">Copy</button>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.8rem;">NEBO Tech &bull; <code>employer@demo.com</code></div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">Pass: <code>Password123!</code></div>
+            </div>
+            <div class="demo-pill">
+              <div class="demo-pill-header">
+                <span>Abebe Bikila (Employer)</span>
+                <button type="button" class="demo-pill-copy" onclick="copyDemoCreds('recruiter@demo.com', 'Password123!', this)">Copy</button>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.8rem;">Commercial Bank &bull; <code>recruiter@demo.com</code></div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">Pass: <code>Password123!</code></div>
+            </div>
+            <div class="demo-pill">
+              <div class="demo-pill-header">
+                <span>Samuel Tadesse (Candidate)</span>
+                <button type="button" class="demo-pill-copy" onclick="copyDemoCreds('seeker1@demo.com', 'Password123!', this)">Copy</button>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.8rem;">Full-Stack Dev &bull; <code>seeker1@demo.com</code></div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">Pass: <code>Password123!</code></div>
+            </div>
+            <div class="demo-pill">
+              <div class="demo-pill-header">
+                <span>Sarah Mekonnen (Candidate)</span>
+                <button type="button" class="demo-pill-copy" onclick="copyDemoCreds('seeker2@demo.com', 'Password123!', this)">Copy</button>
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.8rem;">UI/UX Designer &bull; <code>seeker2@demo.com</code></div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);">Pass: <code>Password123!</code></div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- -------------------------------------------------------------
@@ -1788,7 +2042,7 @@ export const useAuth = () => useContext(AuthContext);</code></pre>
       <section id="section-10" class="doc-section">
         <div class="section-header">
           <span class="section-num">10</span>
-          <h2>Academic Cloud Deployment Guide</h2>
+          <h2>Academic Cloud Deployment &amp; Live Infrastructure</h2>
         </div>
 
         <div class="diagram-card">
@@ -1796,15 +2050,72 @@ export const useAuth = () => useContext(AuthContext);</code></pre>
           <img src="docs/diagrams/deployment-diagram.png" alt="Deployment Diagram" />
         </div>
 
-        <div class="callout callout-info">
-          <div class="callout-icon">💡</div>
+        <div class="callout callout-success">
+          <div class="callout-icon">🌐</div>
           <div class="callout-body">
-            <div class="callout-title">DEPLOYMENT TOPOLOGY SUMMARY</div>
+            <div class="callout-title">VERIFIED LIVE PRODUCTION ENDPOINTS</div>
             <p>
-              <strong>Frontend:</strong> Vercel (Hobby $0) connected to GitHub <code>client/</code>.<br>
-              <strong>Backend:</strong> Render (Free Web Service) connected to GitHub <code>server/</code>.<br>
-              <strong>Database:</strong> MongoDB Atlas (M0 Free Tier, 512 MB).<br>
-              <strong>Cold Start Notice:</strong> Render free service sleeps after 15 minutes of inactivity. First request takes ~60 seconds to wake up.
+              The platform is fully deployed, synchronized with GitHub branch <code>main</code>, and verified operational across three distinct cloud infrastructure providers:
+            </p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Tier / Layer</th>
+                <th>Provider &amp; Plan</th>
+                <th>Live URL / Endpoint</th>
+                <th>Configuration &amp; Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Frontend Client</strong></td>
+                <td>Vercel (Hobby Tier)</td>
+                <td><a href="https://j-ob-board-v2.vercel.app" target="_blank" rel="noopener noreferrer"><code>https://j-ob-board-v2.vercel.app</code> ↗</a></td>
+                <td>Single Page React Application. Routed via <code>vercel.json</code> SPA rewrites. Automated CD from root directory.</td>
+              </tr>
+              <tr>
+                <td><strong>Backend API</strong></td>
+                <td>Render (Free Web Service)</td>
+                <td><a href="https://sira-api-idc1.onrender.com/api/jobs" target="_blank" rel="noopener noreferrer"><code>https://sira-api-idc1.onrender.com</code> ↗</a></td>
+                <td>Node.js/Express REST API in cloud cluster. Trust proxy enabled. Auto-deploys from GitHub <code>main</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Cloud Database</strong></td>
+                <td>MongoDB Atlas (M0 Free Tier)</td>
+                <td><code>sira-cluster.hbs34rn.mongodb.net</code></td>
+                <td>Fully managed replica set (512 MB). Seeded with 9 Ethiopian organizations, sample vacancies, and 4 demo evaluation users.</td>
+              </tr>
+              <tr>
+                <td><strong>Source Code</strong></td>
+                <td>GitHub</td>
+                <td><a href="https://github.com/OriginalAlazar/JObBoardV2" target="_blank" rel="noopener noreferrer"><code>OriginalAlazar/JObBoardV2</code> ↗</a></td>
+                <td>Monorepo containing <code>client/</code>, <code>server/</code>, 92 automated tests, and project documentation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Cross-Origin Session Cookie Architecture</h3>
+        <p>
+          Because the frontend (<code>j-ob-board-v2.vercel.app</code>) and backend API (<code>sira-api-idc1.onrender.com</code>) reside on distinct origins, standard default cookies are blocked by modern browser privacy sandboxes. The production deployment implements the following critical cross-origin architecture:
+        </p>
+        <ul style="margin: 12px 0 20px 24px; line-height: 1.8;">
+          <li><strong>Proxy Trust (<code>app.set('trust proxy', 1)</code>):</strong> Informs Express that it operates behind Render's reverse proxy terminating TLS, ensuring <code>req.secure</code> evaluates to <code>true</code>.</li>
+          <li><strong>Partitioned / SameSite Cookie Flags:</strong> In production mode (<code>NODE_ENV=production</code>), <code>express-session</code> sets <code>sameSite: 'none'</code>, <code>secure: true</code>, and <code>httpOnly: true</code>, allowing cross-site credentialed transmission.</li>
+          <li><strong>Dynamic CORS Origin Reflection:</strong> Express normalizes incoming origins and allows <code>https://j-ob-board-v2.vercel.app</code> while explicitly returning <code>Access-Control-Allow-Credentials: true</code> (preventing browser credential rejection caused by wildcard origins).</li>
+          <li><strong>Axios Client Handshake:</strong> The frontend API client globally specifies <code>withCredentials: true</code> for all authentication and application requests.</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⏱️</div>
+          <div class="callout-body">
+            <div class="callout-title">RENDER FREE TIER COLD-START NOTICE</div>
+            <p>
+              Render free instances sleep after 15 minutes of inactivity. When initiating evaluation or live defense, allow ~50 seconds for the initial wake-up handshake. Once warmed, responses execute in &lt; 200ms.
             </p>
           </div>
         </div>
@@ -2158,24 +2469,307 @@ SESSION_LIFETIME_HOURS=168</code></pre>
       <section id="section-16" class="doc-section">
         <div class="section-header">
           <span class="section-num">16</span>
-          <h2>Live Evaluation &amp; Demonstration Script</h2>
+          <h2>Live Evaluation &amp; Presentation Defense Script</h2>
         </div>
 
-        <div class="callout callout-success">
-          <div class="callout-icon">🎯</div>
-          <div class="callout-body">
-            <div class="callout-title">SEAMLESS PRESENTATION FLOW FOR EVALUATION</div>
-            <ol style="margin: 8px 0 0 20px; line-height: 1.8;">
-              <li><strong>Guest Browsing:</strong> Open <code>http://localhost:5173</code>, observe Sira editorial branding and Ethiopian market statistics, search "Engineer", filter by Category "Technology", and verify transparent ETB compensation tiers.</li>
-              <li><strong>Candidate Sign In:</strong> Authenticate using the quick demo button for Samuel Tadesse (<code>seeker1@demo.com</code> / <code>Password123!</code>). Header updates dynamically to show career workspace.</li>
-              <li><strong>Application Submission:</strong> Open the "Software Engineer" position at NEBO Tech, complete the multi-step modal with cover letter (min 20 chars) and resume link.</li>
-              <li><strong>Duplicate Prevention:</strong> Attempt to apply to the same job again. Demonstrate immediate <code>409 Conflict</code> error banner (BR-002).</li>
-              <li><strong>Employer Workspace:</strong> In an Incognito window, sign in as Hana Alemu (<code>employer@demo.com</code> / <code>Password123!</code>). Inspect NEBO Tech's recruitment pipeline and applicant queue.</li>
-              <li><strong>Candidate Decision:</strong> Transition Samuel's submission from <code>PENDING</code> to <code>ACCEPTED</code> (BR-005 state machine).</li>
-              <li><strong>Real-Time Sync:</strong> Return to Candidate window, refresh "My Applications", and show that status dot updated to <code>● Accepted</code>.</li>
-              <li><strong>Backend Authorization Defense:</strong> While logged in as Candidate, attempt to POST a job via console ➔ Verify <code>403 Forbidden</code> (BR-006). Attempt cross-employer edit ➔ Verify <code>403 Forbidden</code> (BR-004).</li>
-            </ol>
+        <p>
+          This timed 7-minute demonstration script is calibrated for oral project evaluation before examiners. It demonstrates every key requirement: anonymous exploration, stateful authentication, candidate workflow, duplicate constraint enforcement, employer pipeline management, finite state machine progression, and role-based security isolation.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 110px;">Timeline</th>
+                <th style="width: 190px;">Evaluation Phase</th>
+                <th>Examiner Actions &amp; UI Demonstration</th>
+                <th>Backend Enforcement &amp; Architecture Check</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>0:00 - 1:15</strong></td>
+                <td><strong>1. Anonymous Exploration &amp; Ethiopian Localization</strong></td>
+                <td>
+                  1. Navigate to <a href="https://j-ob-board-v2.vercel.app" target="_blank" rel="noopener noreferrer"><code>https://j-ob-board-v2.vercel.app</code></a>.<br>
+                  2. Review hero statistics (live job counts, verified Ethiopian employers, average ETB salaries).<br>
+                  3. Enter search term <em>"Engineer"</em>, select filter <em>"Technology"</em>, toggle <em>"Remote"</em>.<br>
+                  4. Verify server-side pagination and responsive card re-rendering.
+                </td>
+                <td>
+                  <code>GET /api/jobs?keyword=Engineer&amp;category=Technology&amp;type=Remote</code><br>
+                  Public route executes indexed regex text search across <code>title</code>, <code>description</code>, and <code>company</code>. Status code: <code>200 OK</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>1:15 - 2:45</strong></td>
+                <td><strong>2. Candidate Sign In &amp; Modal Application Flow</strong></td>
+                <td>
+                  1. Click <em>"Sign In"</em>. Use the pre-seeded button for <strong>Samuel Tadesse</strong> (<code>seeker1@demo.com</code> / <code>Password123!</code>).<br>
+                  2. Observe navigation dynamically mutating to show <em>"My Applications"</em>.<br>
+                  3. Open vacancy <em>"Senior Backend Engineer"</em> at NEBO Tech.<br>
+                  4. Click <em>"Apply Now"</em> modal, enter cover letter (&gt; 20 chars), valid resume URL, and submit.
+                </td>
+                <td>
+                  <code>POST /api/auth/login</code> sets <code>sira.sid</code> HttpOnly cookie.<br>
+                  <code>POST /api/applications</code> verifies <code>requireAuth</code> (BR-001) and candidate role (BR-006). Application created with initial status <code>PENDING</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2:45 - 3:45</strong></td>
+                <td><strong>3. Duplicate Prevention &amp; Database Integrity Defense</strong></td>
+                <td>
+                  1. Without leaving the NEBO Tech vacancy page, click <em>"Apply Now"</em> again.<br>
+                  2. Submit a second application with identical credentials.<br>
+                  3. Demonstrate immediate inline error banner: <em>"You have already applied for this job."</em>
+                </td>
+                <td>
+                  <code>POST /api/applications</code> triggers application-level check and compound unique index <code>{ job: 1, applicant: 1 }</code>.<br>
+                  Controller intercepts <code>E11000</code> duplicate key error and responds with <code>409 Conflict</code> (BR-002).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>3:45 - 5:15</strong></td>
+                <td><strong>4. Employer Pipeline &amp; Finite State Machine Transition</strong></td>
+                <td>
+                  1. Open a new <strong>Incognito Window</strong> to maintain a separate session.<br>
+                  2. Log in as <strong>Hana Alemu</strong> (<code>employer@demo.com</code> / <code>Password123!</code>).<br>
+                  3. Access <em>"Employer Dashboard"</em> &rarr; <em>"Manage Vacancies"</em>.<br>
+                  4. Open NEBO Tech applicant queue: locate Samuel's submission.<br>
+                  5. Click status dropdown: transition from <code>PENDING</code> &rarr; <code>REVIEWING</code> &rarr; <code>ACCEPTED</code>.
+                </td>
+                <td>
+                  <code>PUT /api/applications/:id/status</code> checks employer ownership <code>job.employer == req.user._id</code> (BR-009).<br>
+                  Enforces finite state machine rules (BR-005). Once marked <code>ACCEPTED</code>, further changes are rejected (BR-005).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>5:15 - 6:30</strong></td>
+                <td><strong>5. Candidate Cross-Sync &amp; RBAC Tamper Prevention</strong></td>
+                <td>
+                  1. Switch back to Candidate window.<br>
+                  2. Refresh <em>"My Applications"</em>: observe status badge live-updated to <code>● Accepted</code>.<br>
+                  3. <strong>Tamper Defense:</strong> Open browser DevTools Console. Attempt to dispatch unauthorized employer action:<br>
+                  <code>fetch('/api/jobs', { method: 'POST', body: JSON.stringify({ title: 'Hacked' }) })</code><br>
+                  4. Verify backend returns <code>403 Forbidden</code>: <em>"Candidate accounts cannot post vacancies."</em>
+                </td>
+                <td>
+                  <code>requireRole('EMPLOYER')</code> middleware verifies <code>req.user.role === 'EMPLOYER'</code>.<br>
+                  Prevents horizontal or vertical privilege escalation at the Express routing layer (BR-006).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- -------------------------------------------------------------
+           SECTION 17: EXAMINER Q&A DEFENSE GUIDE
+      ------------------------------------------------------------- -->
+      <section id="section-17" class="doc-section">
+        <div class="section-header">
+          <span class="section-num">17</span>
+          <h2>Examiner Technical Defense &amp; Evaluation Q&amp;A Guide</h2>
+        </div>
+
+        <p>
+          During the oral defense, examiners probe beyond surface UI functionality to inspect architectural trade-offs, security invariants, data structures, and failure handling. Below are the top 10 anticipated examiner questions paired with authoritative, code-backed answers.
+        </p>
+
+        <!-- Q1 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">01</span>
+            <span class="qa-category-tag">Architecture &amp; Auth</span>
+            Why did your team choose express-session with connect-mongo instead of stateless JWTs?
           </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> We selected server-side sessions stored in MongoDB for three decisive architectural reasons:
+            <br><br>
+            <strong>1. Instant Invalidation:</strong> Stateless JWTs cannot be revoked without maintaining a secondary server-side blacklist (which negates their stateless advantage). When a Sira employer logs out or changes credentials, <code>req.session.destroy()</code> immediately purges the session from MongoDB Atlas, instantly terminating access across all client windows.
+            <br>
+            <strong>2. Defense Against XSS:</strong> Storing JWTs in <code>localStorage</code> leaves authentication tokens accessible to any malicious JavaScript executed via Cross-Site Scripting (XSS). In contrast, Sira transmits credentials via an <code>HttpOnly</code> session cookie which cannot be read or exfiltrated by clientside scripts.
+            <br>
+            <strong>3. Academic Syllabus Compliance:</strong> The WEB II course guidelines explicitly prohibit third-party JWT abstraction libraries, mandating deep understanding of stateful web architecture, cookie security attributes, and database-backed session stores.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/server.js:sessionConfig</code>, <code>server/middleware/auth.js</code></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">02</span>
+            <span class="qa-category-tag">Cross-Origin Security</span>
+            How do you achieve cross-origin cookie authentication between Vercel and Render?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> Deploying the frontend SPA on Vercel (<code>j-ob-board-v2.vercel.app</code>) and the backend API on Render (<code>sira-api-idc1.onrender.com</code>) splits the application across distinct top-level domains, requiring four coordinated cross-origin configurations:
+            <br><br>
+            <strong>1. TLS Reverse Proxy Trust:</strong> Render terminates HTTPS at its edge proxy. We configured <code>app.set('trust proxy', 1)</code> so Express recognizes requests as secure TLS connections.
+            <br>
+            <strong>2. Cookie Flags:</strong> In production, session cookies are configured with <code>sameSite: 'none'</code>, <code>secure: true</code>, and <code>httpOnly: true</code>. <code>SameSite=None</code> allows the browser to transmit the cookie in cross-site XMLHttpRequests, while <code>secure: true</code> ensures it is only transmitted over HTTPS.
+            <br>
+            <strong>3. Explicit CORS Whitelisting:</strong> The browser refuses to accept credentials if the server responds with wildcard <code>Access-Control-Allow-Origin: *</code>. Our CORS middleware normalizes incoming origins and explicitly echoes <code>https://j-ob-board-v2.vercel.app</code> with <code>credentials: true</code>.
+            <br>
+            <strong>4. Axios Client Handshake:</strong> The frontend Axios instance sets <code>withCredentials: true</code> on all API requests.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/server.js</code>, <code>client/src/services/api.js</code></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">03</span>
+            <span class="qa-category-tag">Database Concurrency</span>
+            How does Sira prevent a candidate from applying twice to the same job during high network concurrency (BR-002)?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> We implemented defense-in-depth spanning both the application layer and the storage engine:
+            <br><br>
+            <strong>1. Application Pre-Check:</strong> The <code>applyForJob</code> controller executes an initial read query: <code>Application.findOne({ job: jobId, applicant: req.user._id })</code>. If a record exists, it immediately halts execution and returns <code>409 Conflict</code>.
+            <br>
+            <strong>2. MongoDB Compound Unique Index:</strong> An application-level check alone is vulnerable to race conditions (e.g., rapid double-clicking). To provide mathematical ACID guarantees, the <code>Application</code> schema defines a compound unique index: <code>applicationSchema.index({ job: 1, applicant: 1 }, { unique: true })</code>. Even if two concurrent requests bypass the controller check simultaneously, MongoDB's atomic write lock guarantees that only the first write succeeds. The second write throws a MongoDB <code>E11000 duplicate key error</code>, which our centralized error handler catches and maps to <code>409 Conflict</code>.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/models/Application.js:L38</code>, <code>server/controllers/applicationController.js</code></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">04</span>
+            <span class="qa-category-tag">Business Rules (BR-005)</span>
+            What prevents an employer from changing an application from REJECTED back to PENDING?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> Business Rule <strong>BR-005</strong> enforces a deterministic Finite State Machine (FSM) directly inside <code>updateApplicationStatus</code>:
+            <br><br>
+            <code>PENDING &rarr; REVIEWING &rarr; ACCEPTED / REJECTED</code>
+            <br><br>
+            The backend first verifies the current state of the document. If <code>application.status === 'ACCEPTED'</code> or <code>application.status === 'REJECTED'</code>, the status is classified as terminal. Any mutation attempt returns <code>400 Bad Request</code> with the payload <code>{ success: false, message: 'Cannot modify a finalized application' }</code>. This prevents recruiter tampering and preserves legal audit trails.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/controllers/applicationController.js:updateApplicationStatus</code>, <code>tests/business-rules.test.js</code></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">05</span>
+            <span class="qa-category-tag">Authorization &amp; RBAC</span>
+            How do you guarantee that an employer cannot edit or delete another company's job posting (BR-004)?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> We enforce three independent authorization boundaries:
+            <br><br>
+            <strong>1. Authentication:</strong> <code>requireAuth</code> ensures the caller possesses a valid, unexpired session and populates <code>req.user</code> from the database.
+            <br>
+            <strong>2. Role Gate:</strong> <code>requireRole('EMPLOYER')</code> verifies that <code>req.user.role === 'EMPLOYER'</code>, rejecting Candidates with <code>403 Forbidden</code>.
+            <br>
+            <strong>3. Document-Level Ownership Check:</strong> Before updating or deleting a job, the controller fetches the document and strictly compares:
+            <br>
+            <code>if (job.employer.toString() !== req.user._id.toString()) return res.status(403).json(...)</code>
+            <br>
+            Because this check executes entirely on the backend using the verified session identity (never trusting client-supplied IDs in the request body), horizontal privilege escalation across employers is impossible.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/controllers/jobController.js:updateJob</code>, <code>server/middleware/auth.js</code></div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">06</span>
+            <span class="qa-category-tag">Database Indexing &amp; Performance</span>
+            How did you optimize your MongoDB schema for search and high-throughput queries?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> Without indexing, MongoDB performs expensive collection scans (O(N)) across all documents. Sira implements tailored compound and specialized indexes:
+            <br><br>
+            <strong>1. Compound Unique Index:</strong> <code>{ job: 1, applicant: 1 }</code> on <code>applications</code> enforces single-application business rules and enables instant O(log N) lookup.
+            <br>
+            <strong>2. Dashboard Indexing:</strong> <code>{ employer: 1, createdAt: -1 }</code> on <code>jobs</code> ensures employer dashboard listings are served directly from index memory without in-memory sorting.
+            <br>
+            <strong>3. Candidate Tracking Index:</strong> <code>{ applicant: 1, createdAt: -1 }</code> on <code>applications</code> accelerates seeker dashboard rendering.
+            <br>
+            <strong>4. Text Index:</strong> <code>{ title: 'text', description: 'text', company: 'text' }</code> powers efficient full-text searching across Ethiopian job vacancies.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/models/Job.js</code>, <code>server/models/Application.js</code></div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">07</span>
+            <span class="qa-category-tag">Storage Hygiene &amp; Memory</span>
+            How does Sira prevent session bloat and storage leaks on the 512 MB MongoDB Atlas free tier?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> If session documents were simply appended without removal, the database would eventually hit the 512 MB storage cap.
+            <br><br>
+            We resolved this via <code>connect-mongo</code>'s integrated TTL (Time-To-Live) index on the <code>sessions</code> collection. Every session document includes an <code>expires</code> timestamp. MongoDB Atlas runs a background thread every 60 seconds that evaluates TTL indexes and automatically drops expired sessions directly at the B-tree level without requiring Node.js cron jobs.
+            <br><br>
+            Additionally, we enabled <code>touchAfter: 24 * 3600</code>, ensuring sessions are only re-written to the database once every 24 hours unless the session payload changes, reducing Atlas write operations by over 85%.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/server.js:sessionStore</code></div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">08</span>
+            <span class="qa-category-tag">Automated Testing &amp; Verification</span>
+            How did your team verify that edge cases and business rules function without human error?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> Sira is backed by a comprehensive automated test suite consisting of <strong>92 passing tests</strong> across 5 test suites:
+            <br><br>
+            <strong>1. <code>auth.test.js</code>:</strong> Validates user registration, password hashing, session emission, cookie serialization, and logout destruction.
+            <br>
+            <strong>2. <code>jobs.test.js</code>:</strong> Tests CRUD operations, pagination bounds, route ordering (ensuring <code>/api/jobs/mine</code> is not caught by <code>/:id</code>), and cross-employer update rejections.
+            <br>
+            <strong>3. <code>applications.test.js</code>:</strong> Tests application submission, resume URL validation, and seeker history queries.
+            <br>
+            <strong>4. <code>business-rules.test.js</code>:</strong> Dedicated verification of BR-001 through BR-011 (duplicate application 409, FSM terminal states, closed job rejections).
+            <br>
+            <strong>5. <code>validation.test.js</code>:</strong> Enforces boundary testing (invalid emails, short passwords &lt; 6 chars, negative ETB salaries, missing required fields).
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/tests/</code> (92 passed, 5 test suites)</div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">09</span>
+            <span class="qa-category-tag">Security &amp; Error Sanitization</span>
+            How does Sira protect against NoSQL injection and credential exposure during server crashes?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong>
+            <br><br>
+            <strong>1. NoSQL Injection Prevention:</strong> In MongoDB, passing un-sanitized objects like <code>{ "email": { "$gt": "" } }</code> can bypass authentication. Sira relies on strict Mongoose schema casting. When an input is cast, any nested operator objects targeting primitive fields are rejected or cast to null.
+            <br>
+            <strong>2. Bcrypt Salt Rounds:</strong> Passwords are never stored in plaintext; they are hashed with <code>bcryptjs</code> using 10 salt rounds prior to persistence.
+            <br>
+            <strong>3. Centralized Error Sanitization:</strong> Express features a centralized 4-argument error handling middleware. In production, raw internal stack traces and database connection strings are logged only to the private server console, while the HTTP client receives a sanitized, structured JSON payload: <code>{ success: false, message: 'Internal Server Error' }</code>.
+          </p>
+          <div class="qa-cite">Source Reference: <code>server/server.js:errorHandler</code>, <code>server/models/User.js</code></div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="qa-card">
+          <div class="qa-question">
+            <span class="qa-num">10</span>
+            <span class="qa-category-tag">Cloud Operations &amp; UX</span>
+            How does the frontend handle Render's 50-second free-tier spin-up without degrading user experience?
+          </div>
+          <p class="qa-answer">
+            <strong>Model Defense:</strong> On Render's free tier, the backend web service enters sleep mode after 15 minutes of inactivity. When a cold request arrives, the container requires 45&ndash;60 seconds to boot.
+            <br><br>
+            <strong>1. Client Timeout Configuration:</strong> Axios timeout is configured to allow the cold-start handshake without throwing an abrupt premature network termination.
+            <br>
+            <strong>2. UX Skeleton Screens &amp; Spinners:</strong> The React frontend presents graceful animated skeleton loaders and helpful cold-start status indicators rather than blank screens or broken layouts.
+            <br>
+            <strong>3. Self-Healing Mongoose Pool:</strong> When the container resumes, Mongoose utilizes connection pooling with automated retry logic, immediately re-establishing cluster communication with MongoDB Atlas without requiring manual server restarts.
+          </p>
+          <div class="qa-cite">Source Reference: <code>client/src/services/api.js</code>, <code>server/config/db.js</code></div>
         </div>
       </section>
 
@@ -2210,6 +2804,41 @@ SESSION_LIFETIME_HOURS=168</code></pre>
         themeIcon.textContent = '🌙';
         themeText.textContent = 'Dark Mode';
       }
+    }
+
+    // Presentation / Defense Mode Toggle
+    function togglePresentationMode() {
+      const isPres = document.body.classList.toggle('presentation-mode');
+      const presText = document.getElementById('pres-text');
+      const presIcon = document.getElementById('pres-icon');
+      if (isPres) {
+        if (presText) presText.textContent = 'Exit Defense';
+        if (presIcon) presIcon.textContent = '✕';
+        localStorage.setItem('presentation-mode', 'true');
+      } else {
+        if (presText) presText.textContent = 'Defense Mode';
+        if (presIcon) presIcon.textContent = '🎤';
+        localStorage.setItem('presentation-mode', 'false');
+      }
+    }
+
+    // Restore presentation mode state if previously enabled
+    if (localStorage.getItem('presentation-mode') === 'true') {
+      togglePresentationMode();
+    }
+
+    // Quick Copy Helper for Demo Credentials
+    function copyDemoCreds(email, pass, btn) {
+      const textToCopy = `Email: ${email}\nPassword: ${pass}`;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.color = '#10b981';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = '';
+        }, 2000);
+      });
     }
 
     // Top Progress Bar

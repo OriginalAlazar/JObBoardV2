@@ -2,9 +2,22 @@
 
 **Brand:** Sira · ሥራ (*Find work. Build what’s next.*)  
 **Course:** WEB II — Full Stack Web Development  
-**Architecture:** React SPA (Vite) + Node.js / Express REST API + MongoDB (Mongoose)  
-**Security Model:** Server-Side Sessions with HTTP-Only Cookies + MongoDB TTL + bcrypt  
+**Architecture:** React SPA (Vite) + Node.js / Express REST API + MongoDB Atlas (Mongoose)  
+**Security Model:** Server-Side Sessions with HTTP-Only Cookies + Cross-Site SameSite=None + MongoDB TTL  
 **Automated Tests:** 92 / 92 Tests Passing (100% Green across 5 test suites)  
+
+---
+
+## 🌐 Live Production Deployments (Verified Online)
+
+| Tier / Component | Cloud Provider | Live URL / Endpoint | Status |
+| :--- | :--- | :--- | :---: |
+| **Frontend Application** | Vercel (Hobby Tier) | [https://j-ob-board-v2.vercel.app](https://j-ob-board-v2.vercel.app) | 🟢 Live |
+| **Backend REST API** | Render (Web Service) | [https://sira-api-idc1.onrender.com/api/jobs](https://sira-api-idc1.onrender.com/api/jobs) | 🟢 Live |
+| **Cloud Database** | MongoDB Atlas (M0) | `sira-cluster.hbs34rn.mongodb.net/jobboard_v2` | 🟢 Connected |
+| **Source Code Repository**| GitHub | [OriginalAlazar/JObBoardV2](https://github.com/OriginalAlazar/JObBoardV2) | 🟢 Synced |
+
+> **Presentation & Defense Package:** Open [DOCUMENTATION.html](file:///c:/Users/Alazar/OneDrive/Documents/SPR2026/Web%20II/Project/JObBoardV2/DOCUMENTATION.html) in any browser and click **"🎤 Defense Mode"** in the top navigation bar to toggle presentation-optimized view with 1-click credential copying, timed demonstration script, and 10 technical examiner Q&A defenses.
 
 ---
 
@@ -121,18 +134,19 @@ JObBoardV2/
 
 ---
 
-## 👥 Team Work Breakdown (Phases)
+## 👥 Team Work Breakdown & Delivery Status
 
 | Phase | Module | Assigned To | Status |
 | :---: | :--- | :--- | :---: |
-| **1** | Environment, Git & Scaffolding | Team | ⏳ Pending |
-| **2** | Mongoose Models & Constraints (TTL, Compound Index) | Backend | ⏳ Pending |
-| **3** | Server-side Session Authentication & bcrypt | Backend | ⏳ Pending |
-| **4** | Jobs CRUD, Search, Filter & Ownership Verification | Backend | ⏳ Pending |
-| **5** | Application Submission & Status Decision Flow | Backend | ⏳ Pending |
-| **6** | MongoDB Aggregation Pipelines (Dashboards) | Backend | ⏳ Pending |
-| **7** | Design System, Navbar, Public Pages & Job Search | Frontend | ⏳ Pending |
-| **8** | AuthContext, ProtectedRoute & Role Guards | Frontend | ⏳ Pending |
-| **9** | Seeker Dashboard & Employer Candidate Board | Frontend | ⏳ Pending |
-| **10**| Seed Script & Testing Matrix Execution | Team | ⏳ Pending |
-| **11**| Live Demonstration Rehearsal & Submission | Team | ⏳ Pending |
+| **1** | Environment, Git & Scaffolding | Team | ✅ Complete |
+| **2** | Mongoose Models & Constraints (TTL, Compound Index) | Backend | ✅ Complete |
+| **3** | Server-side Session Authentication & bcrypt | Backend | ✅ Complete |
+| **4** | Jobs CRUD, Search, Filter & Ownership Verification | Backend | ✅ Complete |
+| **5** | Application Submission & Status Decision Flow | Backend | ✅ Complete |
+| **6** | MongoDB Aggregation Pipelines (Dashboards) | Backend | ✅ Complete |
+| **7** | Design System, Navbar, Public Pages & Job Search | Frontend | ✅ Complete |
+| **8** | AuthContext, ProtectedRoute & Role Guards | Frontend | ✅ Complete |
+| **9** | Seeker Dashboard & Employer Candidate Board | Frontend | ✅ Complete |
+| **10**| Seed Script & Testing Matrix Execution (92/92 Tests) | Team | ✅ Complete |
+| **11**| Live Cloud Deployment (Vercel + Render + Atlas) | Team | ✅ Complete |
+| **12**| Defense Package & Oral Presentation Runbook | Team | ✅ Complete |
