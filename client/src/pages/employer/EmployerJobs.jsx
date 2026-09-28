@@ -122,14 +122,14 @@ const EmployerJobs = () => {
               textAlign: 'left'
             }}
           >
-            <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
-              No postings found
+            <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 6px 0', color: 'var(--text)' }}>
+              No opportunities posted yet.
             </h3>
             <p style={{ color: 'var(--text-muted)', maxWidth: '440px', margin: '0 0 20px 0', fontSize: '0.92rem' }}>
-              You haven't created any job postings yet. Publish an opening to begin receiving verified applications.
+              Create your first job listing to start reaching candidates.
             </p>
             <Link to="/employer/jobs/create" className="btn btn-primary">
-              Create job posting →
+              Post a job
             </Link>
           </div>
         ) : (
@@ -177,7 +177,7 @@ const EmployerJobs = () => {
                     <td style={{ padding: '16px', fontSize: '0.88rem' }}>{job.category}</td>
                     <td style={{ padding: '16px', fontSize: '0.88rem' }}>{job.type}</td>
                     <td style={{ padding: '16px', fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--accent)', fontSize: '0.88rem' }}>
-                      ${job.salary?.toLocaleString()}
+                      ETB {job.salary?.toLocaleString()}
                     </td>
                     <td style={{ padding: '16px' }}>
                       <StatusBadge status={job.status} />

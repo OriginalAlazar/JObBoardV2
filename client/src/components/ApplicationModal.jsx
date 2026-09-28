@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
   const { user } = useAuth();
 
-  // Multi-step state: 1 = Personal info, 2 = Application info / Materials, 3 = Review, 4 = Submit / Completed
+  // Multi-step state: 1 = Your information, 2 = Your application, 3 = Review application
   const [step, setStep] = useState(1);
 
   // Form fields
@@ -43,11 +43,11 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
   const validateStep1 = () => {
     setError('');
     if (!applicantName.trim()) {
-      setError('Please provide your full name.');
+      setError('Please provide your name.');
       return false;
     }
     if (!applicantEmail.trim() || !applicantEmail.includes('@')) {
-      setError('Please provide a valid contact email address.');
+      setError('Please provide a valid email address.');
       return false;
     }
     return true;
@@ -58,7 +58,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     setError('');
     const urlPattern = /^(https?:\/\/)([\w.-]+)+(:\d+)?(\/([\w/_.-]*(\?\S+)?)?)?$/;
     if (!urlPattern.test(resumeLink.trim())) {
-      setError('Please provide a valid HTTP/HTTPS link to your online resume or portfolio.');
+      setError('Please provide a valid resume link (HTTP/HTTPS URL).');
       return false;
     }
     if (coverLetter.trim().length < 20) {
@@ -105,9 +105,9 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
         setStep(1);
         setCoverLetter('');
         setResumeLink('');
-      }, 1500);
+      }, 1800);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Failed to submit application. Please try again.';
+      const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
       setError(msg);
     } finally {
       setSubmitting(false);
@@ -129,7 +129,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-md)',
           background: 'var(--surface)',
-          boxShadow: 'none'
+          boxShadow: 'none',
         }}
       >
         {/* Modal Header */}
@@ -138,7 +138,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
           style={{
             borderBottom: '1px solid var(--border)',
             paddingBottom: '16px',
-            marginBottom: '20px'
+            marginBottom: '20px',
           }}
         >
           <div>
@@ -150,10 +150,10 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                 letterSpacing: '0.06em',
                 color: 'var(--text-muted)',
                 display: 'block',
-                marginBottom: '4px'
+                marginBottom: '4px',
               }}
             >
-              Application Submission
+              Apply for
             </span>
             <h3
               id="modal-title"
@@ -161,7 +161,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                 fontSize: '1.25rem',
                 margin: 0,
                 fontFamily: 'var(--font-serif)',
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
               {job.title}
@@ -176,11 +176,11 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
             style={{
               background: 'transparent',
               border: 'none',
-              fontSize: '1.25rem',
+              fontSize: '1.1rem',
               cursor: 'pointer',
               color: 'var(--text-muted)',
               lineHeight: 1,
-              padding: '4px 8px'
+              padding: '4px 8px',
             }}
             aria-label="Close modal"
           >
@@ -198,7 +198,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
               justifyContent: 'space-between',
               marginBottom: '24px',
               paddingBottom: '16px',
-              borderBottom: '1px solid var(--border)'
+              borderBottom: '1px solid var(--border)',
             }}
           >
             <div className="step-indicator" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -214,7 +214,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 600,
                   background: step >= 1 ? 'var(--accent)' : 'var(--border)',
-                  color: step >= 1 ? '#FFFFFF' : 'var(--text-muted)'
+                  color: step >= 1 ? '#FFFFFF' : 'var(--text-muted)',
                 }}
               >
                 1
@@ -223,10 +223,10 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                 style={{
                   fontSize: '0.84rem',
                   fontWeight: step === 1 ? 600 : 400,
-                  color: step === 1 ? 'var(--text)' : 'var(--text-muted)'
+                  color: step === 1 ? 'var(--text)' : 'var(--text-muted)',
                 }}
               >
-                Personal
+                Information
               </span>
             </div>
 
@@ -245,7 +245,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 600,
                   background: step >= 2 ? 'var(--accent)' : 'var(--border)',
-                  color: step >= 2 ? '#FFFFFF' : 'var(--text-muted)'
+                  color: step >= 2 ? '#FFFFFF' : 'var(--text-muted)',
                 }}
               >
                 2
@@ -254,10 +254,10 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                 style={{
                   fontSize: '0.84rem',
                   fontWeight: step === 2 ? 600 : 400,
-                  color: step === 2 ? 'var(--text)' : 'var(--text-muted)'
+                  color: step === 2 ? 'var(--text)' : 'var(--text-muted)',
                 }}
               >
-                Materials
+                Application
               </span>
             </div>
 
@@ -276,7 +276,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 600,
                   background: step === 3 ? 'var(--accent)' : 'var(--border)',
-                  color: step === 3 ? '#FFFFFF' : 'var(--text-muted)'
+                  color: step === 3 ? '#FFFFFF' : 'var(--text-muted)',
                 }}
               >
                 3
@@ -285,7 +285,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                 style={{
                   fontSize: '0.84rem',
                   fontWeight: step === 3 ? 600 : 400,
-                  color: step === 3 ? 'var(--text)' : 'var(--text-muted)'
+                  color: step === 3 ? 'var(--text)' : 'var(--text-muted)',
                 }}
               >
                 Review
@@ -297,59 +297,62 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
         {success ? (
           <div
             style={{
-              padding: '32px 16px',
+              padding: '32px 20px',
               textAlign: 'left',
               border: '1px solid var(--border)',
               background: 'var(--accent-soft)',
-              borderRadius: 'var(--radius-sm)'
+              borderRadius: 'var(--radius-sm)',
             }}
           >
-            <div
+            <span
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.8rem',
+                fontSize: '0.75rem',
                 textTransform: 'uppercase',
                 color: 'var(--accent)',
                 letterSpacing: '0.04em',
-                marginBottom: '8px'
+                display: 'block',
+                marginBottom: '8px',
+                fontWeight: 600,
               }}
             >
-              Confirmed
-            </div>
+              Success
+            </span>
             <h4
               style={{
                 color: 'var(--accent)',
                 margin: '0 0 8px 0',
-                fontSize: '1.4rem',
+                fontSize: '1.35rem',
                 fontFamily: 'var(--font-serif)',
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
-              Application Submitted
+              Application submitted successfully.
             </h4>
             <p style={{ margin: 0, color: 'var(--text)', fontSize: '0.92rem', lineHeight: 1.6 }}>
-              Your candidate profile and materials have been submitted directly to {job.company}.
+              Your application has been submitted and is waiting for review by {job.company}.
             </p>
           </div>
         ) : (
           <div>
             {error && <div className="alert alert-error" style={{ marginBottom: '16px' }}>{error}</div>}
 
-            {/* STEP 1: Applicant Profile Confirmation */}
+            {/* STEP 1: Your Information */}
             {step === 1 && (
               <div>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
-                  Step 1 of 3: Provide your contact details for this submission.
-                </p>
+                <h4 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0' }}>
+                  Your information
+                </h4>
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="app-name">
-                    Full Name
+                    Name
                   </label>
                   <input
                     id="app-name"
                     type="text"
                     className="form-input"
+                    placeholder="Enter your full name"
                     value={applicantName}
                     onChange={(e) => setApplicantName(e.target.value)}
                     required
@@ -358,64 +361,65 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="app-email">
-                    Contact Email Address
+                    Email
                   </label>
                   <input
                     id="app-email"
                     type="email"
                     className="form-input"
+                    placeholder="Enter your email address"
                     value={applicantEmail}
                     onChange={(e) => setApplicantEmail(e.target.value)}
                     required
                   />
                   <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
-                    Status updates and recruitment decisions will be sent to this email.
+                    Status updates and decisions will be sent to this address.
                   </small>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '24px' }}>
                   <button type="button" className="btn btn-primary" onClick={handleNext}>
-                    Next: Add Application Materials →
+                    Continue →
                   </button>
                 </div>
               </div>
             )}
 
-            {/* STEP 2: Application Materials (Resume Link & Cover Letter) */}
+            {/* STEP 2: Your Application (Resume & Cover Letter) */}
             {step === 2 && (
               <div>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
-                  Step 2 of 3: Provide your online resume and brief statement.
-                </p>
+                <h4 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0' }}>
+                  Your application
+                </h4>
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="resumeLink">
-                    Online Resume or Portfolio Link
+                    Resume
                   </label>
                   <input
                     id="resumeLink"
                     type="url"
                     className="form-input"
-                    placeholder="https://drive.google.com/file/d/your-cv/view"
+                    placeholder="Paste your resume link"
                     value={resumeLink}
                     onChange={(e) => setResumeLink(e.target.value)}
                     required
                   />
                   <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
-                    Accepted formats: Google Drive, Dropbox, Notion, or personal portfolio URL.
+                    Link to your CV, Google Drive document, Dropbox, or portfolio.
                   </small>
                 </div>
 
                 <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label className="form-label" htmlFor="coverLetter">
-                      Cover Letter / Statement
+                      Cover letter
                     </label>
                     <span
                       style={{
                         fontSize: '0.75rem',
                         fontFamily: 'var(--font-mono)',
-                        color: coverLetter.length >= 20 ? 'var(--accent)' : 'var(--text-muted)'
+                        color: coverLetter.length >= 20 ? 'var(--accent)' : 'var(--text-muted)',
                       }}
                     >
                       {coverLetter.length} / 20 min
@@ -425,7 +429,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     id="coverLetter"
                     className="form-textarea"
                     rows={5}
-                    placeholder="Describe your relevant background and interest in this role..."
+                    placeholder="Tell the employer why you're a good fit..."
                     value={coverLetter}
                     onChange={(e) => setCoverLetter(e.target.value)}
                     required
@@ -442,18 +446,18 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     disabled={coverLetter.trim().length < 20 || !resumeLink.trim()}
                     onClick={handleNext}
                   >
-                    Next: Review Application →
+                    Review application →
                   </button>
                 </div>
               </div>
             )}
 
-            {/* STEP 3: Review with Direct Edit Links & Submission */}
+            {/* STEP 3: Review Application */}
             {step === 3 && (
               <div>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                  Step 3 of 3: Review your submission before confirming.
-                </p>
+                <h4 style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', margin: '0 0 16px 0' }}>
+                  Review application
+                </h4>
 
                 {/* Section 1 Review */}
                 <div
@@ -462,12 +466,12 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     borderRadius: 'var(--radius-sm)',
                     padding: '16px',
                     marginBottom: '12px',
-                    background: 'var(--surface)'
+                    background: 'var(--surface)',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <strong style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
-                      Applicant Details
+                    <strong style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Your Information
                     </strong>
                     <button
                       type="button"
@@ -479,7 +483,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                         cursor: 'pointer',
                         fontSize: '0.82rem',
                         fontWeight: 600,
-                        textDecoration: 'underline'
+                        textDecoration: 'underline',
                       }}
                     >
                       Edit
@@ -498,12 +502,12 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     borderRadius: 'var(--radius-sm)',
                     padding: '16px',
                     marginBottom: '20px',
-                    background: 'var(--surface)'
+                    background: 'var(--surface)',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <strong style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
-                      Materials
+                    <strong style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)' }}>
+                      Your Application
                     </strong>
                     <button
                       type="button"
@@ -515,7 +519,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                         cursor: 'pointer',
                         fontSize: '0.82rem',
                         fontWeight: 600,
-                        textDecoration: 'underline'
+                        textDecoration: 'underline',
                       }}
                     >
                       Edit
@@ -523,7 +527,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                   </div>
                   <div style={{ fontSize: '0.9rem', color: 'var(--text)' }}>
                     <div style={{ marginBottom: '8px', wordBreak: 'break-all' }}>
-                      Resume Link:{' '}
+                      Resume:{' '}
                       <a
                         href={resumeLink}
                         target="_blank"
@@ -534,7 +538,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                       </a>
                     </div>
                     <div>
-                      Cover Letter:
+                      Cover letter:
                       <div
                         style={{
                           marginTop: '6px',
@@ -546,7 +550,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                           maxHeight: '120px',
                           overflowY: 'auto',
                           fontSize: '0.85rem',
-                          lineHeight: 1.6
+                          lineHeight: 1.6,
                         }}
                       >
                         {coverLetter}
@@ -566,7 +570,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
                     onClick={handleSubmit}
                     style={{ padding: '10px 24px' }}
                   >
-                    {submitting ? 'Submitting Application...' : 'Confirm & Submit Application'}
+                    {submitting ? 'Submitting application...' : 'Submit application'}
                   </button>
                 </div>
               </div>

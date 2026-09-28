@@ -80,7 +80,7 @@ const SeekerDashboard = () => {
                 {getGreeting()}, {user?.name?.split(' ')[0] || 'Applicant'}
               </h1>
               <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.98rem' }}>
-                Your active applications and real-time review progression.
+                Keep moving toward your next opportunity.
               </p>
             </div>
 
@@ -246,11 +246,14 @@ const SeekerDashboard = () => {
 
           {recentApplications.length === 0 ? (
             <div style={{ textAlign: 'left', padding: '32px 0', color: 'var(--text-muted)' }}>
-              <p style={{ margin: '0 0 16px 0', fontSize: '0.95rem' }}>
-                You have not submitted any job applications yet.
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 6px 0', color: 'var(--text)' }}>
+                Your applications will appear here.
+              </h3>
+              <p style={{ margin: '0 0 20px 0', fontSize: '0.95rem' }}>
+                Once you apply for a position, you can track its progress from this page.
               </p>
               <Link to="/jobs" className="btn btn-primary">
-                Explore open positions →
+                Explore opportunities
               </Link>
             </div>
           ) : (

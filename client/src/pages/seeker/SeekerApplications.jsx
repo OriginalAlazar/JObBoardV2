@@ -156,16 +156,16 @@ const SeekerApplications = () => {
               textAlign: 'left'
             }}
           >
-            <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
-              No applications in this category
+            <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
+              Your applications will appear here.
             </h3>
             <p style={{ color: 'var(--text-muted)', margin: '0 0 20px 0', fontSize: '0.92rem' }}>
               {activeTab === 'ALL'
-                ? 'You have not submitted any applications yet.'
+                ? 'Once you apply for a position, you can track its progress from this page.'
                 : `You currently have no applications with status "${activeTab}".`}
             </p>
             <Link to="/jobs" className="btn btn-primary">
-              Explore available positions →
+              Explore opportunities
             </Link>
           </div>
         ) : (

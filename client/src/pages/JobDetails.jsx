@@ -61,11 +61,9 @@ const JobDetails = () => {
     );
   }
 
-  const formattedSalary = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(job.salary || 0);
+  const formattedSalary = job.salary
+    ? `ETB ${Number(job.salary).toLocaleString()}`
+    : 'Competitive';
 
   const formattedDate = new Date(job.createdAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -170,7 +168,7 @@ const JobDetails = () => {
                       color: 'var(--accent)'
                     }}
                   >
-                    {formattedSalary} / yr
+                    {formattedSalary}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '4px' }}>
@@ -183,10 +181,10 @@ const JobDetails = () => {
               {job.status === 'CLOSED' ? (
                 <button
                   className="btn btn-secondary"
-                  style={{ width: '100%', padding: '12px' }}
+                  style={{ width: '100%', padding: '12px', fontSize: '0.88rem' }}
                   disabled
                 >
-                  Position Closed
+                  This opportunity is no longer accepting applications
                 </button>
               ) : hasApplied ? (
                 <div
@@ -206,7 +204,7 @@ const JobDetails = () => {
                   }}
                 >
                   <span className="status-dot dot-accepted" />
-                  Application Submitted
+                  You've already applied for this job
                 </div>
               ) : isEmployer ? (
                 <div
@@ -234,7 +232,7 @@ const JobDetails = () => {
                   onClick={() => navigate('/login', { state: { from: `/jobs/${id}` } })}
                   style={{ width: '100%', padding: '12px', fontSize: '0.98rem' }}
                 >
-                  Sign in to Apply →
+                  Sign in to apply →
                 </button>
               )}
 

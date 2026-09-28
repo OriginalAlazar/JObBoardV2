@@ -6,14 +6,11 @@ import JobCard from '../components/JobCard';
 const CATEGORIES = [
   'ALL',
   'Technology',
-  'Healthcare',
-  'Finance & Banking',
-  'Marketing',
-  'Design',
-  'Sales',
-  'Customer Support',
-  'Human Resources',
-  'Other',
+  'Business & Finance',
+  'Design & Creative',
+  'Sales & Customer Service',
+  'Engineering',
+  'Administration',
 ];
 
 const JOB_TYPES = ['ALL', 'Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'];
@@ -27,11 +24,11 @@ const SORT_OPTIONS = [
 
 const SALARY_TIERS = [
   { value: '', label: 'Any salary' },
-  { value: '50000', label: '$50,000+' },
-  { value: '75000', label: '$75,000+' },
-  { value: '100000', label: '$100,000+' },
-  { value: '125000', label: '$125,000+' },
-  { value: '150000', label: '$150,000+' },
+  { value: '15000', label: 'ETB 15,000+' },
+  { value: '20000', label: 'ETB 20,000+' },
+  { value: '25000', label: 'ETB 25,000+' },
+  { value: '30000', label: 'ETB 30,000+' },
+  { value: '35000', label: 'ETB 35,000+' },
 ];
 
 const Jobs = () => {
@@ -53,7 +50,7 @@ const Jobs = () => {
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [error, setError] = useState('');
 
-  // 200ms delay before showing skeletons to avoid flash of loading on fast loads
+  // 200ms delay before showing skeletons
   useEffect(() => {
     let timer;
     if (loading) {
@@ -143,12 +140,14 @@ const Jobs = () => {
         <div style={{ marginBottom: '36px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
             <div>
-              <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>
-                Directory
+              <div style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                OPPORTUNITIES
               </div>
-              <h1 style={{ fontSize: '2.4rem', margin: 0, lineHeight: 1.15 }}>Open Opportunities</h1>
+              <h1 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', margin: 0, lineHeight: 1.15 }}>
+                Open Opportunities
+              </h1>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '6px' }}>
-                Showing <strong>{pagination.total}</strong> active {pagination.total === 1 ? 'position' : 'positions'}
+                Showing <strong>{pagination.total}</strong> {pagination.total === 1 ? 'opportunity' : 'opportunities'} across Ethiopia
               </p>
             </div>
 
@@ -156,7 +155,7 @@ const Jobs = () => {
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="btn btn-outline"
+                className="btn btn-secondary"
                 style={{ fontSize: '0.85rem', padding: '6px 14px' }}
               >
                 Clear all filters
@@ -169,7 +168,7 @@ const Jobs = () => {
             <input
               type="text"
               className="form-input"
-              placeholder="Search by title, company, skill, or location..."
+              placeholder="Search by job title, skill, or company"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               style={{ fontSize: '0.95rem', padding: '11px 16px' }}
@@ -234,7 +233,7 @@ const Jobs = () => {
 
             {/* Job Type Filter */}
             <div className="filter-section">
-              <label className="filter-title" htmlFor="type-select">Employment type</label>
+              <label className="filter-title" htmlFor="type-select">Job type</label>
               <select
                 id="type-select"
                 className="form-select"
@@ -243,7 +242,7 @@ const Jobs = () => {
               >
                 {JOB_TYPES.map((t) => (
                   <option key={t} value={t}>
-                    {t === 'ALL' ? 'All employment types' : t}
+                    {t === 'ALL' ? 'All job types' : t}
                   </option>
                 ))}
               </select>
@@ -251,7 +250,7 @@ const Jobs = () => {
 
             {/* Minimum Salary Filter */}
             <div className="filter-section">
-              <label className="filter-title" htmlFor="salary-select">Minimum compensation</label>
+              <label className="filter-title" htmlFor="salary-select">Salary</label>
               <select
                 id="salary-select"
                 className="form-select"
@@ -286,17 +285,28 @@ const Jobs = () => {
                 ))}
               </div>
             ) : !loading && jobs.length === 0 ? (
-              <div className="card" style={{ padding: '48px 32px' }}>
-                <h3 style={{ marginBottom: '6px' }}>No positions found</h3>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '20px', maxWidth: '440px' }}>
-                  No open job postings match your active filter criteria. Try expanding your search or resetting filters.
+              /* Exact Empty State from Guide */
+              <div
+                style={{
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--surface)',
+                  padding: '48px 32px',
+                  textAlign: 'left'
+                }}
+              >
+                <h3 style={{ fontSize: '1.35rem', fontFamily: 'var(--font-serif)', margin: '0 0 8px 0' }}>
+                  Nothing matched your search.
+                </h3>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '20px', maxWidth: '440px', fontSize: '0.95rem' }}>
+                  Try a different job title, skill, company, or location.
                 </p>
                 <button
                   type="button"
                   onClick={handleResetFilters}
                   className="btn btn-secondary"
                 >
-                  Clear all filters
+                  Clear filters
                 </button>
               </div>
             ) : (

@@ -6,13 +6,11 @@ import Loading from '../../components/Loading';
 
 const CATEGORIES = [
   'Technology',
-  'Healthcare',
-  'Finance & Banking',
-  'Marketing',
-  'Design',
-  'Sales',
-  'Customer Support',
-  'Human Resources',
+  'Business & Finance',
+  'Design & Creative',
+  'Sales & Customer Service',
+  'Engineering',
+  'Administration',
   'Other',
 ];
 
@@ -210,7 +208,7 @@ const JobEditor = () => {
                   name="company"
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Acme Corp"
+                  placeholder="e.g. NEBO Tech"
                   value={formData.company}
                   onChange={handleChange}
                   required
@@ -238,16 +236,16 @@ const JobEditor = () => {
 
               <div className="form-group">
                 <label className="form-label" htmlFor="job-salary">
-                  Target Salary ($ USD / yr)
+                  Target Salary (ETB)
                 </label>
                 <input
                   id="job-salary"
                   name="salary"
                   type="number"
                   min="0"
-                  step="1000"
+                  step="500"
                   className="form-input"
-                  placeholder="e.g. 120000"
+                  placeholder="e.g. 35000"
                   value={formData.salary}
                   onChange={handleChange}
                   required

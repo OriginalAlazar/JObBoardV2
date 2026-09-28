@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
-  const [role, setRole] = useState('JOB_SEEKER');
+  const location = useLocation();
+  const initialRole = location.state?.role === 'EMPLOYER' ? 'EMPLOYER' : 'JOB_SEEKER';
+
+  const [role, setRole] = useState(initialRole);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
@@ -34,7 +37,7 @@ const Register = () => {
     }
 
     if (role === 'EMPLOYER' && !company.trim()) {
-      setError('Organization name is required for Employer accounts.');
+      setError('Company or organization name is required for Employer accounts.');
       return;
     }
 
@@ -76,7 +79,7 @@ const Register = () => {
             borderRadius: 'var(--radius-md)',
             background: 'var(--surface)',
             padding: '36px',
-            textAlign: 'left'
+            textAlign: 'left',
           }}
         >
           <div style={{ marginBottom: '24px' }}>
@@ -88,10 +91,10 @@ const Register = () => {
                 letterSpacing: '0.06em',
                 color: 'var(--text-muted)',
                 display: 'block',
-                marginBottom: '6px'
+                marginBottom: '6px',
               }}
             >
-              Onboarding
+              Sira · ሥራ
             </span>
             <h1
               style={{
@@ -99,13 +102,13 @@ const Register = () => {
                 margin: '0 0 8px 0',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 600,
-                letterSpacing: '-0.02em'
+                letterSpacing: '-0.02em',
               }}
             >
-              Create Account
+              Start your next chapter.
             </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', margin: 0, lineHeight: 1.5 }}>
-              Join to discover curated opportunities or post open roles.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0, lineHeight: 1.5 }}>
+              Create your Sira account and start discovering opportunities.
             </p>
           </div>
 
@@ -119,7 +122,7 @@ const Register = () => {
               padding: '4px',
               borderRadius: 'var(--radius-sm)',
               marginBottom: '24px',
-              border: '1px solid var(--border)'
+              border: '1px solid var(--border)',
             }}
           >
             <button
@@ -135,10 +138,10 @@ const Register = () => {
                 background: role === 'JOB_SEEKER' ? 'var(--surface)' : 'transparent',
                 color: role === 'JOB_SEEKER' ? 'var(--text)' : 'var(--text-muted)',
                 boxShadow: role === 'JOB_SEEKER' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
-                transition: 'background var(--duration-fast), color var(--duration-fast)'
+                transition: 'background var(--duration-fast), color var(--duration-fast)',
               }}
             >
-              Job Seeker
+              I’m looking for work
             </button>
             <button
               type="button"
@@ -153,10 +156,10 @@ const Register = () => {
                 background: role === 'EMPLOYER' ? 'var(--surface)' : 'transparent',
                 color: role === 'EMPLOYER' ? 'var(--text)' : 'var(--text-muted)',
                 boxShadow: role === 'EMPLOYER' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
-                transition: 'background var(--duration-fast), color var(--duration-fast)'
+                transition: 'background var(--duration-fast), color var(--duration-fast)',
               }}
             >
-              Employer / Recruiter
+              I’m hiring
             </button>
           </div>
 
@@ -169,13 +172,13 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="register-name">
-                Full Name
+                Full name
               </label>
               <input
                 id="register-name"
                 type="text"
                 className="form-input"
-                placeholder={role === 'EMPLOYER' ? 'Abebe Bikila' : 'Sara Mekonnen'}
+                placeholder={role === 'EMPLOYER' ? 'Hana Alemu' : 'Samuel Tadesse'}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoComplete="name"
@@ -186,7 +189,7 @@ const Register = () => {
             {role === 'EMPLOYER' && (
               <div className="form-group">
                 <label className="form-label" htmlFor="register-company">
-                  Company / Organization Name
+                  Company or organization name
                 </label>
                 <input
                   id="register-company"
@@ -202,13 +205,13 @@ const Register = () => {
 
             <div className="form-group">
               <label className="form-label" htmlFor="register-email">
-                Email Address
+                Email
               </label>
               <input
                 id="register-email"
                 type="email"
                 className="form-input"
-                placeholder="name@example.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
@@ -240,7 +243,7 @@ const Register = () => {
                 id="register-password"
                 type={showPassword ? 'text' : 'password'}
                 className="form-input"
-                placeholder="Password"
+                placeholder="Enter a strong password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
@@ -255,7 +258,7 @@ const Register = () => {
                   gridTemplateColumns: '1fr 1fr',
                   gap: '6px',
                   fontSize: '0.8rem',
-                  color: 'var(--text-muted)'
+                  color: 'var(--text-muted)',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -264,7 +267,7 @@ const Register = () => {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: hasMinLength ? 'var(--accent)' : 'var(--border)'
+                      background: hasMinLength ? 'var(--accent)' : 'var(--border)',
                     }}
                   />
                   <span style={{ color: hasMinLength ? 'var(--text)' : 'var(--text-muted)' }}>8+ characters</span>
@@ -275,7 +278,7 @@ const Register = () => {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: hasUpper ? 'var(--accent)' : 'var(--border)'
+                      background: hasUpper ? 'var(--accent)' : 'var(--border)',
                     }}
                   />
                   <span style={{ color: hasUpper ? 'var(--text)' : 'var(--text-muted)' }}>Uppercase letter</span>
@@ -286,7 +289,7 @@ const Register = () => {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: hasLower ? 'var(--accent)' : 'var(--border)'
+                      background: hasLower ? 'var(--accent)' : 'var(--border)',
                     }}
                   />
                   <span style={{ color: hasLower ? 'var(--text)' : 'var(--text-muted)' }}>Lowercase letter</span>
@@ -297,7 +300,7 @@ const Register = () => {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: hasNumber && hasSpecial ? 'var(--accent)' : 'var(--border)'
+                      background: hasNumber && hasSpecial ? 'var(--accent)' : 'var(--border)',
                     }}
                   />
                   <span style={{ color: hasNumber && hasSpecial ? 'var(--text)' : 'var(--text-muted)' }}>Number &amp; symbol</span>
@@ -307,7 +310,7 @@ const Register = () => {
 
             <div className="form-group">
               <label className="form-label" htmlFor="register-confirm-password">
-                Confirm Password
+                Confirm password
               </label>
               <input
                 id="register-confirm-password"
@@ -333,14 +336,14 @@ const Register = () => {
               style={{ width: '100%', padding: '12px', fontSize: '0.98rem', marginTop: '12px' }}
               disabled={loading || !isPasswordValid || password !== confirmPassword}
             >
-              {loading ? 'Creating Account...' : `Register as ${role === 'EMPLOYER' ? 'Employer' : 'Job Seeker'} →`}
+              {loading ? 'Creating account...' : `Create ${role === 'EMPLOYER' ? 'Employer' : 'Candidate'} account →`}
             </button>
           </form>
 
           <div style={{ marginTop: '24px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'left' }}>
             Already have an account?{' '}
             <Link to="/login" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>
-              Sign In
+              Sign in
             </Link>
           </div>
 

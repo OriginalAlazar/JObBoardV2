@@ -6,11 +6,7 @@ const JobCard = ({ job }) => {
   if (!job) return null;
 
   const formattedSalary = job.salary
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-      }).format(job.salary)
+    ? `ETB ${Number(job.salary).toLocaleString()}`
     : null;
 
   return (

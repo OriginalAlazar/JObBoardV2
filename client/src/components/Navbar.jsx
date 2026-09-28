@@ -12,97 +12,189 @@ const Navbar = () => {
   };
 
   return (
-    <header style={{
-      background: 'var(--surface)',
-      borderBottom: '1px solid var(--border)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      height: '64px',
-    }}>
-      <div className="container" style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: '100%',
-      }}>
-        {/* Monochrome Brand Mark */}
-        <Link to="/" style={{
+    <header
+      style={{
+        background: 'var(--surface)',
+        borderBottom: '1px solid var(--border)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        height: '64px',
+      }}
+    >
+      <div
+        className="container"
+        style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          color: 'var(--text)',
-          textDecoration: 'none',
-          fontWeight: 700,
-          fontSize: '1rem',
-          letterSpacing: '-0.01em',
-        }}>
-          <span style={{
-            width: '28px',
-            height: '28px',
-            borderRadius: 'var(--radius-sm)',
-            background: 'var(--text)',
-            color: 'var(--surface)',
+          justifyContent: 'space-between',
+          height: '100%',
+        }}
+      >
+        {/* Brand: Sira / ሥራ */}
+        <Link
+          to="/"
+          style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 700,
-            fontSize: '0.85rem',
-          }}>
-            K
+            gap: '8px',
+            color: 'var(--text)',
+            textDecoration: 'none',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 700,
+              fontSize: '1.45rem',
+              letterSpacing: '-0.02em',
+              color: 'var(--text)',
+            }}
+          >
+            Sira
           </span>
-          <span>KIRAY <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>/ JOBS</span></span>
+          <span
+            style={{
+              fontSize: '0.88rem',
+              color: 'var(--text-muted)',
+              fontWeight: 500,
+              letterSpacing: '0.02em',
+              paddingLeft: '2px',
+            }}
+          >
+            ሥራ
+          </span>
         </Link>
 
         {/* Navigation Links */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <Link to="/jobs" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
-            Opportunities
+          <Link
+            to="/jobs"
+            style={{
+              fontSize: '0.92rem',
+              color: 'var(--text)',
+              textDecoration: 'none',
+              fontWeight: 500,
+            }}
+          >
+            Discover
           </Link>
+
+          <a
+            href="/#how-it-works"
+            style={{
+              fontSize: '0.92rem',
+              color: 'var(--text)',
+              textDecoration: 'none',
+              fontWeight: 500,
+            }}
+          >
+            How it works
+          </a>
+
+          {!isAuthenticated && (
+            <a
+              href="/#for-employers"
+              style={{
+                fontSize: '0.92rem',
+                color: 'var(--text)',
+                textDecoration: 'none',
+                fontWeight: 500,
+              }}
+            >
+              For Employers
+            </a>
+          )}
 
           {/* Role-Specific Links */}
           {isAuthenticated && isSeeker && (
             <>
-              <Link to="/seeker/dashboard" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+              <Link
+                to="/seeker/dashboard"
+                style={{
+                  fontSize: '0.92rem',
+                  color: 'var(--text)',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                }}
+              >
                 Workspace
               </Link>
-              <Link to="/seeker/applications" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
-                Applications
+              <Link
+                to="/seeker/applications"
+                style={{
+                  fontSize: '0.92rem',
+                  color: 'var(--text)',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                My Applications
               </Link>
             </>
           )}
 
           {isAuthenticated && isEmployer && (
             <>
-              <Link to="/employer/dashboard" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
-                Hiring Hub
+              <Link
+                to="/employer/dashboard"
+                style={{
+                  fontSize: '0.92rem',
+                  color: 'var(--text)',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                Workspace
               </Link>
-              <Link to="/employer/jobs" style={{ fontSize: '0.92rem', color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+              <Link
+                to="/employer/jobs"
+                style={{
+                  fontSize: '0.92rem',
+                  color: 'var(--text)',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                }}
+              >
                 Postings
               </Link>
-              <Link to="/employer/jobs/create" className="btn btn-outline" style={{ padding: '6px 14px', fontSize: '0.85rem' }}>
+              <Link
+                to="/employer/jobs/create"
+                className="btn btn-outline"
+                style={{ padding: '6px 14px', fontSize: '0.85rem' }}
+              >
                 Post a job
               </Link>
             </>
           )}
 
-          {/* Auth State Controls */}
+          {/* Auth Controls */}
           {!isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Link to="/login" className="btn btn-secondary" style={{ padding: '7px 16px', fontSize: '0.88rem' }}>
-                Log in
+              <Link
+                to="/login"
+                className="btn btn-secondary"
+                style={{ padding: '7px 16px', fontSize: '0.88rem' }}
+              >
+                Sign in
               </Link>
-              <Link to="/register" className="btn btn-primary" style={{ padding: '7px 16px', fontSize: '0.88rem' }}>
-                Register
+              <Link
+                to="/register"
+                className="btn btn-primary"
+                style={{ padding: '7px 16px', fontSize: '0.88rem' }}
+              >
+                Get started
               </Link>
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <span style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-muted)',
-              }}>
-                {user.name} <span style={{ color: 'var(--border-strong)' }}>·</span> {isEmployer ? 'Employer' : 'Candidate'}
+              <span
+                style={{
+                  fontSize: '0.84rem',
+                  color: 'var(--text-muted)',
+                }}
+              >
+                {user.name} <span style={{ color: 'var(--border)' }}>·</span> {isEmployer ? 'Employer' : 'Candidate'}
               </span>
               <button
                 onClick={handleLogout}

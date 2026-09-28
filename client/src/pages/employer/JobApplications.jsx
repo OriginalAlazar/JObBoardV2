@@ -110,7 +110,7 @@ const JobApplications = () => {
               <div style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>
                 {job?.company} · {job?.location} ·{' '}
                 <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: 'var(--accent)' }}>
-                  ${job?.salary?.toLocaleString()} / yr
+                  ETB {job?.salary?.toLocaleString()}
                 </span>
               </div>
             </div>

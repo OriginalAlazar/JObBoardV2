@@ -52,7 +52,7 @@ const Login = () => {
             borderRadius: 'var(--radius-md)',
             background: 'var(--surface)',
             padding: '36px',
-            textAlign: 'left'
+            textAlign: 'left',
           }}
         >
           <div style={{ marginBottom: '28px' }}>
@@ -64,10 +64,10 @@ const Login = () => {
                 letterSpacing: '0.06em',
                 color: 'var(--text-muted)',
                 display: 'block',
-                marginBottom: '6px'
+                marginBottom: '6px',
               }}
             >
-              Account Access
+              Sira · ሥራ
             </span>
             <h1
               style={{
@@ -75,13 +75,13 @@ const Login = () => {
                 margin: '0 0 8px 0',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 600,
-                letterSpacing: '-0.02em'
+                letterSpacing: '-0.02em',
               }}
             >
-              Sign In
+              Welcome back.
             </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', margin: 0, lineHeight: 1.5 }}>
-              Access your workspace to manage positions, candidate submissions, or applications.
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0, lineHeight: 1.5 }}>
+              Sign in to continue your journey with Sira.
             </p>
           </div>
 
@@ -94,13 +94,13 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="login-email">
-                Email Address
+                Email
               </label>
               <input
                 id="login-email"
                 type="email"
                 className="form-input"
-                placeholder="name@organization.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
@@ -132,7 +132,7 @@ const Login = () => {
                 id="login-password"
                 type={showPassword ? 'text' : 'password'}
                 className="form-input"
-                placeholder="Password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -147,17 +147,17 @@ const Login = () => {
               style={{ width: '100%', padding: '12px', fontSize: '0.98rem', marginTop: '12px' }}
               disabled={loading}
             >
-              {loading ? 'Authenticating...' : 'Sign In →'}
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
 
-          {/* Quick Demo Fill Shortcut */}
+          {/* Quick Demo Credentials */}
           <div
             style={{
               marginTop: '32px',
               paddingTop: '20px',
               borderTop: '1px solid var(--border)',
-              textAlign: 'left'
+              textAlign: 'left',
             }}
           >
             <span
@@ -169,10 +169,10 @@ const Login = () => {
                 marginBottom: '10px',
                 fontFamily: 'var(--font-mono)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.04em'
+                letterSpacing: '0.04em',
               }}
             >
-              Quick demo credentials
+              Demo accounts
             </span>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
@@ -197,7 +197,7 @@ const Login = () => {
           <div style={{ marginTop: '24px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'left' }}>
             Don't have an account?{' '}
             <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>
-              Create an account
+              Create one
             </Link>
           </div>
 

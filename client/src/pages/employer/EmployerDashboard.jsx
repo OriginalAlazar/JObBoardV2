@@ -105,7 +105,7 @@ const EmployerDashboard = () => {
                 {getGreeting()}, {user?.name?.split(' ')[0] || 'Employer'}
               </h1>
               <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.98rem' }}>
-                Your active recruitment pipeline, listings, and candidate submissions.
+                Here's what's happening with your hiring activity.
               </p>
             </div>
 
@@ -288,11 +288,14 @@ const EmployerDashboard = () => {
 
           {recentJobs.length === 0 ? (
             <div style={{ textAlign: 'left', padding: '32px 0', color: 'var(--text-muted)' }}>
-              <p style={{ margin: '0 0 16px 0', fontSize: '0.95rem' }}>
-                You have no active job postings. Publish an opening to begin receiving verified applications.
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', margin: '0 0 6px 0', color: 'var(--text)' }}>
+                No opportunities posted yet.
+              </h3>
+              <p style={{ margin: '0 0 20px 0', fontSize: '0.95rem' }}>
+                Create your first job listing to start reaching candidates.
               </p>
               <Link to="/employer/jobs/create" className="btn btn-primary">
-                Post your first role →
+                Post a job
               </Link>
             </div>
           ) : (
@@ -342,7 +345,7 @@ const EmployerDashboard = () => {
                               color: 'var(--accent)'
                             }}
                           >
-                            ${job.salary?.toLocaleString()} / yr
+                            ETB {job.salary?.toLocaleString()}
                           </span>
                         </div>
                       </div>

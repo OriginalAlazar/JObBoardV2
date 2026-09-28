@@ -12,7 +12,7 @@ const Session = require('./models/Session');
 
 const seedData = async () => {
   try {
-    console.log('--- Connecting to MongoDB for Seeding ---');
+    console.log('--- Connecting to MongoDB for Seeding (Sira Brand Guide) ---');
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jobboard_v2');
     console.log('✓ Connected to MongoDB');
 
@@ -29,33 +29,33 @@ const seedData = async () => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('Password123!', salt);
 
-    // 1. Create Users
+    // 1. Create Users matching Sira Guide
     console.log('Inserting seed users...');
     const employer1 = await User.create({
-      name: 'Sara Mengistu',
+      name: 'Hana Alemu',
       email: 'employer@demo.com',
       passwordHash,
       role: 'EMPLOYER',
-      company: 'Addis Tech Solutions',
+      company: 'NEBO Tech',
     });
 
     const employer2 = await User.create({
-      name: 'Michael Cloud',
+      name: 'Abebe Bikila',
       email: 'recruiter@demo.com',
       passwordHash,
       role: 'EMPLOYER',
-      company: 'FinTech Global',
+      company: 'Luna Digital',
     });
 
     const seeker1 = await User.create({
-      name: 'Dawit Abebe',
+      name: 'Samuel Tadesse',
       email: 'seeker1@demo.com',
       passwordHash,
       role: 'JOB_SEEKER',
     });
 
     const seeker2 = await User.create({
-      name: 'Hanna Tesfaye',
+      name: 'Sarah Mekonnen',
       email: 'seeker2@demo.com',
       passwordHash,
       role: 'JOB_SEEKER',
@@ -63,97 +63,110 @@ const seedData = async () => {
 
     console.log('✓ Created 4 seed users (Password: Password123!)');
 
-    // 2. Create Jobs
-    console.log('Inserting seed job postings...');
+    // 2. Create Jobs from Sira Guide
+    console.log('Inserting seed job postings matching Sira guide...');
     const jobs = await Job.create([
       {
-        title: 'Senior Full Stack MERN Developer',
+        title: 'Software Engineer',
         description:
-          'We are seeking an experienced full-stack engineer to build scalable distributed web applications using Node.js, Express, React, and MongoDB.',
-        company: employer1.company,
-        location: 'Addis Ababa (Hybrid)',
-        type: 'Full-time',
-        category: 'Technology',
-        salary: 65000,
-        requirements: ['React 18+', 'Node.js', 'MongoDB aggregation', 'RESTful API architecture'],
-        postedBy: employer1._id,
-        status: 'OPEN',
-      },
-      {
-        title: 'Cloud DevOps & Site Reliability Engineer',
-        description:
-          'Design and maintain zero-downtime CI/CD pipelines, containerize backend microservices with Docker, and orchestrate with Kubernetes.',
-        company: employer1.company,
-        location: 'Remote',
-        type: 'Full-time',
-        category: 'Technology',
-        salary: 80000,
-        requirements: ['Docker', 'Kubernetes', 'AWS or GCP', 'Linux system administration'],
-        postedBy: employer1._id,
-        status: 'OPEN',
-      },
-      {
-        title: 'Senior UI/UX Product Designer',
-        description:
-          'Transform complex recruitment and workflow management products into intuitive, sleek user experiences with Figma and design systems.',
-        company: employer1.company,
-        location: 'Remote',
-        type: 'Contract',
-        category: 'Design',
-        salary: 55000,
-        requirements: ['Figma', 'Design tokens', 'User testing', 'Wireframing'],
-        postedBy: employer1._id,
-        status: 'OPEN',
-      },
-      {
-        title: 'Financial Systems Data Analyst',
-        description:
-          'Analyze transaction trends, build interactive dashboard metrics, and ensure regulatory compliance in banking applications.',
-        company: employer2.company,
+          'We are seeking an experienced software engineer to build scalable web applications and distributed backend microservices. You will work closely with product teams to design clean RESTful interfaces and robust database schemas.',
+        company: 'NEBO Tech',
         location: 'Addis Ababa',
         type: 'Full-time',
-        category: 'Finance & Banking',
-        salary: 48000,
-        requirements: ['SQL', 'Python', 'Financial modeling', 'PowerBI'],
-        postedBy: employer2._id,
+        category: 'Technology',
+        salary: 35000,
+        requirements: ['React and Node.js', 'RESTful API architecture', 'MongoDB / NoSQL databases', 'Git workflows'],
+        postedBy: employer1._id,
         status: 'OPEN',
       },
       {
-        title: 'Clinical Operations Healthcare Lead',
+        title: 'Frontend Developer',
         description:
-          'Coordinate patient workflows, optimize clinical service schedules, and integrate healthcare records with digital platforms.',
-        company: employer2.company,
-        location: 'Bole, Addis Ababa',
-        type: 'Full-time',
-        category: 'Healthcare',
-        salary: 52000,
-        requirements: ['Health informatics', 'Operational management', 'Patient relations'],
-        postedBy: employer2._id,
-        status: 'OPEN',
-      },
-      {
-        title: 'Growth Marketing & SEO Specialist',
-        description:
-          'Drive organic discovery, execute multi-channel advertising campaigns, and optimize candidate acquisition funnels.',
-        company: employer2.company,
-        location: 'Remote',
-        type: 'Part-time',
-        category: 'Marketing',
-        salary: 32000,
-        requirements: ['Google Analytics 4', 'SEO optimization', 'Content strategy', 'Copywriting'],
-        postedBy: employer2._id,
-        status: 'OPEN',
-      },
-      {
-        title: 'B2B Enterprise Account Executive',
-        description:
-          'Cultivate partnerships with high-growth companies seeking streamlined recruitment management software solutions.',
-        company: employer2.company,
+          'Join our product engineering group to create responsive, accessible, and fast web user interfaces. You will translate design systems into clean, modern component architectures.',
+        company: 'Luna Digital',
         location: 'Addis Ababa',
         type: 'Full-time',
-        category: 'Sales',
-        salary: 60000,
-        requirements: ['B2B Sales', 'CRM management', 'Negotiation', 'Lead qualification'],
+        category: 'Technology',
+        salary: 28000,
+        requirements: ['JavaScript (ES6+)', 'React 18+', 'Modern CSS & responsive layouts', 'State management'],
+        postedBy: employer2._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'IT Support Specialist',
+        description:
+          'Provide technical infrastructure support, resolve network connectivity issues, and manage office workstation hardware and security policies.',
+        company: 'Ethio Systems',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Technology',
+        salary: 18000,
+        requirements: ['Network troubleshooting', 'Windows & Linux server support', 'Hardware diagnostics'],
+        postedBy: employer1._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'Accountant',
+        description:
+          'Manage daily bookkeeping, reconcile bank statements, prepare monthly tax filings, and maintain statutory financial compliance reports.',
+        company: 'Abay Business Group',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Business & Finance',
+        salary: 22000,
+        requirements: ['Degree in Accounting or Finance', 'Peachtree / QuickBooks', 'Ethiopian tax regulations'],
+        postedBy: employer2._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'Operations Coordinator',
+        description:
+          'Coordinate operational supply chains, liaise with vendor partners, and streamline company procurement schedules across regional offices.',
+        company: 'Nile Commerce',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Business & Finance',
+        salary: 24000,
+        requirements: ['Supply chain management', 'Vendor coordination', 'Inventory tracking', 'Analytical reporting'],
+        postedBy: employer1._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'Product Designer',
+        description:
+          'Lead end-to-end product design across web and mobile experiences. Conduct user research, define UX wireframes, and maintain modular design systems.',
+        company: 'Luna Digital',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Design & Creative',
+        salary: 30000,
+        requirements: ['Figma design systems', 'User journey mapping', 'Prototyping & usability testing'],
+        postedBy: employer2._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'Graphic Designer',
+        description:
+          'Create high-impact brand identities, digital marketing creative assets, and print materials for high-growth local businesses and international partners.',
+        company: 'Creative Hub Ethiopia',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Design & Creative',
+        salary: 18000,
+        requirements: ['Adobe Illustrator & Photoshop', 'Visual storytelling', 'Brand identity guidelines'],
+        postedBy: employer1._id,
+        status: 'OPEN',
+      },
+      {
+        title: 'Digital Marketing Specialist',
+        description:
+          'Develop organic and paid digital campaign strategies, manage social media growth channels, and optimize customer acquisition funnels.',
+        company: 'Habesha Commerce',
+        location: 'Addis Ababa',
+        type: 'Full-time',
+        category: 'Sales & Customer Service',
+        salary: 24000,
+        requirements: ['Performance marketing', 'Content planning', 'Social media analytics', 'Campaign ROI tracking'],
         postedBy: employer2._id,
         status: 'OPEN',
       },
@@ -161,57 +174,57 @@ const seedData = async () => {
         title: 'Legacy Python Microservices Developer (Archived)',
         description:
           'Maintenance of legacy ETL microservices. This posting has completed recruitment and is closed to new applicants.',
-        company: employer1.company,
-        location: 'Remote',
-        type: 'Contract',
+        company: 'NEBO Tech',
+        location: 'Addis Ababa',
+        type: 'Full-time',
         category: 'Technology',
-        salary: 40000,
+        salary: 20000,
         requirements: ['Python 3.8', 'PostgreSQL'],
         postedBy: employer1._id,
         status: 'CLOSED', // Demonstrates closed job handling
       },
     ]);
 
-    console.log(`✓ Created ${jobs.length} seed job listings across various categories`);
+    console.log(`✓ Created ${jobs.length} seed job listings across Ethiopian organizations`);
 
-    // 3. Create Sample Applications
+    // 3. Create Sample Applications matching guide
     console.log('Inserting seed job applications...');
     await Application.create([
       {
-        job: jobs[0]._id, // Senior MERN Developer
-        applicant: seeker1._id,
+        job: jobs[0]._id, // Software Engineer at NEBO Tech
+        applicant: seeker1._id, // Samuel Tadesse
         coverLetter:
-          'I have 4+ years of hands-on experience building full-stack JavaScript applications with React and Express. I would love to contribute to Addis Tech Solutions!',
-        resumeLink: 'https://drive.google.com/file/d/sample-resume-dawit/view?usp=sharing',
+          'I have 3+ years of experience building modern web applications with React and Node.js. I am very excited about NEBO Tech and would love to contribute to your engineering team.',
+        resumeLink: 'https://drive.google.com/file/d/sample-resume-samuel/view?usp=sharing',
         status: 'PENDING',
       },
       {
-        job: jobs[1]._id, // DevOps Engineer
-        applicant: seeker1._id,
+        job: jobs[1]._id, // Frontend Developer at Luna Digital
+        applicant: seeker1._id, // Samuel Tadesse
         coverLetter:
-          'Extensive experience containerizing Node.js applications and orchestrating staging clusters. Looking forward to discussing this opportunity.',
-        resumeLink: 'https://drive.google.com/file/d/sample-resume-dawit/view?usp=sharing',
+          'Passionate frontend developer specializing in responsive React UI components and state management with clean RESTful API integration.',
+        resumeLink: 'https://drive.google.com/file/d/sample-resume-samuel/view?usp=sharing',
         status: 'REVIEWED',
       },
       {
-        job: jobs[0]._id, // Senior MERN Developer
-        applicant: seeker2._id,
+        job: jobs[5]._id, // Product Designer at Luna Digital
+        applicant: seeker2._id, // Sarah Mekonnen
         coverLetter:
-          'Passionate frontend developer specializing in responsive React UI components and state management with clean RESTful API integration.',
-        resumeLink: 'https://dropbox.com/s/sample-resume-hanna/cv.pdf',
+          'Extensive experience creating modular Figma design systems and user journey maps. Looking forward to discussing this opportunity with Luna Digital.',
+        resumeLink: 'https://dropbox.com/s/sample-resume-sarah/cv.pdf',
         status: 'ACCEPTED',
       },
     ]);
 
     console.log('✓ Created 3 sample candidate applications');
     console.log('\n=========================================');
-    console.log('Database Seeding Completed Successfully!');
+    console.log('Sira Database Seeding Completed Successfully!');
     console.log('=========================================');
     console.log('Credentials:');
-    console.log('  Employer 1:  employer@demo.com   / Password123!');
-    console.log('  Employer 2:  recruiter@demo.com  / Password123!');
-    console.log('  Seeker 1:    seeker1@demo.com    / Password123!');
-    console.log('  Seeker 2:    seeker2@demo.com    / Password123!');
+    console.log('  Employer 1 (Hana Alemu):    employer@demo.com   / Password123!');
+    console.log('  Employer 2 (Abebe Bikila):  recruiter@demo.com  / Password123!');
+    console.log('  Seeker 1 (Samuel Tadesse):  seeker1@demo.com    / Password123!');
+    console.log('  Seeker 2 (Sarah Mekonnen):  seeker2@demo.com    / Password123!');
     console.log('=========================================');
   } catch (error) {
     console.error('Error seeding database:', error);
