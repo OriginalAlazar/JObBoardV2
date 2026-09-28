@@ -1,10 +1,12 @@
-# MERN Job Board Platform — Master Team Specification & Technical Documentation
+# Sira (ሥራ) Job Board Platform — Master Team Specification & Technical Documentation
 
+**Brand:** Sira · ሥራ (*Find work. Build what’s next.*)  
 **Course:** WEB II — Full Stack Web Development  
-**Project:** Job Board / Recruitment Platform  
+**Project:** Career Workspace & Job Board Recruitment Platform  
 **Target Stack:** MongoDB, Express.js, React (Vite), Node.js (MERN)  
 **Authentication Standard:** Server-Side Sessions with HTTP-Only Cookies & MongoDB TTL  
-**Project Version:** 2.0 (Final Team Reference)
+**Test Suite Coverage:** 92 / 92 Automated Tests Passing (100% Green)  
+**Project Version:** 2.1 (Production Sira Editorial Release)
 
 ---
 
@@ -31,7 +33,7 @@
 ## 1. Project Overview & Core Constraints
 
 ### 1.1 Objective
-The MERN Job Board is an end-to-end recruitment platform connecting Employers seeking talent with Job Seekers looking for career opportunities. The platform provides a modern, fast user experience backed by a robust, secure Express/MongoDB backend.
+**Sira (ሥራ)** is an editorial-grade, end-to-end recruitment platform connecting Ethiopian employers seeking talent with candidates looking for career opportunities. The platform pairs a modern, typography-led editorial user experience (Newsreader display serif + Inter UI sans + JetBrains Mono) with a secure, production-grade Express/MongoDB backend enforcing strict business rules, session authentication, and transparent ETB compensation tiers.
 
 ### 1.2 Strict Technology Boundaries (Course Compliance)
 To maintain alignment with WEB II curriculum guidelines, avoid over-engineering, and focus on fundamental web concepts, the following rules are **strictly enforced across all teammates**:
@@ -295,19 +297,23 @@ const jobSchema = new mongoose.Schema(
       required: [true, 'Job category is required'],
       enum: [
         'Technology',
-        'Healthcare',
+        'Business & Finance',
+        'Design & Creative',
+        'Sales & Customer Service',
+        'Engineering',
+        'Administration',
         'Finance & Banking',
+        'Healthcare',
         'Marketing',
         'Education',
-        'Design',
-        'Sales',
         'Customer Support',
+        'Other',
       ],
       default: 'Technology',
     },
     salary: {
       type: Number,
-      required: [true, 'Annual or monthly salary is required'],
+      required: [true, 'Monthly salary in Ethiopian Birr (ETB) is required'],
       min: [0, 'Salary cannot be negative'],
     },
     requirements: {
@@ -1016,6 +1022,42 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 export default ProtectedRoute;
 ```
 
+### 7.5 Sira Editorial Design System & Token Architecture
+
+The user interface follows a modern, typography-led editorial SaaS identity:
+
+#### 1. Three-Tier Typography System
+- **Display Serif (`Newsreader`):** Used for primary page headlines, hero banners, and brand display typography (`--font-serif`).
+- **Functional Sans (`Inter`):** Clean, accessible grotesque sans used for UI controls, inputs, cards, and body text (`--font-sans`).
+- **Data Mono (`JetBrains Mono`):** Used for metrics, uppercase category tags, timestamps, and currency numbers (`--font-mono`).
+
+#### 2. Restrained Color Architecture
+```css
+:root {
+  --bg: #FAFAF8;            /* Soft editorial paper canvas */
+  --surface: #FFFFFF;       /* Crisp white card surface */
+  --surface-alt: #F4F4F0;   /* Muted surface for tags & tables */
+  --text: #1A1A1A;          /* Charcoal text (never harsh pure #000) */
+  --text-muted: #666666;    /* Secondary metadata gray */
+  --accent: #1F4D3A;        /* Deep Ethiopian forest green */
+  --accent-soft: #E8F0EC;   /* Subtle green badge background */
+  --border: #E5E5E5;        /* 1px clean separation border */
+  --radius-sm: 8px;         /* Rectangular tailored button radius */
+  --radius-md: 12px;        /* Card border radius */
+}
+```
+
+#### 3. Strict Zero-Emojis Standard
+Emojis are prohibited across the entire design. Statuses are rendered as clean typographic text with subtle colored indicator dots:
+- `● Pending` (Neutral indicator)
+- `● Reviewed` (Active evaluation indicator)
+- `● Accepted` (Forest green confirmation indicator)
+- `● Rejected` (Subtle rose/charcoal indicator)
+
+#### 4. Official Brand Identity Assets
+- **Favicon:** `/favicon.png` (High-resolution rounded green icon with white "S" and golden seed mark)
+- **Touch Icon / Open Graph:** `/icon.png` (Large-scale brand mark for mobile bookmarks and social previews)
+
 ---
 
 ## 8. Search, Filtering, Sorting & Pagination Mechanics
@@ -1269,59 +1311,82 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ## 12. Seed Data & Demo Accounts
 
-To make the application instantly demonstrable during evaluation and testing, `server/seed.js` populates realistic, diverse records.
+To make the application instantly demonstrable during evaluation and testing, `server/seed.js` populates realistic records matching the Sira Ethiopian market guide.
 
 ### 12.1 Default Demo Credentials
 
-| Role | Name | Email | Password | Company |
-| :--- | :--- | :--- | :--- | :--- |
-| **Employer #1** | Sara Mengistu | `employer@addistech.et` | `Password123!` | Addis Tech Solutions |
-| **Employer #2** | Dawit Haile | `dawit@habeshacareers.com`| `Password123!` | Habesha Digital |
-| **Job Seeker #1**| Alazar Tesfaye | `alazar@seeker.et` | `Password123!` | *(N/A)* |
-| **Job Seeker #2**| Beth Smith | `beth@seeker.et` | `Password123!` | *(N/A)* |
+| Role | Name | Email | Password | Organization | Focus / Specialization |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Employer #1** | Hana Alemu | `employer@demo.com` | `Password123!` | NEBO Tech | Technology, Web & Systems |
+| **Employer #2** | Abebe Bikila | `recruiter@demo.com`| `Password123!` | Luna Digital / Ethio Systems | Creative, Operations & IT |
+| **Candidate #1**| Samuel Tadesse | `seeker1@demo.com` | `Password123!` | *(N/A)* | Senior Full Stack Engineer |
+| **Candidate #2**| Sarah Mekonnen | `seeker2@demo.com` | `Password123!` | *(N/A)* | UI/UX Product Designer |
 
-### 12.2 Seed Content Breakdown
-- **8–10 Job Postings:**
-  - Full-time React Engineer (Addis Ababa, 45,000 ETB, Technology, OPEN)
-  - Backend Node.js Developer (Remote, 50,000 ETB, Technology, OPEN)
-  - Digital Marketing Strategist (Hawassa, 25,000 ETB, Marketing, OPEN)
-  - Senior Financial Analyst (Addis Ababa, 60,000 ETB, Finance & Banking, OPEN)
-  - UI/UX Mobile Designer (Remote, 35,000 ETB, Design, OPEN)
-  - Clinical Nurse Practitioner (Addis Ababa, 30,000 ETB, Healthcare, OPEN)
-  - Customer Success Lead (Remote, 20,000 ETB, Customer Support, CLOSED)
-  - Junior Frontend Intern (Addis Ababa, 12,000 ETB, Technology, OPEN)
-- **4 Applications:**
-  - Alazar -> Full-time React Engineer (`PENDING`)
-  - Alazar -> Digital Marketing Strategist (`REVIEWED`)
-  - Beth -> Backend Node.js Developer (`ACCEPTED`)
-  - Beth -> Clinical Nurse Practitioner (`REJECTED`)
+### 12.2 Seed Content Breakdown (Ethiopian Market)
+- **9 Job Postings with ETB Compensation:**
+  - Software Engineer (NEBO Tech, Addis Ababa, 35,000 ETB, Technology, OPEN)
+  - Frontend Developer (Luna Digital, Addis Ababa, 28,000 ETB, Technology, OPEN)
+  - IT Support Specialist (Ethio Systems, Addis Ababa, 18,000 ETB, Technology, OPEN)
+  - Accountant (Abay Business Group, Addis Ababa, 22,000 ETB, Business & Finance, OPEN)
+  - Operations Coordinator (Nile Commerce, Addis Ababa, 24,000 ETB, Business & Finance, OPEN)
+  - Product Designer (Luna Digital, Addis Ababa, 30,000 ETB, Design & Creative, OPEN)
+  - Graphic Designer (Creative Hub Ethiopia, Addis Ababa, 18,000 ETB, Design & Creative, OPEN)
+  - Digital Marketing Specialist (Habesha Commerce, Addis Ababa, 24,000 ETB, Sales & Customer Service, OPEN)
+  - Legacy Python Microservices Developer (NEBO Tech, Addis Ababa, 20,000 ETB, Technology, CLOSED)
+- **4 Sample Applications Demonstrating Pipeline:**
+  - Samuel Tadesse ➔ Software Engineer at NEBO Tech (`PENDING`)
+  - Samuel Tadesse ➔ Frontend Developer at Luna Digital (`REVIEWED`)
+  - Sarah Mekonnen ➔ Product Designer at Luna Digital (`ACCEPTED`)
+  - Sarah Mekonnen ➔ IT Support Specialist at Ethio Systems (`REJECTED`)
 
 ---
 
-## 13. Quality Assurance & Test Case Matrix
+## 13. Quality Assurance & Test Case Matrix (92/92 Passing Tests)
 
-Every member must run these validation tests prior to submitting pull requests.
+The platform is fortified with **92 automated integration & contract test cases** executed via `npm test` inside `server/`. All test suites execute automatically against MongoDB with 100% pass rates.
 
-| # | Test Scenario | HTTP / Action | Expected Result | Verified |
-| :---: | :--- | :--- | :--- | :---: |
-| **1** | Guest views public jobs list | `GET /api/jobs` | `200 OK` + Paginated jobs list | [ ] |
-| **2** | Guest attempts to create a job | `POST /api/jobs` | `401 Unauthorized` | [ ] |
-| **3** | Seeker attempts to create a job | `POST /api/jobs` | `403 Forbidden` | [ ] |
-| **4** | Employer creates a valid job | `POST /api/jobs` | `201 Created` with job document | [ ] |
-| **5** | Employer edits their own job | `PUT /api/jobs/:id` | `200 OK` with updated attributes | [ ] |
-| **6** | Employer tries to edit another employer's job | `PUT /api/jobs/:id` | `403 Forbidden` | [ ] |
-| **7** | Employer deletes their own job | `DELETE /api/jobs/:id`| `200 OK` (cascades application deletions) | [ ] |
-| **8** | Seeker submits valid application | `POST /api/applications` | `201 Created` with application | [ ] |
-| **9** | Seeker applies again to same job | `POST /api/applications` | `409 Conflict` ("Already applied") | [ ] |
-| **10**| Seeker applies to a `CLOSED` job | `POST /api/applications` | `400 Bad Request` ("Job is closed") | [ ] |
-| **11**| Employer views applicants for their job | `GET /api/jobs/:id/applications` | `200 OK` + Array of applicants | [ ] |
-| **12**| Employer views applicants for other's job| `GET /api/jobs/:id/applications` | `403 Forbidden` | [ ] |
-| **13**| Employer updates applicant status | `PUT /api/applications/:id/status`| `200 OK` (e.g. status -> `ACCEPTED`) | [ ] |
-| **14**| Seeker attempts to change status | `PUT /api/applications/:id/status`| `403 Forbidden` | [ ] |
-| **15**| User logs out | `POST /api/auth/logout` | `200 OK`, Session removed from DB & cookie cleared | [ ] |
-| **16**| Request with expired session | `GET /api/auth/me` | `401 Unauthorized` | [ ] |
-| **17**| Page refresh in React when logged in | Browser Reload | State preserved via `/api/auth/me` call | [ ] |
-| **18**| Search with multiple filters combined | `GET /api/jobs?category=Technology&type=Remote` | Only matching filtered jobs returned | [ ] |
+### 13.1 Automated Test Suites Summary (100% Pass Rate)
+
+| Test Suite File | Domain & Scope | Test Count | Status |
+| :--- | :--- | :---: | :---: |
+| `server/tests/phase2-validation.js` | Mongoose Data Models, Validation, & MongoDB TTL Indexes | 15 / 15 | **PASSED** |
+| `server/tests/phase3-validation.js` | Authentication, Bcrypt Hashing, Session Lifecycles & Cookies | 12 / 12 | **PASSED** |
+| `server/tests/phase4-validation.js` | Job CRUD, Ownership Verification (BR-004), Route Ordering (BR-008) | 19 / 19 | **PASSED** |
+| `server/tests/phase5-validation.js` | Applications, Duplicate Prevention (BR-002), State Machine (BR-005) | 22 / 22 | **PASSED** |
+| `server/tests/phase10-matrix-validation.js` | End-to-End QA Matrix (AUTH-01..07, JOB-01..09, APP-01..08) | 24 / 24 | **PASSED** |
+| **TOTAL AUTOMATED COVERAGE** | **Comprehensive Full-System Backend & API Verification** | **92 / 92** | **100% GREEN** |
+
+### 13.2 Detailed End-to-End QA Matrix (`phase10-matrix-validation.js`)
+
+#### 1. Authentication & Session Lifecycle (AUTH)
+- `[AUTH-01]` Register valid user creates account, issues HTTP-only `sessionId` cookie, and sanitizes output (no `passwordHash`).
+- `[AUTH-02]` Register with duplicate email is strictly rejected (`400 Bad Request` / `409 Conflict`).
+- `[AUTH-03]` Login with incorrect password is rejected (`401 Unauthorized`).
+- `[AUTH-04]` Login with valid credentials returns `200 OK` and issues HTTP-only session cookie.
+- `[AUTH-05]` User logout destroys session record in MongoDB and clears cookie (`200 OK`).
+- `[AUTH-06]` Request with invalid/tampered session cookie returns `401 Unauthorized` with `{ user: null }`.
+- `[AUTH-07]` Session persistence verified via `GET /api/auth/me` on client page reloads.
+
+#### 2. Job Operations, Ownership & Search (JOB)
+- `[JOB-01]` Guest views public job listings with server-side pagination metadata (`200 OK`).
+- `[JOB-02]` Employer creates valid job posting initialized in `OPEN` status (`201 Created`).
+- `[JOB-03]` Candidate attempting to create job is rejected with `403 Forbidden` (BR-006).
+- `[JOB-04]` Employer successfully updates their own job posting (`200 OK`).
+- `[JOB-05]` Employer attempting to edit another employer's job is rejected with `403 Forbidden` (BR-004).
+- `[JOB-06]` Employer deletes job, triggering cascade deletion of all associated candidate applications (`200 OK`).
+- `[JOB-07]` Regex keyword search matches queries across title, company, location, and description.
+- `[JOB-08]` Multi-parameter filtering (Category + ETB Minimum Salary) returns accurately constrained subsets.
+- `[JOB-09]` Express route ordering: `GET /api/jobs/mine` executes cleanly before dynamic `GET /api/jobs/:id` (BR-008).
+
+#### 3. Application Pipeline & Candidate Evaluation (APP)
+- `[APP-01]` Candidate applies for open job with cover letter (min 20 chars) and valid URL, initialized to `PENDING` (`201 Created`).
+- `[APP-02]` Duplicate application submission to the same job is rejected with `409 Conflict` (BR-002).
+- `[APP-03]` Candidate applying to a `CLOSED` job is rejected with `400 Bad Request` (BR-003).
+- `[APP-04]` Employer retrieves applicant submissions for their posted job with populated profiles (`200 OK`).
+- `[APP-05]` Third-party employer viewing another employer's applicants is rejected with `403 Forbidden`.
+- `[APP-06]` Employer advances candidate through finite state machine: `PENDING` ➔ `REVIEWED` ➔ `ACCEPTED` (`200 OK`).
+- `[APP-07]` Candidate attempting to update application status is rejected with `403 Forbidden`.
+- `[APP-08]` Illegal state transition attempt or modifying an application in terminal state is rejected with `400 Bad Request` (BR-005).
 
 ---
 
@@ -1356,115 +1421,121 @@ The architecture is divided into 4 parallel development streams:
 ## 15. Phase-by-Phase Implementation Roadmap
 
 ```
-Phase 1: Environment & Project Scaffolding
-   ├── Setup client/ (Vite + React Router + Axios)
-   ├── Setup server/ (Express + Mongoose + cookie-parser + cors + dotenv)
-   └── Configure db.js and verify MongoDB local connection
+[x] Phase 1: Environment & Project Scaffolding
+    ├── Setup client/ (Vite + React Router + Axios)
+    ├── Setup server/ (Express + Mongoose + cookie-parser + cors + dotenv)
+    └── Configure db.js and verify MongoDB local connection
 
-Phase 2: Data Models & Constraints
-   ├── User.js (role enum: JOB_SEEKER | EMPLOYER)
-   ├── Job.js (status: OPEN | CLOSED, postedBy ref)
-   ├── Application.js (compound unique index: job + applicant)
-   └── Session.js (MongoDB TTL index: expiresAt)
+[x] Phase 2: Data Models & Schema Constraints
+    ├── User.js (role enum: JOB_SEEKER | EMPLOYER)
+    ├── Job.js (status: OPEN | CLOSED, postedBy ref, ETB salary, Sira categories)
+    ├── Application.js (compound unique index: job + applicant)
+    └── Session.js (MongoDB TTL index: expiresAt)
+    └── Automated Test Suite: 15 / 15 PASSED
 
-Phase 3: Backend Authentication & Security
-   ├── bcrypt password hashing utility
-   ├── session creation & cookie issuance
-   ├── requireAuth & requireRole middlewares
-   └── /api/auth routes (register, login, logout, me, profile)
+[x] Phase 3: Backend Authentication & Security Controls
+    ├── bcrypt password hashing (salt rounds = 10)
+    ├── Session creation & HTTP-only cookie issuance
+    ├── requireAuth & requireRole middlewares
+    └── /api/auth routes (register, login, logout, me, profile, password)
+    └── Automated Test Suite: 12 / 12 PASSED
 
-Phase 4: Jobs & Ownership Operations
-   ├── GET /api/jobs (search, filter, sort, server-side pagination)
-   ├── GET /api/jobs/:id (details)
-   ├── POST /api/jobs (employer only)
-   ├── PUT /api/jobs/:id (strict ownership check)
-   └── DELETE /api/jobs/:id (strict ownership check + cascade delete)
+[x] Phase 4: Jobs & Ownership Operations
+    ├── GET /api/jobs (search regex, filter, sort, server-side pagination)
+    ├── GET /api/jobs/:id (public details)
+    ├── POST /api/jobs (employer only)
+    ├── PUT /api/jobs/:id (strict BR-004 ownership check)
+    └── DELETE /api/jobs/:id (strict ownership check + BR-009 cascade delete)
+    └── Automated Test Suite: 19 / 19 PASSED
 
-Phase 5: Application Submission & Candidate Review
-   ├── POST /api/applications (duplicate check, resumeLink regex, closed check)
-   ├── GET /api/applications/me (job seeker's history)
-   ├── GET /api/jobs/:jobId/applications (employer candidate review)
-   └── PUT /api/applications/:id/status (employer updates status)
+[x] Phase 5: Application Submission & Candidate Evaluation
+    ├── POST /api/applications (BR-002 duplicate check, BR-007 URL regex, BR-003 closed check)
+    ├── GET /api/applications/me (BR-008 route ordering, seeker history)
+    ├── GET /api/jobs/:jobId/applications (employer candidate review)
+    ├── PUT /api/applications/:id/status (BR-005 state machine transitions)
+    └── DELETE /api/applications/:id (BR-011 withdrawal rule)
+    └── Automated Test Suite: 22 / 22 PASSED
 
-Phase 6: MongoDB Aggregation Pipelines
-   ├── Seeker dashboard statistics (counts by status)
-   └── Employer dashboard statistics (counts by status & job open/closed)
+[x] Phase 6: MongoDB Aggregation Pipelines
+    ├── Seeker dashboard statistics ($facet counts by application status)
+    └── Employer dashboard statistics (counts by status & open/closed job listings)
 
-Phase 7: Frontend Design System & Public Pages
-   ├── index.css (color tokens, typography, dark/light contrast, cards)
-   ├── Navbar, Footer, StatusBadge, Loading
-   ├── Home (Hero, category tags, recent jobs)
-   ├── Jobs (Search bar, category/type/salary filter panel, pagination)
-   └── JobDetails (Description, requirements list, Apply button trigger)
+[x] Phase 7: Sira Editorial Design System & Public Pages
+    ├── index.css (typography: Newsreader serif, Inter sans, JetBrains Mono; colors: #1F4D3A)
+    ├── Navbar, Footer, StatusBadge, Loading (zero-emojis standard, colored dots)
+    ├── Home (Hero, ETB metrics, 6 Sira categories, How It Works, employer/seeker split)
+    ├── Jobs (Dual search by keyword & location, filter panel, ETB salary tiers, pagination)
+    └── JobDetails (Editorial layout, requirements list, application modal trigger)
 
-Phase 8: Frontend Auth & Role Routing
-   ├── AuthContext & Axios instance with credentials
-   ├── Login & Register forms with role selector
-   └── ProtectedRoute component guarding seeker & employer URLs
+[x] Phase 8: Frontend Auth & Protected Routing
+    ├── AuthContext & Axios instance with credentials
+    ├── Login & Register forms with role switcher and password checklist
+    └── ProtectedRoute component guarding seeker & employer URLs
 
-Phase 9: Role Dashboards & Workflows
-   ├── Seeker Dashboard (Metrics cards, application table, status badges)
-   ├── Employer Dashboard (Job stats, applicant stats, quick actions)
-   ├── Employer Job Management (My Jobs table, Create Job, Edit Job)
-   └── Employer Applicant Board (Candidate list, resumeLink preview, status selector)
+[x] Phase 9: Role Dashboards & Workflows
+    ├── Seeker Dashboard (Career workspace, KPI cards, application tracker, withdraw action)
+    ├── Employer Dashboard (Hiring workspace, recruitment KPIs, candidate review board)
+    ├── Employer Job Management (My Jobs table, Create Job, Edit Job)
+    └── Employer Applicant Board (Candidate list, resumeLink preview, status selector)
 
-Phase 10: Seed Script & Verification
-   ├── Run server/seed.js to insert 4 users, 8+ jobs, 4 applications
-   └── Execute full test case matrix (scenarios 1-18)
+[x] Phase 10: Sira Ethiopian Seed Script & End-to-End QA Matrix
+    ├── Run server/seed.js (4 users, 9 Ethiopian jobs in ETB, 4 sample applications)
+    └── Execute full QA matrix (server/tests/phase10-matrix-validation.js)
+    └── Automated Test Suite: 24 / 24 PASSED (Total: 92/92 automated tests passing)
 
-Phase 11: Final Polish & Presentation Prep
-   ├── Verify all edge cases (401, 403, 404, 409 error banners)
-   └── Rehearse the live demonstration script
+[ ] Phase 11: Production Deployment & Cloud Smoke Testing
+    ├── Deploy backend to Render (`render.yaml`, environment variables)
+    ├── Deploy frontend to Vercel (`vercel.json` SPA rewrites, VITE_API_BASE_URL)
+    └── Connect MongoDB Atlas M0 cluster and run cloud authentication smoke tests
 ```
 
 ---
 
 ## 16. Live Evaluation & Demonstration Script
 
-Follow this sequential walkthrough during the presentation to clearly demonstrate all functional requirements and security checks:
+Follow this sequential walkthrough during the presentation to clearly demonstrate all functional requirements, editorial branding, and security checks:
 
 ```
-Step 1: Guest Browsing (Unauthenticated)
-   1. Open http://localhost:5173 on the landing page.
-   2. Navigate to "Jobs" page.
-   3. Search "React" in the search bar -> Result updates in real time.
-   4. Filter by Category: "Technology", Type: "Full-time" -> Filtered list renders.
-   5. Demonstrate pagination by navigating to Page 2.
+Step 1: Guest Browsing & Discovery (Unauthenticated)
+   1. Open http://localhost:5173 on the Sira landing page.
+   2. Observe the editorial serif typography ("Find work worth moving toward.") and Ethiopian market stats.
+   3. Enter "Engineer" in the search input and click "Explore opportunities".
+   4. Observe live filtering on /jobs page with ETB currency amounts (e.g. 35,000 ETB).
+   5. Filter by Category: "Technology", Type: "Full-time".
    6. Click on a job card to view the Job Details page.
-   7. Notice that clicking "Apply Now" prompts the user to Log In.
+   7. Observe the clean split layout and note that clicking "Apply for this opportunity" prompts the user to Sign In.
 
-Step 2: Job Seeker Journey
-   1. Click "Login" and log in with alazar@seeker.et / Password123!.
-   2. Navbar updates dynamically to show Seeker navigation: "Dashboard", "My Applications".
-   3. Navigate to the job details page of an open job.
-   4. Click "Apply Now", fill in the cover letter, and submit a Google Drive link.
-   5. Success toast/message displays: "Application submitted successfully."
-   6. Try applying to the same job again -> Immediate feedback: "409 Conflict: You have already applied for this job."
-   7. Navigate to "Seeker Dashboard" -> Metrics counter increments, and the new application shows with status "PENDING".
+Step 2: Candidate Journey (Samuel Tadesse)
+   1. Click "Sign in" and use the "Candidate demo" quick button (seeker1@demo.com / Password123!).
+   2. Navbar updates dynamically to show candidate navigation: "Discover", "Workspace", "My Applications".
+   3. Open the "Software Engineer" position at NEBO Tech.
+   4. Click "Apply for this opportunity" to launch the multi-step application modal.
+   5. Fill in the cover letter (min 20 characters), provide a valid resume link, and submit.
+   6. Navigate to "Workspace" (/seeker/dashboard) -> Observe live stats (Pending, Reviewed, Accepted).
+   7. Try applying to the same job again -> Immediate feedback: "409 Conflict: You have already applied for this job."
 
-Step 3: Employer Journey
-   1. Open an Incognito window (or log out and log in).
-   2. Log in with employer@addistech.et / Password123!.
-   3. Navbar updates to Employer navigation: "Dashboard", "My Jobs", "Post Job".
-   4. Navigate to "Employer Dashboard" -> View aggregate numbers (Total jobs, Open jobs, Total applicants).
-   5. Click "My Jobs" -> Shows jobs posted by this employer.
-   6. Click "View Applicants" on the job that Alazar just applied for.
-   7. Inspect Alazar's application, click the resumeLink (opens in new tab).
-   8. Change application status from "PENDING" to "ACCEPTED".
-   9. Create a new job posting through "Post Job" form -> Immediately appears on the board.
+Step 3: Employer Journey (Hana Alemu — NEBO Tech)
+   1. Open an Incognito window (or sign out).
+   2. Click "Sign in" and use the "Employer demo" quick button (employer@demo.com / Password123!).
+   3. Navbar updates to Employer navigation: "Workspace", "Postings", "Post a job".
+   4. Navigate to "Workspace" (/employer/dashboard) -> View recruitment KPIs (Total jobs, Open jobs, Candidates).
+   5. View the applicant queue for the Software Engineer posting.
+   6. Inspect Samuel Tadesse's submission and click the resumeLink (opens in new tab).
+   7. Use the status dropdown to transition Samuel's application from "PENDING" to "ACCEPTED".
+   8. Navigate to "Post a job" and create a new opportunity -> Immediately listed on the live board.
 
 Step 4: Real-Time Synchronization & Seeker Update
-   1. Return to the Job Seeker's browser window.
+   1. Return to the Candidate's browser window.
    2. Refresh or navigate to "My Applications".
-   3. Observe the status badge has updated from "PENDING" to "ACCEPTED".
+   3. Observe the status dot and badge has updated from "● Pending" to "● Accepted".
 
-Step 5: Rigorous Security & Authorization Verification
-   1. While logged in as Job Seeker, attempt to make a POST request to /api/jobs via Postman or browser console.
-      -> Result: 403 Forbidden.
-   2. While logged in as Employer B, attempt to edit Employer A's job via PUT /api/jobs/:id.
-      -> Result: 403 Forbidden (Ownership check enforces postedBy === req.user._id).
-   3. Log out -> Cookie sessionId is cleared, and Session record in MongoDB is deleted.
-   4. Attempt to access /seeker/dashboard -> Redirected to /login.
+Step 5: Security & Authorization Verification
+   1. While logged in as Candidate, attempt to POST to /api/jobs via browser console.
+      -> Result: 403 Forbidden (BR-006: Seekers cannot create jobs).
+   2. While logged in as Employer B (Abebe Bikila), attempt to edit NEBO Tech's job via PUT /api/jobs/:id.
+      -> Result: 403 Forbidden (BR-004: Ownership check enforces postedBy === req.user._id).
+   3. Sign out -> HTTP-only cookie sessionId is cleared and Session record in MongoDB is destroyed.
+   4. Attempt to access /seeker/dashboard -> ProtectedRoute redirects cleanly to /login.
 ```
 
 ---

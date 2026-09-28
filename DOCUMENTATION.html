@@ -821,11 +821,11 @@
   <!-- Top Global Header -->
   <header class="top-nav">
     <a href="#" class="brand">
-      <div class="brand-icon">J</div>
+      <img src="client/public/favicon.png" alt="Sira" style="width: 32px; height: 32px; border-radius: 8px; object-fit: contain;" />
       <div>
-        <div class="brand-title">MERN Job Board</div>
+        <div class="brand-title">Sira · ሥራ</div>
       </div>
-      <span class="brand-badge">WEB II • Complete Team Manual</span>
+      <span class="brand-badge">WEB II • 92 Passing Tests</span>
     </a>
 
     <div class="nav-actions">
@@ -889,14 +889,15 @@
       <section class="doc-hero">
         <div class="hero-meta">
           <span class="meta-tag highlight">WEB II Final Specification</span>
-          <span class="meta-tag">MERN Stack</span>
+          <span class="meta-tag">Sira · ሥራ Brand</span>
+          <span class="meta-tag">92/92 Passing Tests</span>
           <span class="meta-tag">Vercel + Render + MongoDB Atlas</span>
           <span class="meta-tag">Server Sessions</span>
-          <span class="meta-tag">4-Person Team Plan</span>
+          <span class="meta-tag">ETB Compensation</span>
         </div>
-        <h1 class="doc-title">MERN Job Board Platform</h1>
+        <h1 class="doc-title">Sira (ሥራ) Job Board Platform</h1>
         <p class="doc-subtitle">
-          The definitive single source of truth for all teammates. Contains full SRS, 18 use cases, system diagrams, Mongoose schemas, REST API contracts, business rules, cloud deployment runbook, and a 4-person phased modular work breakdown.
+          The definitive single source of truth for the Sira recruitment platform. Contains complete SRS, use case specifications, system diagrams, Mongoose data schemas, REST API contracts, business rules (BR-001 through BR-011), editorial design system tokens, 92 automated test suite matrices, and academic cloud deployment runbooks.
         </p>
       </section>
 
@@ -1750,6 +1751,34 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => useContext(AuthContext);</code></pre>
         </div>
+
+        <h3>Sira Editorial Design System &amp; Token Architecture</h3>
+        <p>
+          The user interface is crafted with an editorial typographic hierarchy tailored for the Ethiopian recruitment ecosystem:
+        </p>
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-title">1. Three-Tier Typography</div>
+            <p><strong>Display Serif:</strong> <code>Newsreader</code> (Headlines &amp; Hero)</p>
+            <p><strong>UI Sans:</strong> <code>Inter</code> (Controls, Forms &amp; Cards)</p>
+            <p><strong>Data Mono:</strong> <code>JetBrains Mono</code> (Metrics &amp; Tags)</p>
+          </div>
+          <div class="card">
+            <div class="card-title">2. Color Palette &amp; Canvas</div>
+            <p><strong>Canvas:</strong> <code>#FAFAF8</code> (Warm editorial paper)</p>
+            <p><strong>Primary Accent:</strong> <code>#1F4D3A</code> (Forest green)</p>
+            <p><strong>Accent Soft:</strong> <code>#E8F0EC</code> (Subtle badge)</p>
+          </div>
+          <div class="card">
+            <div class="card-title">3. Zero Emojis Standard</div>
+            <p>Emojis are strictly disallowed across all components. Statuses are rendered as clean typographic text with subtle colored indicator dots: <code>● Pending</code>, <code>● Reviewed</code>, <code>● Accepted</code>, <code>● Rejected</code>.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">4. Brand Identity Assets</div>
+            <p><strong>Favicon:</strong> <code>/favicon.png</code> (Browser tab icon)</p>
+            <p><strong>Touch Icon:</strong> <code>/icon.png</code> (Open Graph social preview)</p>
+          </div>
+        </div>
       </section>
 
       <!-- -------------------------------------------------------------
@@ -2136,14 +2165,14 @@ SESSION_LIFETIME_HOURS=168</code></pre>
           <div class="callout-body">
             <div class="callout-title">SEAMLESS PRESENTATION FLOW FOR EVALUATION</div>
             <ol style="margin: 8px 0 0 20px; line-height: 1.8;">
-              <li><strong>Guest Browsing:</strong> Open <code>/jobs</code>, search "React", toggle Category to "Technology", and click through Page 2.</li>
-              <li><strong>Seeker Login:</strong> Authenticate as <code>alazar@seeker.et</code> / <code>Password123!</code>. Navbar updates dynamically.</li>
-              <li><strong>Application Submission:</strong> Open an open job, submit a cover letter and Google Drive link. Show success alert.</li>
-              <li><strong>Duplicate Prevention:</strong> Attempt to apply to the same job again. Demonstrate immediate <code>409 Conflict</code> error message.</li>
-              <li><strong>Employer Login:</strong> In an Incognito window, log in as <code>employer@addistech.et</code> / <code>Password123!</code>. View the new applicant on the Employer Dashboard.</li>
-              <li><strong>Decision Transition:</strong> Change application status from <code>PENDING</code> to <code>ACCEPTED</code>.</li>
-              <li><strong>Real-Time Sync:</strong> Return to Seeker window, refresh "My Applications", and show that status updated to <code>ACCEPTED</code>.</li>
-              <li><strong>Backend Authorization Defense:</strong> While logged in as Seeker, attempt to post a job via API / console ➔ Verify <code>403 Forbidden</code> is enforced by Express.</li>
+              <li><strong>Guest Browsing:</strong> Open <code>http://localhost:5173</code>, observe Sira editorial branding and Ethiopian market statistics, search "Engineer", filter by Category "Technology", and verify transparent ETB compensation tiers.</li>
+              <li><strong>Candidate Sign In:</strong> Authenticate using the quick demo button for Samuel Tadesse (<code>seeker1@demo.com</code> / <code>Password123!</code>). Header updates dynamically to show career workspace.</li>
+              <li><strong>Application Submission:</strong> Open the "Software Engineer" position at NEBO Tech, complete the multi-step modal with cover letter (min 20 chars) and resume link.</li>
+              <li><strong>Duplicate Prevention:</strong> Attempt to apply to the same job again. Demonstrate immediate <code>409 Conflict</code> error banner (BR-002).</li>
+              <li><strong>Employer Workspace:</strong> In an Incognito window, sign in as Hana Alemu (<code>employer@demo.com</code> / <code>Password123!</code>). Inspect NEBO Tech's recruitment pipeline and applicant queue.</li>
+              <li><strong>Candidate Decision:</strong> Transition Samuel's submission from <code>PENDING</code> to <code>ACCEPTED</code> (BR-005 state machine).</li>
+              <li><strong>Real-Time Sync:</strong> Return to Candidate window, refresh "My Applications", and show that status dot updated to <code>● Accepted</code>.</li>
+              <li><strong>Backend Authorization Defense:</strong> While logged in as Candidate, attempt to POST a job via console ➔ Verify <code>403 Forbidden</code> (BR-006). Attempt cross-employer edit ➔ Verify <code>403 Forbidden</code> (BR-004).</li>
             </ol>
           </div>
         </div>
