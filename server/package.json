@@ -7,11 +7,12 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node seed.js",
-    "test": "node tests/phase2-validation.js && node tests/phase3-validation.js && node tests/phase4-validation.js && node tests/phase5-validation.js",
+    "test": "node tests/phase2-validation.js && node tests/phase3-validation.js && node tests/phase4-validation.js && node tests/phase5-validation.js && node tests/phase10-matrix-validation.js",
     "test:phase2": "node tests/phase2-validation.js",
     "test:phase3": "node tests/phase3-validation.js",
     "test:phase4": "node tests/phase4-validation.js",
-    "test:phase5": "node tests/phase5-validation.js"
+    "test:phase5": "node tests/phase5-validation.js",
+    "test:phase10": "node tests/phase10-matrix-validation.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
