@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import JobCard from '../components/JobCard';
+import Loading from '../components/Loading';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [recentJobs, setRecentJobs] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
   const [healthStatus, setHealthStatus] = useState({ loading: true, connected: false });
   const navigate = useNavigate();
 
@@ -16,7 +20,21 @@ const Home = () => {
         setHealthStatus({ loading: false, connected: false });
       }
     };
+
+    const fetchRecentJobs = async () => {
+      try {
+        setLoadingJobs(true);
+        const res = await api.get('/jobs?limit=3&sort=newest');
+        setRecentJobs(res.data.jobs || []);
+      } catch {
+        setRecentJobs([]);
+      } finally {
+        setLoadingJobs(false);
+      }
+    };
+
     checkBackend();
+    fetchRecentJobs();
   }, []);
 
   const handleSearch = (e) => {
@@ -70,7 +88,7 @@ const Home = () => {
             }} />
             {healthStatus.loading
               ? 'Checking backend connection...'
-              : (healthStatus.connected ? 'Express API & MongoDB Atlas Online' : 'Connecting to API server...')}
+              : (healthStatus.connected ? 'Express API & MongoDB Database Online' : 'Connecting to API server...')}
           </div>
 
           <h1 style={{
@@ -138,7 +156,8 @@ const Home = () => {
                   padding: '4px 12px',
                   borderRadius: '9999px',
                   fontSize: '0.82rem',
-                  fontWeight: 500
+                  fontWeight: 500,
+                  textDecoration: 'none'
                 }}
               >
                 {cat}
@@ -146,6 +165,35 @@ const Home = () => {
             ))}
           </div>
 
+        </div>
+      </section>
+
+      {/* Featured / Recent Jobs Section */}
+      <section style={{ padding: '60px 0', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div className="container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <h2 style={{ fontSize: '1.8rem', marginBottom: '6px' }}>Recent Opportunities</h2>
+              <p style={{ color: 'var(--text-muted)', margin: 0 }}>Fresh job postings added by verified companies</p>
+            </div>
+            <Link to="/jobs" className="btn btn-outline" style={{ fontSize: '0.9rem' }}>
+              Explore All Jobs →
+            </Link>
+          </div>
+
+          {loadingJobs ? (
+            <Loading message="Loading latest openings..." />
+          ) : recentJobs.length === 0 ? (
+            <div className="card" style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
+              No open job postings right now. Check back soon!
+            </div>
+          ) : (
+            <div className="job-grid">
+              {recentJobs.map((job) => (
+                <JobCard key={job._id} job={job} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
