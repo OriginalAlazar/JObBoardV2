@@ -1,63 +1,109 @@
 /* ==========================================================================
-   MERN JOB BOARD — MASTER DESIGN SYSTEM & CSS TOKENS
+   MERN JOB BOARD — 2026 THREE-TIER TOKEN SYSTEM & DESIGN ARCHITECTURE
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap');
 
 :root {
+  /* -------------------------------------------------------------
+     TIER 1: PRIMITIVE TOKENS (Raw values)
+     ------------------------------------------------------------- */
+  --primitive-slate-50: #f8fafc;
+  --primitive-slate-100: #f1f5f9;
+  --primitive-slate-200: #e2e8f0;
+  --primitive-slate-300: #cbd5e1;
+  --primitive-slate-400: #94a3b8;
+  --primitive-slate-500: #64748b;
+  --primitive-slate-600: #475569;
+  --primitive-slate-700: #334155;
+  --primitive-slate-800: #1e293b;
+  --primitive-slate-900: #0f172a;
+  --primitive-slate-950: #020617;
+
+  --primitive-sky-50: #f0f9ff;
+  --primitive-sky-100: #e0f2fe;
+  --primitive-sky-500: #0284c7;
+  --primitive-sky-600: #0369a1;
+  --primitive-sky-700: #075985;
+
+  --primitive-emerald-500: #059669;
+  --primitive-amber-500: #d97706;
+  --primitive-rose-500: #e11d48;
+  --primitive-purple-500: #7e22ce;
+
+  /* Typography Primitives: Characterful Serif for Display, Clean Sans for Functional UI, Mono for Data */
+  --font-serif: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Outfit', var(--font-sans);
-  --font-mono: 'Fira Code', Consolas, Monaco, monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, monospace;
 
-  /* Color Palette */
-  --bg-canvas: #f8fafc;
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Precise Radii Scale: Never pill for primary buttons; full only for status badges */
+  --radius-sm: 6px;       /* Form inputs, action buttons, search controls */
+  --radius-md: 10px;      /* Cards, panels, modal dialogs */
+  --radius-lg: 16px;      /* Elevated floating surfaces */
+  --radius-full: 9999px;  /* Pill status badges and chips ONLY */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+
+  /* Purposeful Transitions (150-250ms stable easing) */
+  --motion-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition: all var(--motion-normal);
+
+  /* -------------------------------------------------------------
+     TIER 2: SEMANTIC TOKENS (Contextual usage)
+     ------------------------------------------------------------- */
+  --bg-canvas: var(--primitive-slate-50);
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f1f5f9;
-  --bg-surface-hover: #e2e8f0;
+  --bg-surface-elevated: var(--primitive-slate-100);
+  --bg-surface-hover: #f8fafc;
 
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --border-focus: #0284c7;
+  --border-subtle: var(--primitive-slate-200);
+  --border-strong: var(--primitive-slate-300);
+  --border-focus: var(--primitive-sky-500);
 
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
+  --text-primary: var(--primitive-slate-900);
+  --text-secondary: var(--primitive-slate-700);
+  --text-muted: var(--primitive-slate-500);
   --text-inverse: #ffffff;
 
-  /* Primary Brand Accent */
-  --primary: #0284c7;
-  --primary-hover: #0369a1;
-  --primary-active: #075985;
+  --primary: var(--primitive-sky-500);
+  --primary-hover: var(--primitive-sky-600);
+  --primary-active: var(--primitive-sky-700);
   --primary-subtle: rgba(2, 132, 199, 0.08);
-  --primary-glow: rgba(2, 132, 199, 0.2);
+  --primary-glow: rgba(2, 132, 199, 0.18);
 
-  /* Status Accents */
-  --accent-green: #059669;
+  --accent-green: var(--primitive-emerald-500);
   --accent-green-bg: #ecfdf5;
   --accent-green-border: #a7f3d0;
 
-  --accent-amber: #d97706;
+  --accent-amber: var(--primitive-amber-500);
   --accent-amber-bg: #fffbeb;
   --accent-amber-border: #fde68a;
 
-  --accent-rose: #e11d48;
+  --accent-rose: var(--primitive-rose-500);
   --accent-rose-bg: #fff1f2;
   --accent-rose-border: #fecdd3;
 
-  --accent-purple: #7e22ce;
+  --accent-purple: var(--primitive-purple-500);
   --accent-purple-bg: #faf5ff;
   --accent-purple-border: #e9d5ff;
 
-  /* Spacing, Radius, Shadow */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-full: 9999px;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-
-  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Editorial Column & Typography Standard (Derived from 45-75 char reading standard) */
+  --reading-column: 46rem;
+  --body-font-size: 17px;
 }
 
 /* Base Reset */
@@ -69,9 +115,10 @@
 
 body {
   font-family: var(--font-sans);
+  font-size: var(--body-font-size);
   background-color: var(--bg-canvas);
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   display: flex;
@@ -88,16 +135,25 @@ main {
   flex: 1;
 }
 
-/* Typography Helpers */
+/* Typography Hierarchy: Editorial Display Serif */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   color: var(--text-primary);
-  font-weight: 700;
-  line-height: 1.25;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.75rem; }
+.font-sans-headline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.85rem; }
+h3 { font-size: 1.35rem; }
+h4 { font-size: 1.15rem; }
 h3 { font-size: 1.35rem; }
 h4 { font-size: 1.1rem; }
 
@@ -535,6 +591,381 @@ a:hover {
   color: var(--text-muted);
   margin-top: 10px;
 }
+
+/* Data Table Styling */
+.data-table-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.data-table th {
+  background: var(--bg-surface-elevated);
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.data-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover td {
+  background: var(--bg-surface-elevated);
+}
+
+.action-btn-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   2026 EDITORIAL DIRECTORY: FLAT ROW-BASED INTERACTION
+   ========================================================================== */
+.job-directory {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.job-directory-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-surface);
+  transition: background var(--motion-fast), border-color var(--motion-fast);
+  position: relative;
+  outline: none;
+}
+
+.job-directory-row:last-child {
+  border-bottom: none;
+}
+
+.job-directory-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--primary);
+  opacity: 0;
+  transition: opacity var(--motion-fast);
+}
+
+.job-directory-row:hover,
+.job-directory-row:focus-visible {
+  background: var(--bg-surface-hover);
+}
+
+.job-directory-row:hover::before,
+.job-directory-row:focus-visible::before {
+  opacity: 1;
+}
+
+.job-directory-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.row-main {
+  flex: 1;
+  min-width: 0;
+  padding-right: 20px;
+}
+
+.row-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.row-company {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.row-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.row-salary {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-green);
+}
+
+.row-action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.row-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: transform var(--motion-fast), color var(--motion-fast), background var(--motion-fast);
+}
+
+.job-directory-row:hover .row-arrow,
+.job-directory-row:focus-visible .row-arrow {
+  transform: translateX(4px);
+  color: var(--primary);
+  background: var(--primary-subtle);
+}
+
+/* ==========================================================================
+   MASTER-DETAIL (70/30) SPLIT LAYOUT & READING COLUMN
+   ========================================================================== */
+.master-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .master-detail-layout {
+    grid-template-columns: 1fr 340px;
+    gap: 48px;
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: 90px; /* Clears 68px navbar with breathing room */
+  }
+}
+
+.reading-column {
+  max-width: var(--reading-column);
+  line-height: 1.7;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+.reading-column p {
+  margin-bottom: 20px;
+}
+
+.reading-column ul {
+  margin-bottom: 24px;
+  padding-left: 20px;
+}
+
+.reading-column li {
+  margin-bottom: 8px;
+}
+
+/* Metadata Chips with Explicit Wording + Icons (No color-only coding) */
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   MULTI-STEP APPLICATION FLOW & STEPPER
+   ========================================================================== */
+.stepper-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  transition: var(--transition);
+}
+
+.step-dot.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.step-dot.completed {
+  background: var(--accent-green);
+  color: #ffffff;
+  border-color: var(--accent-green);
+}
+
+.review-section {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   JOURNEY TIMELINE (UX4G SEMANTIC STEPPER)
+   ========================================================================== */
+.journey-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+
+.journey-step {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.journey-step:last-child {
+  padding-bottom: 0;
+}
+
+.journey-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.journey-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: var(--transition);
+}
+
+.journey-dot.completed {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: white;
+  font-size: 0.7rem;
+}
+
+.journey-dot.active {
+  background: var(--accent-amber);
+  border-color: var(--accent-amber);
+}
+
+.journey-line {
+  flex: 1;
+  width: 2px;
+  background: var(--border-subtle);
+  margin: 4px 0;
+}
+
+.journey-content {
+  flex: 1;
+}
+
+/* ==========================================================================
+   SURGICAL PREFERS-REDUCED-MOTION (VESTIBULAR SAFETY)
+   Preserves subtle opacity reveals while eliminating spatial movements
+   ========================================================================== */
+@media screen and (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .job-directory-row,
+  .row-arrow,
+  .modal-dialog,
+  .btn,
+  .job-card,
+  .stat-card {
+    transform: none !important;
+    transition: opacity var(--motion-fast) ease !important;
+  }
+}
+
 
 /* Data Table Styling */
 .data-table-container {

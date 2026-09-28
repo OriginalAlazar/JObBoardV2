@@ -14,39 +14,35 @@ const JobCard = ({ job }) => {
   const formattedDate = new Date(job.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric',
   });
 
   return (
-    <Link to={`/jobs/${job._id}`} className="job-card" id={`job-card-${job._id}`}>
-      <div>
-        <div className="job-card-header">
-          <div>
-            <h3 className="job-card-title">{job.title}</h3>
-            <div className="job-card-company">{job.company}</div>
-          </div>
-          <StatusBadge status={job.status} />
-        </div>
+    <Link
+      to={`/jobs/${job._id}`}
+      className="job-directory-row"
+      id={`job-row-${job._id}`}
+      aria-label={`${job.title} at ${job.company}, ${job.location}`}
+    >
+      <div className="row-main">
+        <h3 className="row-title">{job.title}</h3>
+        <div className="row-company">{job.company}</div>
 
-        <p className="job-desc-snippet">{job.description}</p>
-
-        <div className="job-meta-row">
-          <span className="job-tag">📍 {job.location}</span>
-          <span className="job-tag">💼 {job.type}</span>
-          <span className="job-tag">🏷️ {job.category}</span>
+        <div className="row-meta">
+          <span className="row-meta-item">📍 {job.location}</span>
+          <span className="row-meta-item">💼 {job.type}</span>
+          <span className="row-meta-item">🏷️ {job.category}</span>
+          <span className="row-salary">💰 {formattedSalary}</span>
+          <span className="row-meta-item" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+            Posted {formattedDate}
+          </span>
         </div>
       </div>
 
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: '16px',
-        borderTop: '1px solid var(--border-subtle)',
-        marginTop: '12px'
-      }}>
-        <span className="salary-tag">{formattedSalary} <small style={{ fontWeight: 400, color: 'var(--text-muted)' }}>/ year</small></span>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{formattedDate}</span>
+      <div className="row-action">
+        <StatusBadge status={job.status} />
+        <span className="row-arrow" aria-hidden="true">
+          →
+        </span>
       </div>
     </Link>
   );

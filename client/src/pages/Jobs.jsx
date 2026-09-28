@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import JobCard from '../components/JobCard';
-import Loading from '../components/Loading';
 
 const CATEGORIES = [
   'ALL',
@@ -51,7 +50,19 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 9, total: 0, totalPages: 1 });
   const [loading, setLoading] = useState(true);
+  const [showSkeleton, setShowSkeleton] = useState(false);
   const [error, setError] = useState('');
+
+  // 200ms delay before showing skeletons to avoid flash of loading on fast loads
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setTimeout(() => setShowSkeleton(true), 200);
+    } else {
+      setShowSkeleton(false);
+    }
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   // Keep search input synced if URL search changes externally
   useEffect(() => {
@@ -132,15 +143,19 @@ const Jobs = () => {
     <div style={{ padding: '40px 0 80px' }}>
       <div className="container">
         
-        {/* Header Title & Instant Search */}
+        {/* Editorial Header & Live Opportunities Counter */}
         <div style={{ marginBottom: '32px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
             <div>
-              <h1 style={{ fontSize: '2.2rem', marginBottom: '6px' }}>Browse Open Opportunities</h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1rem', margin: 0 }}>
-                {loading
-                  ? 'Searching available positions...'
-                  : `${pagination.total} ${pagination.total === 1 ? 'position' : 'positions'} available`}
+              <h1 style={{ fontSize: '2.5rem', marginBottom: '6px' }}>Browse Opportunities</h1>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', margin: 0 }}>
+                {loading && !showSkeleton ? (
+                  'Filtering openings...'
+                ) : (
+                  <>
+                    Showing <strong style={{ color: 'var(--text-primary)' }}>{pagination.total}</strong> active {pagination.total === 1 ? 'position' : 'positions'} across vetted employers
+                  </>
+                )}
               </p>
             </div>
 
@@ -172,13 +187,15 @@ const Jobs = () => {
           </form>
         </div>
 
-        {/* 2-Column Layout: Sidebar Filters + Main Job Grid */}
+        {/* 2-Column Layout: Sidebar Filters + Main Job Directory */}
         <div className="jobs-layout">
           
           {/* Left Sidebar Filter Panel */}
           <aside className="filter-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)' }}>
-              <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-primary)' }}>Filters</span>
+              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Filter Directory
+              </span>
               {hasActiveFilters && (
                 <button
                   type="button"
@@ -256,7 +273,7 @@ const Jobs = () => {
 
           </aside>
 
-          {/* Right Main Content: Results Grid */}
+          {/* Right Main Content: Editorial Directory Rows */}
           <main>
             {error && (
               <div className="alert alert-error" style={{ marginBottom: '24px' }}>
@@ -264,14 +281,25 @@ const Jobs = () => {
               </div>
             )}
 
-            {loading ? (
-              <Loading message="Fetching job opportunities..." />
-            ) : jobs.length === 0 ? (
+            {/* Skeleton state (shown only after 200ms delay to prevent fast flash) */}
+            {loading && showSkeleton ? (
+              <div className="job-directory">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="job-directory-row" style={{ opacity: 0.6 }}>
+                    <div className="row-main" style={{ width: '100%' }}>
+                      <div style={{ width: '38%', height: '20px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)', marginBottom: '8px' }} />
+                      <div style={{ width: '24%', height: '14px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)', marginBottom: '10px' }} />
+                      <div style={{ width: '55%', height: '12px', background: 'var(--border-subtle)', borderRadius: 'var(--radius-sm)' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : !loading && jobs.length === 0 ? (
               <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔎</div>
-                <h3 style={{ marginBottom: '8px' }}>No Jobs Found</h3>
+                <h3 style={{ marginBottom: '8px' }}>No Matches Found</h3>
                 <p style={{ color: 'var(--text-muted)', maxWidth: '440px', margin: '0 auto 24px' }}>
-                  We couldn't find any active job postings matching your current search or filter criteria.
+                  We couldn't find any job postings matching your current criteria. Try adjusting your search query or reset your filters.
                 </p>
                 <button
                   type="button"
@@ -283,7 +311,7 @@ const Jobs = () => {
               </div>
             ) : (
               <>
-                <div className="job-grid">
+                <div className="job-directory">
                   {jobs.map((job) => (
                     <JobCard key={job._id} job={job} />
                   ))}
