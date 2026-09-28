@@ -47,7 +47,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Helper to remove passwordHash from returned objects
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.passwordHash;

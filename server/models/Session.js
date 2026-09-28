@@ -22,7 +22,6 @@ const sessionSchema = new mongoose.Schema({
   },
 });
 
-// CRITICAL TTL INDEX: MongoDB background thread scans this index and purges expired sessions automatically
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const Session = mongoose.model('Session', sessionSchema);
