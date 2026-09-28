@@ -8,14 +8,14 @@
 
 ---
 
-## Endpoint Quick Reference Index
+## Endpoint Quick Reference Index (22 Live Endpoints)
 
 | Method | Endpoint | Access | Purpose |
 | :---: | :--- | :--- | :--- |
 | `POST` | `/api/auth/register` | Public | Register new Job Seeker or Employer |
 | `POST` | `/api/auth/login` | Public | Authenticate user & issue session cookie |
 | `POST` | `/api/auth/logout` | Authenticated | Destroy server session & clear cookie |
-| `GET` | `/api/auth/me` | Authenticated | Retrieve currently authenticated user |
+| `GET` | `/api/auth/me` | Public / Auth | Check current user state (`user: null` for guests) |
 | `PUT` | `/api/auth/profile` | Authenticated | Update user name & company |
 | `PUT` | `/api/auth/password` | Authenticated | Update account password (bcrypt) |
 | `GET` | `/api/jobs` | Public | List, search, filter, and paginate jobs |
@@ -24,18 +24,74 @@
 | `POST` | `/api/jobs` | Employer | Create a new job posting |
 | `PUT` | `/api/jobs/:id` | Employer (Owner) | Update job posting details |
 | `DELETE` | `/api/jobs/:id` | Employer (Owner) | Delete job posting & cascade delete applications |
+| `GET` | `/api/jobs/:id/applications` | Employer (Owner) | Retrieve all candidate applications for job |
+| `GET` | `/api/jobs/stats/employer` | Employer | Employer dashboard aggregate metrics |
 | `POST` | `/api/applications` | Job Seeker | Submit application (`coverLetter`, `resumeLink`) |
 | `GET` | `/api/applications/me` | Job Seeker | Retrieve all applications submitted by user |
 | `GET` | `/api/applications/:id` | Applicant / Owner | Retrieve single application details |
-| `GET` | `/api/jobs/:jobId/applications` | Employer (Owner) | Retrieve all candidate applications for job |
 | `PUT` | `/api/applications/:id/status` | Employer (Owner) | Update candidate status (`ACCEPTED`, etc.) |
-| `GET` | `/api/applications/stats/seeker` | Job Seeker | Seeker dashboard metric counts |
-| `GET` | `/api/jobs/stats/employer` | Employer | Employer dashboard metric counts |
+| `DELETE` | `/api/applications/:id` | Job Seeker (Owner) | Withdraw a PENDING application |
+| `GET` | `/api/applications/stats/seeker` | Job Seeker | Seeker dashboard aggregate metrics |
+| `GET` | `/api/health` | Public | Health and database connectivity check |
+| `GET` | `/api` | Public | API discovery and metadata index |
+
+---
+
+## Route Authorization & Permission Matrix
+
+| Endpoint | Guest | Job Seeker | Employer |
+| :--- | :---: | :---: | :---: |
+| `POST /api/auth/register` | ✓ | — | — |
+| `POST /api/auth/login` | ✓ | — | — |
+| `POST /api/auth/logout` | — | ✓ | ✓ |
+| `GET /api/auth/me` | ✓ (returns `{ user: null }`) | ✓ | ✓ |
+| `PUT /api/auth/profile` | — | ✓ | ✓ |
+| `PUT /api/auth/password` | — | ✓ | ✓ |
+| `GET /api/jobs` | ✓ | ✓ | ✓ |
+| `GET /api/jobs/:id` | ✓ | ✓ | ✓ |
+| `GET /api/jobs/mine` | — | — | ✓ |
+| `GET /api/jobs/stats/employer` | — | — | ✓ |
+| `POST /api/jobs` | — | — | ✓ |
+| `PUT /api/jobs/:id` | — | — | Job Owner |
+| `DELETE /api/jobs/:id` | — | — | Job Owner |
+| `GET /api/jobs/:id/applications` | — | — | Job Owner |
+| `POST /api/applications` | — | ✓ | ✗ (`403 Forbidden`) |
+| `GET /api/applications/me` | — | ✓ | — |
+| `GET /api/applications/stats/seeker` | — | ✓ | — |
+| `GET /api/applications/:id` | — | Applicant Only | Job Owner Only |
+| `PUT /api/applications/:id/status` | — | — | Job Owner |
+| `DELETE /api/applications/:id` | — | Applicant Only (`PENDING` only) | — |
+| `GET /api/health` | ✓ | ✓ | ✓ |
+| `GET /api` | ✓ | ✓ | ✓ |
 
 > [!WARNING]
-> ### EXPRESS ROUTE ORDERING REQUIREMENT
-> In the Express router, `GET /api/jobs/mine` **MUST** be defined **BEFORE** `GET /api/jobs/:id`.
-> If `/:id` is registered first, Express will intercept `/api/jobs/mine` and treat the literal string `"mine"` as an ObjectId parameter!
+> ### EXPRESS ROUTE ORDERING REQUIREMENT (BR-008)
+> In the Express routers:
+> - `GET /api/jobs/mine` and `GET /api/jobs/stats/employer` **MUST** be defined **BEFORE** `GET /api/jobs/:id`.
+> - `GET /api/applications/me` and `GET /api/applications/stats/seeker` **MUST** be defined **BEFORE** `GET /api/applications/:id`.
+> If `/:id` is registered first, Express will intercept static names like `"mine"` or `"me"` and treat them as ObjectId parameters!
+
+---
+
+## Standard API Error Contract
+
+All API error responses return a standardized JSON structure with consistent HTTP status codes:
+
+```json
+{
+  "message": "Human-readable error description",
+  "errors": ["Optional array of specific validation error messages"],
+  "stack": "Stack trace (included ONLY in development mode; omitted in production)"
+}
+```
+
+### Standard Status Codes:
+- `400 Bad Request`: Validation failures, malformed ObjectIds, submissions to closed jobs, or invalid state machine transitions.
+- `401 Unauthorized`: Missing session cookie, expired session, or invalid credentials.
+- `403 Forbidden`: Role policy violations (e.g. seeker posting job, employer applying) or non-owner mutation attempts.
+- `404 Not Found`: Resource (job, application, user) does not exist.
+- `409 Conflict`: Unique constraint violation (duplicate email address or repeat job application).
+- `500 Internal Server Error`: Unhandled server exceptions (logged server-side).
 
 ---
 
@@ -305,6 +361,25 @@
   - Modification of already `ACCEPTED` or `REJECTED` applications returns `400 Bad Request`.
 - **Success Response (`200 OK`):** Updated application object.
 - **Error Response:** `403 Forbidden` if employer does not own the parent job.
+
+---
+
+### 3.5 Withdraw Application
+- **Method:** `DELETE`
+- **URL:** `/api/applications/:id`
+- **Access:** Authenticated (`requireAuth` + `requireRole('JOB_SEEKER')`)
+- **Ownership Verification:** Backend checks `application.applicant.toString() === req.user._id.toString()`.
+- **State Rule:** Only applications in `PENDING` status can be withdrawn. Attempting to withdraw `ACCEPTED` or `REJECTED` applications returns `400 Bad Request`.
+- **Success Response (`200 OK`):**
+  ```json
+  {
+    "message": "Application withdrawn successfully."
+  }
+  ```
+- **Error Response:**
+  - `400 Bad Request` if application is already accepted/rejected.
+  - `403 Forbidden` if user is not the original applicant.
+  - `404 Not Found` if application does not exist.
 
 ---
 

@@ -19,6 +19,7 @@
 | **BR-008** | Express Route Ordering | Registering `/:id` before `/mine` | Strict code requirement: `/mine` first |
 | **BR-009** | Cascade Application Deletion | Employer deletes a job posting | Cascade delete all associated `Application` docs |
 | **BR-010** | Session Cleanup & Invalidation | User logs out or session passes `expiresAt` | Server session purged; cookie cleared |
+| **BR-011** | Application Withdrawal Rule | Candidate withdraws an application | Allowed only if status is `PENDING`; terminal states blocked |
 
 ---
 
@@ -110,6 +111,7 @@
 
 ### BR-009 — Cascade Deletion on Job Removal
 - **Statement:** When an employer deletes a job posting, all associated application records must be pruned to avoid orphaned records in MongoDB.
+- **Architectural Rationale:** Deleting a job permanently deletes its associated applications because historical application retention across purged jobs is outside the project's current academic scope. (In high-compliance enterprise systems, soft-deletes/job-archival are utilized instead).
 - **Enforcement:**
   ```javascript
   await Job.deleteOne({ _id: jobId });
@@ -123,3 +125,13 @@
 - **Enforcement:**
   - `POST /api/auth/logout` deletes the MongoDB `Session` record and clears the cookie.
   - `requireAuth` immediately verifies `Date.now() <= session.expiresAt`.
+
+---
+
+### BR-011 — Application Withdrawal Rule
+- **Statement:** A job seeker is permitted to withdraw an application they submitted if and only if the application has not yet been processed beyond the initial `PENDING` stage.
+- **Enforcement:**
+  - `DELETE /api/applications/:id` checks `application.applicant.toString() === req.user._id.toString()`.
+  - Checks `['ACCEPTED', 'REJECTED'].includes(application.status)`.
+- **Response:** If the application is already in a terminal state (`ACCEPTED` or `REJECTED`), abort withdrawal with `400 Bad Request` and message `"Cannot withdraw an application that has reached a terminal state."`. If `PENDING`, permanently deletes the record and returns `200 OK`.
+

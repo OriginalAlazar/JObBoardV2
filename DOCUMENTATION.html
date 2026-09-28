@@ -1443,15 +1443,102 @@ const cookieOptions = {
                 <td>401 Unauthorized</td>
               </tr>
               <tr>
+                <td><span class="badge badge-put">PUT</span></td>
+                <td><code>/api/auth/profile</code></td>
+                <td>Authenticated</td>
+                <td>Update profile (name &amp; company)</td>
+                <td>200 OK (Updated user)</td>
+                <td>400 Bad Request, 401 Unauthorized</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-put">PUT</span></td>
+                <td><code>/api/auth/password</code></td>
+                <td>Authenticated</td>
+                <td>Update password (bcrypt verified)</td>
+                <td>200 OK</td>
+                <td>400 Bad Request, 401 Unauthorized</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-delete">DELETE</span></td>
+                <td><code>/api/applications/:id</code></td>
+                <td>Job Seeker (Owner)</td>
+                <td>Withdraw application (PENDING status only)</td>
+                <td>200 OK</td>
+                <td>400 Bad Request, 403 Forbidden, 404 Not Found</td>
+              </tr>
+              <tr>
                 <td><span class="badge badge-get">GET</span></td>
-                <td><code>/api/jobs/stats/employer</code></td>
-                <td>Employer</td>
-                <td>Counts for open/closed jobs and candidates</td>
-                <td>200 OK (<code>{ totalJobs, openJobs, ... }</code>)</td>
-                <td>403 Forbidden</td>
+                <td><code>/api/health</code></td>
+                <td>Public</td>
+                <td>Diagnostics &amp; MongoDB connection state</td>
+                <td>200 OK (<code>{ status, database }</code>)</td>
+                <td>500 Server Error</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-get">GET</span></td>
+                <td><code>/api</code></td>
+                <td>Public</td>
+                <td>API discovery and endpoint index</td>
+                <td>200 OK</td>
+                <td>None</td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <h3>Route Authorization &amp; Permission Matrix</h3>
+        <p>This matrix defines access policies enforced by the Express <code>requireAuth</code>, <code>requireRole</code>, and controller ownership checks:</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Endpoint</th>
+                <th>Guest</th>
+                <th>Job Seeker</th>
+                <th>Employer</th>
+                <th>Access Policy &amp; Ownership Rule</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>POST /api/auth/register</code></td><td>✓</td><td>—</td><td>—</td><td>Public; issues HTTP-only session cookie</td></tr>
+              <tr><td><code>POST /api/auth/login</code></td><td>✓</td><td>—</td><td>—</td><td>Public; verifies credentials &amp; issues cookie</td></tr>
+              <tr><td><code>POST /api/auth/logout</code></td><td>—</td><td>✓</td><td>✓</td><td>Authenticated; deletes session in DB &amp; clears cookie</td></tr>
+              <tr><td><code>GET /api/auth/me</code></td><td>✓</td><td>✓</td><td>✓</td><td>Returns <code>{ user: null }</code> for guests; profile if authenticated</td></tr>
+              <tr><td><code>PUT /api/auth/profile</code></td><td>—</td><td>✓</td><td>✓</td><td>Authenticated user updates own profile</td></tr>
+              <tr><td><code>PUT /api/auth/password</code></td><td>—</td><td>✓</td><td>✓</td><td>Authenticated user updates own password</td></tr>
+              <tr><td><code>GET /api/jobs</code></td><td>✓</td><td>✓</td><td>✓</td><td>Public search &amp; paginated job listings</td></tr>
+              <tr><td><code>GET /api/jobs/:id</code></td><td>✓</td><td>✓</td><td>✓</td><td>Public single job details</td></tr>
+              <tr><td><code>GET /api/jobs/mine</code></td><td>—</td><td>—</td><td>✓</td><td>Employer only; lists own jobs with applicant counts</td></tr>
+              <tr><td><code>GET /api/jobs/stats/employer</code></td><td>—</td><td>—</td><td>✓</td><td>Employer only; aggregate job and candidate metrics</td></tr>
+              <tr><td><code>POST /api/jobs</code></td><td>—</td><td>—</td><td>✓</td><td>Employer only; creates new job posting</td></tr>
+              <tr><td><code>PUT /api/jobs/:id</code></td><td>—</td><td>—</td><td>Job Owner</td><td>Employer must match <code>job.postedBy</code> (403 if mismatch)</td></tr>
+              <tr><td><code>DELETE /api/jobs/:id</code></td><td>—</td><td>—</td><td>Job Owner</td><td>Employer must match <code>job.postedBy</code>; cascade deletes apps</td></tr>
+              <tr><td><code>GET /api/jobs/:id/applications</code></td><td>—</td><td>—</td><td>Job Owner</td><td>Employer must match <code>job.postedBy</code></td></tr>
+              <tr><td><code>POST /api/applications</code></td><td>—</td><td>✓</td><td>✗ (403)</td><td>Seeker only; employers cannot apply (BR-006)</td></tr>
+              <tr><td><code>GET /api/applications/me</code></td><td>—</td><td>✓</td><td>—</td><td>Seeker only; views own application history</td></tr>
+              <tr><td><code>GET /api/applications/stats/seeker</code></td><td>—</td><td>✓</td><td>—</td><td>Seeker only; aggregate application status metrics</td></tr>
+              <tr><td><code>GET /api/applications/:id</code></td><td>—</td><td>Applicant</td><td>Job Owner</td><td>Accessible only to applicant or job poster (403 otherwise)</td></tr>
+              <tr><td><code>PUT /api/applications/:id/status</code></td><td>—</td><td>—</td><td>Job Owner</td><td>Employer must own job; BR-005 state machine rules</td></tr>
+              <tr><td><code>DELETE /api/applications/:id</code></td><td>—</td><td>Applicant</td><td>—</td><td>Seeker can withdraw own application in PENDING status only</td></tr>
+              <tr><td><code>GET /api/health</code></td><td>✓</td><td>✓</td><td>✓</td><td>Public monitoring</td></tr>
+              <tr><td><code>GET /api</code></td><td>✓</td><td>✓</td><td>✓</td><td>Public discovery</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Standard API Error Contract</h3>
+        <p>All API error responses follow a standardized JSON format across all controllers and centralized error handling middleware:</p>
+
+        <div class="code-wrapper">
+          <div class="code-header">
+            <span>Standard API Error Response Schema</span>
+          </div>
+          <pre><code>{
+  "message": "Human-readable error description",
+  "errors": ["Optional array of specific validation error messages"],
+  "stack": "Stack trace (included ONLY in development; omitted in production)"
+}</code></pre>
         </div>
       </section>
 
@@ -1593,6 +1680,12 @@ module.exports = { requireAuth, requireRole };</code></pre>
                 <td>Session Invalidation</td>
                 <td>User logs out</td>
                 <td>Delete Session in DB &amp; clear cookie</td>
+              </tr>
+              <tr>
+                <td><strong>BR-011</strong></td>
+                <td>Application Withdrawal</td>
+                <td>Candidate withdraws an application</td>
+                <td>Allowed only if status is <code>PENDING</code>; terminal states blocked (<code>400 Bad Request</code>)</td>
               </tr>
             </tbody>
           </table>
