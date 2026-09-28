@@ -14,22 +14,51 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Global Middleware Configuration
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  process.env.CLIENT_URL,
-].filter(Boolean);
+const normalizeUrl = (url) => (url ? url.trim().replace(/\/$/, '') : null);
+const configuredClientUrl = normalizeUrl(process.env.CLIENT_URL);
+
+const isAllowedOrigin = (origin) => {
+  // Allow server-to-server, curl, Postman, health probes
+  if (!origin) return true;
+
+  const normalizedOrigin = normalizeUrl(origin);
+
+  // Allow local development
+  if (
+    normalizedOrigin === 'http://localhost:5173' ||
+    normalizedOrigin === 'http://127.0.0.1:5173' ||
+    normalizedOrigin === 'http://localhost:3000'
+  ) {
+    return true;
+  }
+
+  // Allow explicitly configured CLIENT_URL
+  if (configuredClientUrl && normalizedOrigin === configuredClientUrl) {
+    return true;
+  }
+
+  // Allow production Vercel app and vercel.app preview deployments
+  if (
+    normalizedOrigin === 'https://j-ob-board-v2.vercel.app' ||
+    /^https:\/\/([a-z0-9-]+)\.vercel\.app$/i.test(normalizedOrigin)
+  ) {
+    return true;
+  }
+
+  return false;
+};
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (e.g. mobile apps, curl, Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
       return callback(new Error(`Blocked by CORS policy for origin: ${origin}`));
     },
     credentials: true, // MANDATORY: Sends HTTP-only session cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 );
 
