@@ -1,8 +1,10 @@
-# MERN Job Board Platform (JobBoardV2)
+# Sira (ሥራ) Job Board Platform (`JObBoardV2`)
 
+**Brand:** Sira · ሥራ (*Find work. Build what’s next.*)  
 **Course:** WEB II — Full Stack Web Development  
 **Architecture:** React SPA (Vite) + Node.js / Express REST API + MongoDB (Mongoose)  
 **Security Model:** Server-Side Sessions with HTTP-Only Cookies + MongoDB TTL + bcrypt  
+**Automated Tests:** 92 / 92 Tests Passing (100% Green across 5 test suites)  
 
 ---
 
@@ -68,14 +70,14 @@ npm run dev      # Starts Vite dev server on http://localhost:5173
 
 ## 🔑 Demo Accounts (Pre-seeded)
 
-All accounts use the password: `Password123!`
+All demo accounts use the password: `Password123!`
 
-| Role | Name | Email | Company | Key Capabilities |
+| Role | Name | Email | Organization | Key Capabilities |
 | :--- | :--- | :--- | :--- | :--- |
-| **Employer** | Sara Mengistu | `employer@addistech.et` | Addis Tech Solutions | Post jobs, manage applicants, change status |
-| **Employer** | Dawit Haile | `dawit@habeshacareers.com` | Habesha Digital | Post jobs, manage applicants |
-| **Job Seeker** | Alazar Tesfaye | `alazar@seeker.et` | N/A | Browse, apply with resumeLink, track status |
-| **Job Seeker** | Beth Smith | `beth@seeker.et` | N/A | Browse, apply, track status |
+| **Employer #1** | Hana Alemu | `employer@demo.com` | NEBO Tech | Post jobs, review candidate pipeline, evaluate status |
+| **Employer #2** | Abebe Bikila | `recruiter@demo.com` | Luna Digital / Ethio Systems | Post jobs, review applicants, evaluate status |
+| **Candidate #1** | Samuel Tadesse | `seeker1@demo.com` | N/A | Browse, apply with resumeLink, track status, withdraw |
+| **Candidate #2** | Sarah Mekonnen | `seeker2@demo.com` | N/A | Browse, apply with resumeLink, track status, withdraw |
 
 ---
 
