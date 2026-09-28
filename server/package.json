@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node seed.js"
+    "seed": "node seed.js",
+    "test": "node tests/phase2-validation.js",
+    "test:phase2": "node tests/phase2-validation.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
