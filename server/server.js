@@ -86,7 +86,10 @@ app.get('/api/health', (req, res) => {
 
 // Mount Feature API Routers
 const authRoutes = require('./routes/auth');
+const jobRoutes = require('./routes/jobs');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Clean JSON 404 Handler for Unmatched Routes (replaces Express default HTML 404)
 app.use((req, res) => {
