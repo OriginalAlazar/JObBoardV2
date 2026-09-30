@@ -1,3 +1,11 @@
+/**
+ * @file JobDetails.jsx
+ * @description Comprehensive job description and application dispatch view.
+ * Displays position details in an editorial split layout (sticky action summary column + long-form reading pane).
+ * Handles candidate pre-flight checks (duplicate application detection BR-002, closed job freeze BR-003),
+ * employer edit shortcuts for job owners, and launches the 3-step application modal.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -6,25 +14,33 @@ import StatusBadge from '../components/StatusBadge';
 import Loading from '../components/Loading';
 import ApplicationModal from '../components/ApplicationModal';
 
+/**
+ * JobDetails Component
+ */
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isEmployer, isAuthenticated } = useAuth();
 
+  // Job data and UI interaction states
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [hasApplied, setHasApplied] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  /**
+   * Fetch job details and verify whether the current seeker has already submitted an application
+   */
   useEffect(() => {
     const fetchJob = async () => {
       try {
         setLoading(true);
+        // Fetch job metadata by URL id parameter
         const res = await api.get(`/jobs/${id}`);
         setJob(res.data);
 
-        // If authenticated job seeker, check if already applied
+        // If authenticated as a Job Seeker, check existing applications to avoid duplicate submissions (BR-002)
         if (user && user.role === 'JOB_SEEKER') {
           try {
             const appsRes = await api.get('/applications/me');
@@ -33,7 +49,7 @@ const JobDetails = () => {
             );
             setHasApplied(found);
           } catch {
-            // Non-critical check
+            // Non-critical check: database unique index will still catch any duplicates on submit
           }
         }
       } catch (err) {
@@ -46,8 +62,10 @@ const JobDetails = () => {
     fetchJob();
   }, [id, user]);
 
+  // Loading spinner state while fetching job
   if (loading) return <Loading message="Loading position overview..." />;
 
+  // Error boundary state if job does not exist or network fails
   if (error || !job) {
     return (
       <div className="container" style={{ padding: '64px var(--space-4)', textAlign: 'left' }}>
@@ -60,6 +78,7 @@ const JobDetails = () => {
       </div>
     );
   }
+
 
   const formattedSalary = job.salary
     ? `ETB ${Number(job.salary).toLocaleString()}`

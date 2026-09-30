@@ -1,16 +1,37 @@
+/**
+ * @file Home.jsx
+ * @description Public Landing Page / Homepage of Sira.
+ * Features:
+ *  - Hero headline with Ethiopian career mission statement
+ *  - Live search bar (title, skill, company keyword + location filters) routing to `/jobs`
+ *  - Real-time preview of the 5 newest job listings
+ *  - Industry category quick browse grid
+ *  - "How Sira Works" multi-step workflow walkthrough
+ *  - Dedicated employer hiring recruitment CTA banner.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import JobCard from '../components/JobCard';
 
+/**
+ * Home Component
+ */
 const Home = () => {
+  // Search bar input state
   const [searchTerm, setSearchTerm] = useState('');
   const [locationTerm, setLocationTerm] = useState('Addis Ababa, Ethiopia');
+  
+  // Real-time job statistics & latest listings state
   const [recentJobs, setRecentJobs] = useState([]);
   const [totalJobs, setTotalJobs] = useState(0);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const navigate = useNavigate();
 
+  /**
+   * Fetch 5 newest jobs on initial page load to populate the hero listings preview
+   */
   useEffect(() => {
     const fetchRecentJobs = async () => {
       try {
@@ -28,6 +49,10 @@ const Home = () => {
     fetchRecentJobs();
   }, []);
 
+  /**
+   * handleSearch
+   * Formats search parameters into URL query strings and forwards user to the `/jobs` catalog view
+   */
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
@@ -38,6 +63,7 @@ const Home = () => {
     navigate(`/jobs${params.toString() ? `?${params.toString()}` : ''}`);
   };
 
+  // Primary job sectors showcased in the category grid
   const categories = [
     {
       title: 'Technology',
@@ -64,6 +90,7 @@ const Home = () => {
       description: 'Operations, HR, administration & coordination',
     },
   ];
+
 
   return (
     <div>

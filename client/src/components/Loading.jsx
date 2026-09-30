@@ -1,5 +1,18 @@
+/**
+ * @file Loading.jsx
+ * @description Reusable loading spinner component.
+ * Displays a lightweight animated CSS spinner accompanied by customizable status text
+ * during asynchronous network fetches, auth checks, and route transitions.
+ */
+
 import React from 'react';
 
+/**
+ * Loading Component
+ * 
+ * @param {object} props - Component props
+ * @param {string} [props.message='Loading...'] - Text message displayed beneath spinner
+ */
 const Loading = ({ message = 'Loading...' }) => {
   return (
     <div style={{
@@ -10,6 +23,7 @@ const Loading = ({ message = 'Loading...' }) => {
       padding: '60px 20px',
       minHeight: '260px'
     }}>
+      {/* Animated Circular Spinner Element */}
       <div style={{
         width: '40px',
         height: '40px',
@@ -19,9 +33,11 @@ const Loading = ({ message = 'Loading...' }) => {
         animation: 'spin 0.8s linear infinite',
         marginBottom: '16px'
       }} />
+      {/* Descriptive loading message */}
       <p style={{ color: '#64748b', fontSize: '0.95rem', fontWeight: 500 }}>
         {message}
       </p>
+      {/* Inline Keyframes for continuous 360-degree rotation */}
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
@@ -33,3 +49,4 @@ const Loading = ({ message = 'Loading...' }) => {
 };
 
 export default Loading;
+

@@ -1,12 +1,25 @@
+/**
+ * @file SeekerApplications.jsx
+ * @description Candidate application history and tracking view.
+ * Lists all positions the job seeker has applied for with filterable status tabs (ALL, PENDING,
+ * REVIEWED, ACCEPTED, REJECTED), inline submission detail drawer modals (cover letter & resume link),
+ * and application withdrawal capability prior to terminal recruitment decisions.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
+// Status filter tabs for candidate application list
 const STATUS_TABS = ['ALL', 'PENDING', 'REVIEWED', 'ACCEPTED', 'REJECTED'];
 
+/**
+ * SeekerApplications Component
+ */
 const SeekerApplications = () => {
+  // Application list and filter states
   const [applications, setApplications] = useState([]);
   const [activeTab, setActiveTab] = useState('ALL');
   const [loading, setLoading] = useState(true);
@@ -15,6 +28,10 @@ const SeekerApplications = () => {
   const [withdrawingId, setWithdrawingId] = useState(null);
   const [selectedApp, setSelectedApp] = useState(null);
 
+  /**
+   * fetchApplications
+   * Queries all candidate applications submitted by the current user from `/api/applications/me`
+   */
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -32,6 +49,12 @@ const SeekerApplications = () => {
     fetchApplications();
   }, []);
 
+  /**
+   * handleWithdraw
+   * Requests application withdrawal from the server after confirmation
+   * 
+   * @param {string} appId - Application ID to withdraw
+   */
   const handleWithdraw = async (appId) => {
     const confirmed = window.confirm(
       'Are you sure you want to withdraw this application? Once withdrawn, the employer will no longer consider your submission.'
@@ -53,12 +76,14 @@ const SeekerApplications = () => {
     }
   };
 
+  // Filter application list based on selected status tab
   const filteredApps = applications.filter((app) => {
     if (activeTab === 'ALL') return true;
     return app.status === activeTab;
   });
 
   if (loading) return <Loading message="Loading submitted applications..." />;
+
 
   return (
     <div style={{ padding: '48px 0 80px' }}>

@@ -1,11 +1,26 @@
+/**
+ * @file JobApplications.jsx
+ * @description Candidate application review and evaluation view for hiring managers.
+ * Lists all candidate submissions for a specific job posting. Supports:
+ *  - Live status transition updates (PENDING -> REVIEWED -> ACCEPTED / REJECTED) conforming to BR-005
+ *  - Inline resume URL inspection
+ *  - Full cover letter reading drawer modal
+ *  - Application pipeline status distribution counter bar.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
+/**
+ * JobApplications Component
+ */
 const JobApplications = () => {
   const { id } = useParams();
+  
+  // Component states
   const [job, setJob] = useState(null);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +29,9 @@ const JobApplications = () => {
   const [updatingId, setUpdatingId] = useState(null);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
 
+  /**
+   * Concurrently fetch parent job details and candidate applications
+   */
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -35,6 +53,13 @@ const JobApplications = () => {
     fetchData();
   }, [id]);
 
+  /**
+   * handleStatusChange
+   * Dispatches application review status transition conforming to BR-005
+   * 
+   * @param {string} appId - Application document ID
+   * @param {string} newStatus - Target status ('REVIEWED', 'ACCEPTED', 'REJECTED')
+   */
   const handleStatusChange = async (appId, newStatus) => {
     try {
       setUpdatingId(appId);
@@ -54,10 +79,12 @@ const JobApplications = () => {
 
   if (loading) return <Loading message="Loading candidate applications..." />;
 
+  // Calculate pipeline status counts
   const pendingCount = applications.filter((a) => a.status === 'PENDING').length;
   const reviewedCount = applications.filter((a) => a.status === 'REVIEWED').length;
   const acceptedCount = applications.filter((a) => a.status === 'ACCEPTED').length;
   const rejectedCount = applications.filter((a) => a.status === 'REJECTED').length;
+
 
   return (
     <div style={{ padding: '48px 0 80px' }}>

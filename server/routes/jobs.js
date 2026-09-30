@@ -1,3 +1,11 @@
+/**
+ * @file jobs.js
+ * @description Job postings management and discovery routes.
+ * Covers public search and filtering with pagination, employer job creation and editing,
+ * employer-specific dashboard analytics aggregations, candidate lists per job,
+ * and cascading deletion of associated applications when a job is removed.
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const Job = require('../models/Job');
@@ -23,21 +31,24 @@ const router = express.Router();
  */
 router.get('/mine', requireAuth, requireEmployer, async (req, res, next) => {
   try {
+    // 1. Query all jobs posted by this employer, sorted newest first
     const jobs = await Job.find({ postedBy: req.user._id }).sort({ createdAt: -1 });
 
     const jobIds = jobs.map((j) => j._id);
 
-    // Aggregate application counts for each job
+    // 2. Aggregate application counts for each of these jobs in a single database query
     const applicationCounts = await Application.aggregate([
       { $match: { job: { $in: jobIds } } },
       { $group: { _id: '$job', count: { $sum: 1 } } },
     ]);
 
+    // 3. Convert aggregation result array into a lookup map keyed by job ID string
     const countsMap = applicationCounts.reduce((acc, curr) => {
       acc[curr._id.toString()] = curr.count;
       return acc;
     }, {});
 
+    // 4. Attach computed applicantCount to each job object
     const jobsWithCounts = jobs.map((job) => ({
       ...job.toObject(),
       applicantCount: countsMap[job._id.toString()] || 0,
@@ -51,13 +62,14 @@ router.get('/mine', requireAuth, requireEmployer, async (req, res, next) => {
 
 /**
  * @route   GET /api/jobs/stats/employer
- * @desc    Aggregate employer analytics (job counts, application pipeline status)
+ * @desc    Aggregate employer analytics (job counts, application pipeline status breakdown)
  * @access  Authenticated (Employer only)
  */
 router.get('/stats/employer', requireAuth, requireEmployer, async (req, res, next) => {
   try {
     const employerId = req.user._id;
 
+    // 1. Concurrently calculate total jobs, open jobs, closed jobs, and get employer job IDs
     const [totalJobs, openJobs, closedJobs, employerJobs] = await Promise.all([
       Job.countDocuments({ postedBy: employerId }),
       Job.countDocuments({ postedBy: employerId, status: 'OPEN' }),
@@ -67,6 +79,7 @@ router.get('/stats/employer', requireAuth, requireEmployer, async (req, res, nex
 
     const jobIds = employerJobs.map((j) => j._id);
 
+    // 2. Aggregate candidate application counts grouped by status across all employer jobs
     const appStats = await Application.aggregate([
       { $match: { job: { $in: jobIds } } },
       {
@@ -85,6 +98,7 @@ router.get('/stats/employer', requireAuth, requireEmployer, async (req, res, nex
       rejected: 0,
     };
 
+    // 3. Populate status breakdown counts
     appStats.forEach((stat) => {
       totalApplicants += stat.count;
       const key = stat._id.toLowerCase();
@@ -111,7 +125,7 @@ router.get('/stats/employer', requireAuth, requireEmployer, async (req, res, nex
 
 /**
  * @route   GET /api/jobs
- * @desc    List, search, filter, and paginate jobs
+ * @desc    List, search, filter, and paginate job postings
  * @access  Public
  */
 router.get('/', async (req, res, next) => {
@@ -131,14 +145,14 @@ router.get('/', async (req, res, next) => {
 
     const query = {};
 
-    // By default, public search returns OPEN jobs unless specified
+    // By default, public search returns OPEN jobs unless explicitly requesting CLOSED or ALL
     if (status && ['OPEN', 'CLOSED'].includes(status.toUpperCase())) {
       query.status = status.toUpperCase();
     } else if (status !== 'ALL') {
       query.status = 'OPEN';
     }
 
-    // Keyword Search across title, company, location, and description
+    // Keyword Search across title, company, location, and description using case-insensitive regex
     if (search && search.trim()) {
       const searchRegex = new RegExp(search.trim(), 'i');
       query.$or = [
@@ -149,22 +163,22 @@ router.get('/', async (req, res, next) => {
       ];
     }
 
-    // Category filter
+    // Category filter matching exact category name
     if (category && category !== 'ALL') {
       query.category = category;
     }
 
-    // Employment type filter
+    // Employment type filter (Full-time, Part-time, Contract, etc.)
     if (type && type !== 'ALL') {
       query.type = type;
     }
 
-    // Location substring match
+    // Location substring match (case-insensitive)
     if (location && location.trim()) {
       query.location = new RegExp(location.trim(), 'i');
     }
 
-    // Salary range filters
+    // Salary range boundary filters
     if (minSalary || maxSalary) {
       query.salary = {};
       if (minSalary && !isNaN(Number(minSalary))) {
@@ -175,7 +189,7 @@ router.get('/', async (req, res, next) => {
       }
     }
 
-    // Sorting options
+    // Sorting options: newest (default), oldest, highest-salary, lowest-salary
     let sortOptions = { createdAt: -1 };
     switch (sort) {
       case 'oldest':
@@ -193,11 +207,12 @@ router.get('/', async (req, res, next) => {
         break;
     }
 
-    // Pagination calculations
+    // Calculate pagination values with safety bounds (max 50 per page)
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.max(1, Math.min(50, parseInt(limit, 10) || 9));
     const skip = (pageNum - 1) * limitNum;
 
+    // Concurrently fetch matching document count and the paginated subset
     const [total, jobs] = await Promise.all([
       Job.countDocuments(query),
       Job.find(query)
@@ -223,13 +238,14 @@ router.get('/', async (req, res, next) => {
 
 /**
  * @route   GET /api/jobs/:id
- * @desc    Get single job details by ID
+ * @desc    Get single job details by ID with populated employer info
  * @access  Public
  */
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    // Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ message: 'Job not found' });
     }
@@ -268,12 +284,14 @@ router.post('/', requireAuth, requireEmployer, async (req, res, next) => {
       requirements,
     } = req.body;
 
+    // Validate required fields
     if (!title || !description || !location || !salary) {
       return res.status(400).json({
         message: 'Title, description, location, and salary are required fields.',
       });
     }
 
+    // Create job listing associated with authenticated employer
     const newJob = await Job.create({
       title: title.trim(),
       description: description.trim(),
@@ -311,7 +329,7 @@ router.put('/:id', requireAuth, requireEmployer, async (req, res, next) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    // BR-004: Job Ownership Verification
+    // BR-004: Job Ownership Verification - only the employer who created this job can edit it
     if (job.postedBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message: 'Forbidden. You do not have permission to modify this job posting.',
@@ -330,6 +348,7 @@ router.put('/:id', requireAuth, requireEmployer, async (req, res, next) => {
       status,
     } = req.body;
 
+    // Apply updates selectively
     if (title) job.title = title.trim();
     if (description) job.description = description.trim();
     if (company) job.company = company.trim();
@@ -377,7 +396,7 @@ router.delete('/:id', requireAuth, requireEmployer, async (req, res, next) => {
       });
     }
 
-    // BR-009: Cascade Deletion of applications
+    // BR-009: Cascade Deletion of applications to prevent orphaned database records
     await Application.deleteMany({ job: job._id });
     await Job.deleteOne({ _id: job._id });
 
@@ -407,13 +426,14 @@ router.get('/:id/applications', requireAuth, requireEmployer, async (req, res, n
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    // BR-004: Ownership check
+    // BR-004: Ownership check - only the job author can inspect candidate applications
     if (job.postedBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message: 'Forbidden. You can only view candidates for jobs you posted.',
       });
     }
 
+    // Fetch applications with applicant profile info, ordered newest first
     const applications = await Application.find({ job: id })
       .populate('applicant', 'name email createdAt')
       .sort({ appliedAt: -1 });
@@ -425,3 +445,4 @@ router.get('/:id/applications', requireAuth, requireEmployer, async (req, res, n
 });
 
 module.exports = router;
+

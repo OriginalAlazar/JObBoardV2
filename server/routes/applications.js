@@ -1,3 +1,11 @@
+/**
+ * @file applications.js
+ * @description Job application lifecycle and candidate evaluation routes.
+ * Handles candidate submission with validation, duplicate application prevention (BR-002),
+ * closed job application freeze (BR-003), employer evaluation status transitions (BR-005),
+ * candidate application withdrawal, and seeker dashboard analytics.
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const Application = require('../models/Application');
@@ -27,6 +35,8 @@ const router = express.Router();
  */
 router.get('/me', requireAuth, requireSeeker, async (req, res, next) => {
   try {
+    // 1. Query applications submitted by the authenticated user
+    // 2. Deeply populate the parent job and the employer who posted it
     const applications = await Application.find({ applicant: req.user._id })
       .populate({
         path: 'job',
@@ -53,6 +63,7 @@ router.get('/stats/seeker', requireAuth, requireSeeker, async (req, res, next) =
   try {
     const seekerId = req.user._id;
 
+    // Concurrently count total applications and aggregate counts grouped by status
     const [totalApplications, stats] = await Promise.all([
       Application.countDocuments({ applicant: seekerId }),
       Application.aggregate([
@@ -73,6 +84,7 @@ router.get('/stats/seeker', requireAuth, requireSeeker, async (req, res, next) =
       rejected: 0,
     };
 
+    // Populate counts into status breakdown dictionary
     stats.forEach((item) => {
       const key = item._id.toLowerCase();
       if (statusCounts[key] !== undefined) {
@@ -102,28 +114,28 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
   try {
     const { jobId, coverLetter, resumeLink } = req.body;
 
-    // Validate presence
+    // 1. Validate presence of required fields
     if (!jobId || !coverLetter || !resumeLink) {
       return res.status(400).json({
         message: 'jobId, coverLetter, and resumeLink are required.',
       });
     }
 
-    // Validate ObjectId
+    // 2. Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
       return res.status(400).json({
         message: 'Invalid jobId format.',
       });
     }
 
-    // Validate cover letter length
+    // 3. Validate cover letter minimum length (must be at least 20 chars)
     if (coverLetter.trim().length < 20) {
       return res.status(400).json({
         message: 'Cover letter must be at least 20 characters long.',
       });
     }
 
-    // Validate resumeLink URL format
+    // 4. Validate resumeLink URL format using regex
     const urlPattern = /^(https?:\/\/)([\w.-]+)+(:\d+)?(\/([\w/_.-]*(\?\S+)?)?)?$/;
     if (!urlPattern.test(resumeLink.trim())) {
       return res.status(400).json({
@@ -132,7 +144,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
       });
     }
 
-    // 1. Fetch parent job
+    // 5. Fetch target job posting from database
     const job = await Job.findById(jobId);
     if (!job) {
       return res.status(404).json({
@@ -140,7 +152,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
       });
     }
 
-    // BR-003: Closed Job Submission Freeze
+    // BR-003: Closed Job Submission Freeze - applications cannot be submitted to CLOSED listings
     if (job.status === 'CLOSED') {
       return res.status(400).json({
         message:
@@ -148,7 +160,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
       });
     }
 
-    // BR-002: Duplicate Application Prevention (Application-level check)
+    // BR-002: Duplicate Application Prevention (Pre-insert check)
     const existingApp = await Application.findOne({
       job: jobId,
       applicant: req.user._id,
@@ -159,7 +171,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
       });
     }
 
-    // 2. Create Application (Database compound unique index also acts as safety net)
+    // 6. Create Application record (database unique compound index ensures atomic concurrency safety)
     try {
       const application = await Application.create({
         job: jobId,
@@ -170,6 +182,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
         appliedAt: new Date(),
       });
 
+      // Populate basic job metadata for frontend confirmation
       const populatedApp = await Application.findById(application._id).populate(
         'job',
         'title company location type salary status'
@@ -177,6 +190,7 @@ router.post('/', requireAuth, requireSeeker, async (req, res, next) => {
 
       return res.status(201).json(populatedApp);
     } catch (dbError) {
+      // Catch race-condition compound index collision (code 11000)
       if (dbError.code === 11000) {
         return res.status(409).json({
           message: 'You have already applied for this job.',
@@ -214,7 +228,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Authorization: Seeker must be applicant, Employer must be job poster
+    // Authorization Guard: Only the applicant or the employer owning the job may view the application
     const isApplicant =
       application.applicant._id.toString() === req.user._id.toString();
     const isJobOwner =
@@ -267,7 +281,7 @@ router.put('/:id/status', requireAuth, requireEmployer, async (req, res, next) =
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // BR-004: Ownership check
+    // BR-004: Ownership check - only the employer who posted the job can update candidate statuses
     if (application.job.postedBy.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message:
@@ -277,28 +291,27 @@ router.put('/:id/status', requireAuth, requireEmployer, async (req, res, next) =
 
     const currentStatus = application.status;
 
-    // Idempotent update
+    // Idempotent update: if status is unchanged, return current application
     if (currentStatus === targetStatus) {
       return res.status(200).json(application);
     }
 
-    // BR-005: State Machine Enforcement
-    // Terminal states cannot be changed
+    // BR-005: State Machine Enforcement:
+    // 1. Terminal states (ACCEPTED / REJECTED) cannot be modified once set
     if (['ACCEPTED', 'REJECTED'].includes(currentStatus)) {
       return res.status(400).json({
         message: `Cannot modify an application that has already reached terminal status '${currentStatus}'.`,
       });
     }
 
-    // Valid transitions:
-    // PENDING -> REVIEWED, ACCEPTED, REJECTED
-    // REVIEWED -> ACCEPTED, REJECTED
+    // 2. Forward transitions only: Cannot revert a REVIEWED application back to PENDING
     if (currentStatus === 'REVIEWED' && targetStatus === 'PENDING') {
       return res.status(400).json({
         message: 'Cannot revert a REVIEWED application back to PENDING.',
       });
     }
 
+    // Update and persist state
     application.status = targetStatus;
     const updatedApplication = await application.save();
 
@@ -326,20 +339,21 @@ router.delete('/:id', requireAuth, requireSeeker, async (req, res, next) => {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Ensure applicant is the owner
+    // Ensure only the seeker who created the application can withdraw it
     if (application.applicant.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message: 'Forbidden. You cannot withdraw someone else’s application.',
       });
     }
 
-    // Cannot withdraw if already decided
+    // Cannot withdraw if an employer has already accepted or rejected the candidate
     if (['ACCEPTED', 'REJECTED'].includes(application.status)) {
       return res.status(400).json({
         message: `Cannot withdraw an application that is already ${application.status}.`,
       });
     }
 
+    // Delete application document
     await Application.deleteOne({ _id: id });
 
     return res.status(200).json({
@@ -351,3 +365,4 @@ router.delete('/:id', requireAuth, requireSeeker, async (req, res, next) => {
 });
 
 module.exports = router;
+

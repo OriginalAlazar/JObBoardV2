@@ -1,8 +1,17 @@
+/**
+ * @file Jobs.jsx
+ * @description Public job discovery catalog and search interface.
+ * Synchronizes filter states with browser URL search parameters (`useSearchParams`),
+ * supporting multi-criteria filtering (keywords, industry category, employment arrangement,
+ * minimum ETB salary tiers), multiple sort options, skeleton loading states, and pagination.
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import JobCard from '../components/JobCard';
 
+// Available industry categories for filter dropdown
 const CATEGORIES = [
   'ALL',
   'Technology',
@@ -13,8 +22,10 @@ const CATEGORIES = [
   'Administration',
 ];
 
+// Available employment types for filter dropdown
 const JOB_TYPES = ['ALL', 'Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'];
 
+// Sort options mapped to backend sorting query parameters
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest first' },
   { value: 'oldest', label: 'Oldest first' },
@@ -22,6 +33,7 @@ const SORT_OPTIONS = [
   { value: 'lowest-salary', label: 'Lowest compensation' },
 ];
 
+// Ethiopian Birr compensation minimum threshold tiers
 const SALARY_TIERS = [
   { value: '', label: 'Any salary' },
   { value: '15000', label: 'ETB 15,000+' },
@@ -31,10 +43,13 @@ const SALARY_TIERS = [
   { value: '35000', label: 'ETB 35,000+' },
 ];
 
+/**
+ * Jobs Component
+ */
 const Jobs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Read query params from URL
+  // Read current filter and pagination state directly from the URL query string
   const querySearch = searchParams.get('search') || '';
   const queryCategory = searchParams.get('category') || 'ALL';
   const queryType = searchParams.get('type') || 'ALL';
@@ -42,7 +57,7 @@ const Jobs = () => {
   const querySort = searchParams.get('sort') || 'newest';
   const queryPage = parseInt(searchParams.get('page') || '1', 10);
 
-  // Local state for search input
+  // Local state for the search input before form submission or debounce
   const [searchInput, setSearchInput] = useState(querySearch);
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 9, total: 0, totalPages: 1 });
@@ -50,7 +65,7 @@ const Jobs = () => {
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [error, setError] = useState('');
 
-  // 200ms delay before showing skeletons
+  // Delay skeleton appearance by 200ms to avoid flashing UI skeletons on fast connections
   useEffect(() => {
     let timer;
     if (loading) {
@@ -61,10 +76,16 @@ const Jobs = () => {
     return () => clearTimeout(timer);
   }, [loading]);
 
+  // Keep search input in sync when URL changes externally (e.g. browser back button)
   useEffect(() => {
     setSearchInput(querySearch);
   }, [querySearch]);
 
+  /**
+   * updateParams
+   * Updates URL query parameters while removing empty/default parameters and resetting page to 1
+   * whenever filters are altered.
+   */
   const updateParams = useCallback((newParams) => {
     setSearchParams((prev) => {
       const updated = new URLSearchParams(prev);
@@ -75,6 +96,7 @@ const Jobs = () => {
           updated.set(key, val);
         }
       });
+      // Reset page back to 1 unless the page parameter is explicitly being modified
       if (!('page' in newParams)) {
         updated.delete('page');
       }
@@ -82,6 +104,9 @@ const Jobs = () => {
     });
   }, [setSearchParams]);
 
+  /**
+   * Fetch matching jobs from backend REST API whenever search parameters change
+   */
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -98,6 +123,7 @@ const Jobs = () => {
         if (queryCategory && queryCategory !== 'ALL') params.category = queryCategory;
         if (queryType && queryType !== 'ALL') params.type = queryType;
         if (queryMinSalary) params.minSalary = queryMinSalary;
+
 
         const res = await api.get('/jobs', { params });
         setJobs(res.data.jobs || []);

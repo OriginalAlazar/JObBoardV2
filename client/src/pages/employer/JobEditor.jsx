@@ -1,9 +1,20 @@
+/**
+ * @file JobEditor.jsx
+ * @description Unified job posting creation and editing form.
+ * Serves dual modes:
+ *  - Create Mode (`/employer/jobs/create`): Renders empty form pre-filled with employer's company name.
+ *  - Edit Mode (`/employer/jobs/:id/edit`): Fetches existing posting and hydrates inputs for in-place modification.
+ * Handles multiline requirements string parsing into string arrays, numerical salary coercion,
+ * input validation, and PUT/POST API dispatch.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import Loading from '../../components/Loading';
 
+// Standard industry classification categories
 const CATEGORIES = [
   'Technology',
   'Business & Finance',
@@ -14,14 +25,20 @@ const CATEGORIES = [
   'Other',
 ];
 
+// Standard employment engagement types
 const JOB_TYPES = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Remote'];
 
+/**
+ * JobEditor Component
+ */
 const JobEditor = () => {
   const { id } = useParams();
+  // Edit mode active when an ID parameter exists in the route URL
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Controlled form state
   const [formData, setFormData] = useState({
     title: '',
     company: user?.company || '',
@@ -38,6 +55,9 @@ const JobEditor = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  /**
+   * If in edit mode, fetch the current job posting and pre-populate the form
+   */
   useEffect(() => {
     if (isEditMode) {
       const fetchJob = async () => {
@@ -67,20 +87,30 @@ const JobEditor = () => {
     }
   }, [id, isEditMode, user]);
 
+  /**
+   * Universal change handler for inputs, selects, and textareas
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * handleSubmit
+   * Validates mandatory fields, splits newline-delimited requirements into an array,
+   * dispatches PUT (edit) or POST (create), and redirects back to the postings list.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Parse multiline string into trimmed list of requirements
     const requirements = formData.requirementsText
       .split('\n')
       .map((r) => r.trim())
       .filter(Boolean);
 
+    // Prepare JSON payload
     const payload = {
       title: formData.title.trim(),
       company: formData.company.trim(),
@@ -93,10 +123,12 @@ const JobEditor = () => {
       status: formData.status,
     };
 
+    // Client-side validation check
     if (!payload.title || !payload.company || !payload.location || !payload.description) {
       setError('Please fill in all required fields (title, company, location, and description).');
       return;
     }
+
 
     try {
       setSubmitting(true);

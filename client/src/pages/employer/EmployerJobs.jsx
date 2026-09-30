@@ -1,16 +1,32 @@
+/**
+ * @file EmployerJobs.jsx
+ * @description Job postings directory and lifecycle management for employers.
+ * Lists all postings authored by the authenticated recruiter with live applicant metrics,
+ * quick status toggling between OPEN and CLOSED vacancy states, direct routing to the job editor,
+ * candidate applications view, and confirmation-protected cascade deletion.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
+/**
+ * EmployerJobs Component
+ */
 const EmployerJobs = () => {
+  // Postings data and action state
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [processingId, setProcessingId] = useState(null);
 
+  /**
+   * fetchJobs
+   * Queries all jobs authored by the current employer along with aggregated applicant counts
+   */
   const fetchJobs = async () => {
     try {
       setLoading(true);
@@ -28,6 +44,12 @@ const EmployerJobs = () => {
     fetchJobs();
   }, []);
 
+  /**
+   * handleToggleStatus
+   * Toggles job status between OPEN and CLOSED (BR-003)
+   * 
+   * @param {object} job - Target job document
+   */
   const handleToggleStatus = async (job) => {
     const newStatus = job.status === 'OPEN' ? 'CLOSED' : 'OPEN';
     try {
@@ -46,6 +68,13 @@ const EmployerJobs = () => {
     }
   };
 
+  /**
+   * handleDelete
+   * Prompts user with a warning about cascade deletion (BR-009) and permanently removes the job posting
+   * 
+   * @param {string} jobId - ID of job to delete
+   * @param {string} title - Job title for user confirmation prompt
+   */
   const handleDelete = async (jobId, title) => {
     const confirmed = window.confirm(
       `Are you sure you want to permanently delete "${title}"? All submitted candidate applications for this position will also be removed.`
@@ -67,6 +96,7 @@ const EmployerJobs = () => {
   };
 
   if (loading) return <Loading message="Loading job postings..." />;
+
 
   return (
     <div style={{ padding: '48px 0 80px' }}>

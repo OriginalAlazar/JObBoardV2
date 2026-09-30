@@ -1,8 +1,17 @@
+/**
+ * @file seed.js
+ * @description Database seeding script for local development and demonstration testing.
+ * Populates MongoDB with predefined user accounts (Employers and Job Seekers),
+ * diverse job postings across Ethiopian companies, and sample candidate applications
+ * across different review statuses (PENDING, REVIEWED, ACCEPTED).
+ */
+
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const path = require('path');
 
+// Load environment variables from the server/.env file
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const User = require('./models/User');
@@ -10,13 +19,17 @@ const Job = require('./models/Job');
 const Application = require('./models/Application');
 const Session = require('./models/Session');
 
+/**
+ * seedData
+ * Asynchronous orchestrator that wipes existing database collections and populates fresh sample records.
+ */
 const seedData = async () => {
   try {
     console.log('--- Connecting to MongoDB for Seeding (Sira Brand Guide) ---');
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jobboard_v2');
     console.log('✓ Connected to MongoDB');
 
-    // Clean existing collections
+    // 1. Clean existing collections to ensure a fresh, consistent database state
     await Promise.all([
       User.deleteMany({}),
       Job.deleteMany({}),
@@ -25,11 +38,11 @@ const seedData = async () => {
     ]);
     console.log('✓ Cleared previous database collections');
 
-    // Hash common password
+    // 2. Pre-hash a common development password ('Password123!') for all seed users
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash('Password123!', salt);
 
-    // 1. Create Users matching Sira Guide
+    // 3. Create Seed Users matching Sira brand guidelines (2 Employers, 2 Job Seekers)
     console.log('Inserting seed users...');
     const employer1 = await User.create({
       name: 'Hana Alemu',
@@ -63,7 +76,7 @@ const seedData = async () => {
 
     console.log('✓ Created 4 seed users (Password: Password123!)');
 
-    // 2. Create Jobs from Sira Guide
+    // 4. Create Job Postings across Ethiopian organizations and technology sectors
     console.log('Inserting seed job postings matching Sira guide...');
     const jobs = await Job.create([
       {
@@ -181,13 +194,13 @@ const seedData = async () => {
         salary: 20000,
         requirements: ['Python 3.8', 'PostgreSQL'],
         postedBy: employer1._id,
-        status: 'CLOSED', // Demonstrates closed job handling
+        status: 'CLOSED', // Demonstrates closed job handling and UI states
       },
     ]);
 
     console.log(`✓ Created ${jobs.length} seed job listings across Ethiopian organizations`);
 
-    // 3. Create Sample Applications matching guide
+    // 5. Create Sample Applications across multiple review states
     console.log('Inserting seed job applications...');
     await Application.create([
       {
@@ -230,8 +243,10 @@ const seedData = async () => {
     console.error('Error seeding database:', error);
     process.exit(1);
   } finally {
+    // 6. Always cleanly disconnect MongoDB client connection upon completion
     await mongoose.disconnect();
   }
 };
 
 seedData();
+

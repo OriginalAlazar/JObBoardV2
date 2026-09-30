@@ -1,11 +1,25 @@
+/**
+ * @file Register.jsx
+ * @description New account registration view.
+ * Allows candidates to create Job Seeker accounts and recruiters to create Employer accounts.
+ * Includes interactive role switcher tabs, real-time password complexity validation checks
+ * (length, uppercase, lowercase, digits, special characters), confirm password equality checks,
+ * and automated session establishment upon registration.
+ */
+
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Register Component
+ */
 const Register = () => {
   const location = useLocation();
+  // Check if a role was pre-selected via navigation state (e.g. from homepage 'For Employers' CTA)
   const initialRole = location.state?.role === 'EMPLOYER' ? 'EMPLOYER' : 'JOB_SEEKER';
 
+  // Form states
   const [role, setRole] = useState(initialRole);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,33 +33,43 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Password validation checks
+  // Real-time password complexity rule evaluators
   const hasMinLength = password.length >= 8;
   const hasUpper = /[A-Z]/.test(password);
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+  // Overall password validity requires satisfying all 5 criteria
   const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial;
 
+  /**
+   * handleSubmit
+   * Validates form entries, verifies password complexity, submits registration payload,
+   * and routes user to their role-specific onboarding dashboard.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // 1. Validate mandatory fields
     if (!name.trim() || !email.trim() || !password) {
       setError('Please fill in all required fields.');
       return;
     }
 
+    // 2. Validate company presence if registering as an employer
     if (role === 'EMPLOYER' && !company.trim()) {
       setError('Company or organization name is required for Employer accounts.');
       return;
     }
 
+    // 3. Ensure password satisfies all security rules
     if (!isPasswordValid) {
       setError('Password does not meet all security complexity requirements.');
       return;
     }
 
+    // 4. Ensure passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -53,6 +77,7 @@ const Register = () => {
 
     try {
       setLoading(true);
+      // Register account and establish session
       const res = await register({
         name: name.trim(),
         email: email.trim().toLowerCase(),
@@ -61,6 +86,7 @@ const Register = () => {
         company: role === 'EMPLOYER' ? company.trim() : undefined,
       });
 
+      // Navigate to respective workspace dashboard
       const destination = res.user?.role === 'EMPLOYER' ? '/employer/dashboard' : '/seeker/dashboard';
       navigate(destination, { replace: true });
     } catch (err) {
@@ -82,6 +108,7 @@ const Register = () => {
             textAlign: 'left',
           }}
         >
+          {/* Header & Brand Identity */}
           <div style={{ marginBottom: '24px' }}>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', marginBottom: '14px' }}>
               <img

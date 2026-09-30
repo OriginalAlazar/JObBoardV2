@@ -1,3 +1,10 @@
+/**
+ * @file SeekerDashboard.jsx
+ * @description Candidate career workspace and application tracking dashboard.
+ * Summarizes the job seeker's submission counts across review stages (Pending, Reviewed, Accepted, Rejected),
+ * displays recent submission records, and provides quick discovery shortcuts to find new job postings.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -5,13 +12,20 @@ import { useAuth } from '../../context/AuthContext';
 import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
+/**
+ * SeekerDashboard Component
+ */
 const SeekerDashboard = () => {
   const { user } = useAuth();
+  // State for metrics and recent applications
   const [stats, setStats] = useState(null);
   const [recentApplications, setRecentApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  /**
+   * Concurrently fetch seeker application statistics and recent submission history
+   */
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -24,6 +38,7 @@ const SeekerDashboard = () => {
         ]);
 
         setStats(statsRes.data);
+        // Only preview the 5 most recent submissions on the dashboard
         setRecentApplications(appsRes.data.slice(0, 5));
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load career workspace.');
@@ -37,6 +52,10 @@ const SeekerDashboard = () => {
 
   if (loading) return <Loading message="Loading career workspace..." />;
 
+  /**
+   * Computes a friendly time-based greeting for the candidate
+   * @returns {string} 'Good morning', 'Good afternoon', or 'Good evening'
+   */
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -44,7 +63,9 @@ const SeekerDashboard = () => {
     return 'Good evening';
   };
 
+  // Format count with leading zero padding for typographic consistency
   const formatNumber = (num) => String(num || 0).padStart(2, '0');
+
 
   return (
     <div style={{ padding: '48px 0 80px' }}>

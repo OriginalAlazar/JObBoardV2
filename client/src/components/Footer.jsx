@@ -1,6 +1,16 @@
+/**
+ * @file Footer.jsx
+ * @description Global footer component displayed at the bottom of all application views.
+ * Features brand identity, platform navigation links, account shortcuts, support sections,
+ * and Ethiopian localized dedication copyright notes.
+ */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Footer Component
+ */
 const Footer = () => {
   return (
     <footer
@@ -12,7 +22,7 @@ const Footer = () => {
       }}
     >
       <div className="container">
-        {/* Main Footer Columns */}
+        {/* Main Footer Columns Grid */}
         <div
           style={{
             display: 'grid',
@@ -21,7 +31,7 @@ const Footer = () => {
             marginBottom: '48px',
           }}
         >
-          {/* Brand Column */}
+          {/* Brand Column: Logo, Brand Typography, and Tagline */}
           <div style={{ maxWidth: '280px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
               <img
@@ -68,7 +78,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Platform Links */}
+          {/* Platform Links: Discover jobs, How it works, For employers */}
           <div>
             <span
               style={{
@@ -103,7 +113,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Account Links */}
+          {/* Account Links: Sign in, Create account, My applications */}
           <div>
             <span
               style={{
@@ -138,7 +148,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support Links */}
+          {/* Support Links: Help and Contact */}
           <div>
             <span
               style={{
@@ -165,7 +175,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Footer Bottom Note */}
+        {/* Footer Bottom Note: Copyright and Regional Motto */}
         <div
           style={{
             borderTop: '1px solid var(--border)',
@@ -190,3 +200,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

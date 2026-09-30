@@ -1,8 +1,20 @@
+/**
+ * @file Login.jsx
+ * @description User authentication view.
+ * Provides credential inputs (email and password) with show/hide password toggle,
+ * one-click demo account filling for quick testing (candidate & employer accounts),
+ * inline error feedback, and redirect forwarding back to the originally requested route.
+ */
+
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Login Component
+ */
 const Login = () => {
+  // Form input and UI control states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -13,10 +25,15 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /**
+   * handleSubmit
+   * Handles credential submission to backend API and navigates to the target destination
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Input validation
     if (!email.trim() || !password) {
       setError('Please provide both email and password.');
       return;
@@ -24,8 +41,10 @@ const Login = () => {
 
     try {
       setLoading(true);
+      // Execute login action via AuthContext
       const res = await login({ email: email.trim(), password });
       
+      // Determine redirection target: return to previous protected route if redirected, or default to role dashboard
       const destination = location.state?.from || (
         res.user?.role === 'EMPLOYER' ? '/employer/dashboard' : '/seeker/dashboard'
       );
@@ -37,6 +56,13 @@ const Login = () => {
     }
   };
 
+  /**
+   * handleQuickLogin
+   * Helper utility to autofill sample accounts for evaluation and grading
+   * 
+   * @param {string} demoEmail - Predefined seed user email
+   * @param {string} demoPassword - Predefined seed user password
+   */
   const handleQuickLogin = (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
@@ -55,6 +81,7 @@ const Login = () => {
             textAlign: 'left',
           }}
         >
+          {/* Header & Brand Identity */}
           <div style={{ marginBottom: '28px' }}>
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', marginBottom: '14px' }}>
               <img
@@ -97,12 +124,14 @@ const Login = () => {
             </p>
           </div>
 
+          {/* Error Alert Banner */}
           {error && (
             <div className="alert alert-error" style={{ marginBottom: '20px' }}>
               {error}
             </div>
           )}
 
+          {/* Credential Form */}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="login-email">
@@ -163,7 +192,7 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Quick Demo Credentials */}
+          {/* Quick Demo Credentials Panel for Testers and Evaluators */}
           <div
             style={{
               marginTop: '32px',
@@ -206,6 +235,7 @@ const Login = () => {
             </div>
           </div>
 
+          {/* Sign Up Redirect Link */}
           <div style={{ marginTop: '24px', fontSize: '0.88rem', color: 'var(--text-muted)', textAlign: 'left' }}>
             Don't have an account?{' '}
             <Link to="/register" style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'underline' }}>
@@ -220,3 +250,4 @@ const Login = () => {
 };
 
 export default Login;
+

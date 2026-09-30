@@ -1,11 +1,26 @@
+/**
+ * @file Navbar.jsx
+ * @description Persistent top navigation bar header.
+ * Displays brand identity (Sira · ሥራ), public discovery links, role-conditional navigation
+ * (Job Seeker workspace vs. Employer workspace & posting management), and authentication controls.
+ */
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * Navbar Component
+ */
 const Navbar = () => {
+  // Extract auth state and session actions from AuthContext
   const { user, isAuthenticated, isEmployer, isSeeker, logout } = useAuth();
   const navigate = useNavigate();
 
+  /**
+   * handleLogout
+   * Invokes context logout action and navigates the user back to the login page
+   */
   const handleLogout = async () => {
     await logout();
     navigate('/login');
@@ -31,7 +46,7 @@ const Navbar = () => {
           height: '100%',
         }}
       >
-        {/* Brand: Sira / ሥራ */}
+        {/* Brand Identity: Sira with Amharic typography 'ሥራ' and logo */}
         <Link
           to="/"
           style={{
@@ -77,8 +92,9 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Navigation Links */}
+        {/* Navigation Links: Public & Role-Specific */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          {/* Public Discover link */}
           <Link
             to="/jobs"
             style={{
@@ -91,6 +107,7 @@ const Navbar = () => {
             Discover
           </Link>
 
+          {/* How It Works Anchor Link */}
           <a
             href="/#how-it-works"
             style={{
@@ -103,6 +120,7 @@ const Navbar = () => {
             How it works
           </a>
 
+          {/* For Employers Anchor Link (visible to unauthenticated guests) */}
           {!isAuthenticated && (
             <a
               href="/#for-employers"
@@ -117,7 +135,7 @@ const Navbar = () => {
             </a>
           )}
 
-          {/* Role-Specific Links */}
+          {/* Role-Specific Links: Job Seeker (Workspace & My Applications) */}
           {isAuthenticated && isSeeker && (
             <>
               <Link
@@ -145,6 +163,7 @@ const Navbar = () => {
             </>
           )}
 
+          {/* Role-Specific Links: Employer (Workspace, Postings, and Post a Job CTA) */}
           {isAuthenticated && isEmployer && (
             <>
               <Link
@@ -179,7 +198,7 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Auth Controls */}
+          {/* Auth Controls: Guest (Sign in / Get started) vs Authenticated (Profile Tag & Sign out) */}
           {!isAuthenticated ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Link
@@ -223,3 +242,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

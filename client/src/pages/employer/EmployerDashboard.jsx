@@ -1,3 +1,10 @@
+/**
+ * @file EmployerDashboard.jsx
+ * @description Central workspace and analytics overview for hiring managers and employers.
+ * Aggregates high-level recruitment metrics (active vs. closed positions, candidate pipeline breakdown),
+ * lists all organization job postings, and supports expandable inline candidate inspection previews.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
@@ -5,8 +12,12 @@ import { useAuth } from '../../context/AuthContext';
 import StatusBadge from '../../components/StatusBadge';
 import Loading from '../../components/Loading';
 
+/**
+ * EmployerDashboard Component
+ */
 const EmployerDashboard = () => {
   const { user } = useAuth();
+  // Metrics, job listings, and drawer expansion states
   const [stats, setStats] = useState(null);
   const [recentJobs, setRecentJobs] = useState([]);
   const [expandedJobId, setExpandedJobId] = useState(null);
@@ -15,6 +26,9 @@ const EmployerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  /**
+   * Concurrently fetch employer recruitment statistics and posted job listings
+   */
   useEffect(() => {
     const fetchEmployerData = async () => {
       try {
@@ -38,6 +52,10 @@ const EmployerDashboard = () => {
     fetchEmployerData();
   }, []);
 
+  /**
+   * Generates a contextual greeting based on the local time of day
+   * @returns {string} 'Good morning', 'Good afternoon', or 'Good evening'
+   */
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -45,8 +63,15 @@ const EmployerDashboard = () => {
     return 'Good evening';
   };
 
+  // Formats numbers with zero-padding for aligned editorial typography (e.g. 03)
   const formatNumber = (num) => String(num || 0).padStart(2, '0');
 
+  /**
+   * handleToggleExpand
+   * Expands an inline candidate drawer for a selected job posting, lazily fetching candidates if not cached
+   * 
+   * @param {string} jobId - Selected job ID to expand/collapse
+   */
   const handleToggleExpand = async (jobId) => {
     if (expandedJobId === jobId) {
       setExpandedJobId(null);
@@ -70,6 +95,7 @@ const EmployerDashboard = () => {
   };
 
   if (loading) return <Loading message="Loading hiring workspace..." />;
+
 
   return (
     <div style={{ padding: '48px 0 80px' }}>

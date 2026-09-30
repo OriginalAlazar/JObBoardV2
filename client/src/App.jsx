@@ -1,3 +1,11 @@
+/**
+ * @file App.jsx
+ * @description Main application routing tree and layout scaffolding.
+ * Configures React Router (`BrowserRouter`, `Routes`, `Route`), integrates the global
+ * `AuthProvider` context, and declares all public, seeker-protected, employer-protected,
+ * legacy-redirect, and 404 error routes.
+ */
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -12,32 +20,43 @@ import JobDetails from './pages/JobDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// Seeker Pages
+// Job Seeker Workspace Pages
 import SeekerDashboard from './pages/seeker/SeekerDashboard';
 import SeekerApplications from './pages/seeker/SeekerApplications';
 
-// Employer Pages
+// Employer Workspace Pages
 import EmployerDashboard from './pages/employer/EmployerDashboard';
 import EmployerJobs from './pages/employer/EmployerJobs';
 import JobEditor from './pages/employer/JobEditor';
 import JobApplications from './pages/employer/JobApplications';
 
+/**
+ * App Root Component
+ */
 function App() {
   return (
     <BrowserRouter>
+      {/* Global authentication state provider wrapping all application routes */}
       <AuthProvider>
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {/* Top navigation header visible across all pages */}
           <Navbar />
+          
+          {/* Main content viewport expanding to fill available vertical space */}
           <main style={{ flex: 1 }}>
             <Routes>
-              {/* Public Routes */}
+              {/* ------------------------------------------------------------- */}
+              {/* Public Routes (Accessible by all users & guests)              */}
+              {/* ------------------------------------------------------------- */}
               <Route path="/" element={<Home />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/jobs/:id" element={<JobDetails />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
-              {/* Seeker Protected Routes */}
+              {/* ------------------------------------------------------------- */}
+              {/* Seeker Protected Routes (Requires role: JOB_SEEKER)           */}
+              {/* ------------------------------------------------------------- */}
               <Route
                 path="/seeker/dashboard"
                 element={
@@ -54,9 +73,12 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Legacy Seeker Dashboard Route Aliasing */}
               <Route path="/dashboard/seeker" element={<Navigate to="/seeker/dashboard" replace />} />
 
-              {/* Employer Protected Routes */}
+              {/* ------------------------------------------------------------- */}
+              {/* Employer Protected Routes (Requires role: EMPLOYER)           */}
+              {/* ------------------------------------------------------------- */}
               <Route
                 path="/employer/dashboard"
                 element={
@@ -97,9 +119,12 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              {/* Legacy Employer Dashboard Route Aliasing */}
               <Route path="/dashboard/employer" element={<Navigate to="/employer/dashboard" replace />} />
 
-              {/* 404 Fallback */}
+              {/* ------------------------------------------------------------- */}
+              {/* 404 Fallback Route (Catches all undefined paths)             */}
+              {/* ------------------------------------------------------------- */}
               <Route
                 path="*"
                 element={
@@ -113,6 +138,8 @@ function App() {
               />
             </Routes>
           </main>
+
+          {/* Persistent global footer */}
           <Footer />
         </div>
       </AuthProvider>
@@ -121,3 +148,4 @@ function App() {
 }
 
 export default App;
+

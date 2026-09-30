@@ -1,24 +1,44 @@
+/**
+ * @file ApplicationModal.jsx
+ * @description Accessible 3-step job application wizard modal dialog.
+ * Guides job seekers through:
+ *  - Step 1: Candidate identification & contact info verification
+ *  - Step 2: Resume URL link and cover letter entry (with 20-char validation counter)
+ *  - Step 3: Application summary review with section edit links prior to final submission.
+ * Includes Escape key dismissal, backdrop click closing, and success confirmation.
+ */
+
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * ApplicationModal Component
+ * 
+ * @param {object} props - Component props
+ * @param {object} props.job - Job posting being applied for
+ * @param {boolean} props.isOpen - Whether modal dialog is currently visible
+ * @param {Function} props.onClose - Callback triggered to close modal
+ * @param {Function} [props.onApplied] - Callback triggered when application is successfully submitted
+ */
 const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
   const { user } = useAuth();
 
   // Multi-step state: 1 = Your information, 2 = Your application, 3 = Review application
   const [step, setStep] = useState(1);
 
-  // Form fields
+  // Controlled form fields
   const [applicantName, setApplicantName] = useState(user?.name || '');
   const [applicantEmail, setApplicantEmail] = useState(user?.email || '');
   const [resumeLink, setResumeLink] = useState('');
   const [coverLetter, setCoverLetter] = useState('');
 
+  // Async submission and feedback states
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  // Sync user info on open
+  // Synchronize authenticated user credentials when modal opens or user profile changes
   useEffect(() => {
     if (user) {
       if (!applicantName) setApplicantName(user.name || '');
@@ -26,7 +46,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     }
   }, [user, applicantName, applicantEmail]);
 
-  // Escape key platform dismiss
+  // Platform standard accessibility: Allow dismissing modal dialog with Escape keyboard key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -37,9 +57,14 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  // If modal is closed or job details are not loaded, render nothing
   if (!isOpen || !job) return null;
 
-  // Progressive validation for Step 1
+  /**
+   * validateStep1
+   * Validates applicant name and email presence and structure before advancing
+   * @returns {boolean} True if step 1 inputs are valid
+   */
   const validateStep1 = () => {
     setError('');
     if (!applicantName.trim()) {
@@ -53,7 +78,11 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     return true;
   };
 
-  // Progressive validation for Step 2
+  /**
+   * validateStep2
+   * Validates resume URL against HTTP/HTTPS web format and ensures cover letter has >= 20 characters
+   * @returns {boolean} True if step 2 inputs are valid
+   */
   const validateStep2 = () => {
     setError('');
     const urlPattern = /^(https?:\/\/)([\w.-]+)+(:\d+)?(\/([\w/_.-]*(\?\S+)?)?)?$/;
@@ -68,6 +97,10 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     return true;
   };
 
+  /**
+   * handleNext
+   * Validates current step before progressing to the next step
+   */
   const handleNext = () => {
     if (step === 1 && validateStep1()) {
       setStep(2);
@@ -76,15 +109,24 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
     }
   };
 
+  /**
+   * handleBack
+   * Returns to previous wizard step
+   */
   const handleBack = () => {
     setError('');
     setStep((prev) => Math.max(1, prev - 1));
   };
 
+  /**
+   * handleSubmit
+   * Submits application payload to `/api/applications` backend endpoint
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Re-verify Step 2 fields before submission
     if (!validateStep2()) {
       setStep(2);
       return;
@@ -97,8 +139,11 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
         coverLetter: coverLetter.trim(),
         resumeLink: resumeLink.trim(),
       });
+      // Show success feedback
       setSuccess(true);
       if (onApplied) onApplied();
+      
+      // Auto-close dialog after brief confirmation delay and reset wizard state
       setTimeout(() => {
         onClose();
         setSuccess(false);
@@ -113,6 +158,7 @@ const ApplicationModal = ({ job, isOpen, onClose, onApplied }) => {
       setSubmitting(false);
     }
   };
+
 
   return (
     <div
